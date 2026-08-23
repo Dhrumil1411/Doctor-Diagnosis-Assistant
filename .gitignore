@@ -1,0 +1,37 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# --- Node ---
+node_modules/
+dist/
+.vite/
+
+# --- Secrets / environment ---
+.env
+.env.*
+!.env.example
+
+# --- Source datasets (large; kept local only, sources documented in docs/) ---
+Data/
+
+# --- ML artifacts (regenerable via ml/ scripts) ---
+ml/artifacts/*.joblib
+ml/artifacts/*.pkl
+
+# --- Uploaded files / local object storage ---
+uploads/
+storage/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
