@@ -15,7 +15,7 @@ Reference docs: `project-roadmap.md` (authoritative) · `doctor-diagnosis-assist
 |---|---|---|
 | 0 | Repo scaffold, PROGRESS.md, tooling baseline | **done** (2026-08-23) — see Decisions Log; Docker flagged missing |
 | 1 | Data audit + prep (42-disease set), symptom vocabulary | **done** (2026-08-23) — actual data: 131 symptoms / 41 diseases, see docs/dataset-notes.md |
-| 2 | Baseline classifier (LR vs RF), champion model saved | not started |
+| 2 | Baseline classifier (LR vs RF), champion model saved | **done** (2026-08-23) — champion: logistic regression; CV + test both 1.00 macro-F1 (see caveat below) |
 
 ## Phase B — Backend
 
@@ -50,6 +50,8 @@ Reference docs: `project-roadmap.md` (authoritative) · `doctor-diagnosis-assist
 | 2026-08-23 | `Data/` gitignored (large source files stay local); sources/licenses to be documented in `docs/data-sources.md` at Step 1 | Standard practice; reproducibility preserved via documented sources + prep scripts |
 | 2026-08-23 | Cleaned train/test CSVs + vocabulary + prep_report are COMMITTED in `ml/artifacts/` (regenerable via `ml/data_prep.py`) | Decouples Steps 2+ from raw `Data/` presence; ~1 MB total; generator script is the source of truth |
 | 2026-08-23 | Dataset reality recorded as 131 symptoms / 41 diseases (not advertised 132/42) — duplicate column name double-counted upstream, and only 41 classes exist in the files | Verified by audit; assertions in data_prep.py now derive expectations from raw shape, not folklore |
+| 2026-08-23 | Champion = logistic regression (LR and RF tied at CV macro-F1 1.000; LR preferred: interpretable coefficients, tiny artifact, fast inference). Dummy floor included (macro-F1 0.0012) to guard against misleading accuracy | Pre-agreed macro-F1 rule + simplicity tie-break |
+| 2026-08-23 | Perfect scores treated as dataset property, NOT model quality claim — source data is near-deterministic per disease. Classifier's real role: fast baseline cross-check for the LLM layer; partial-symptom behavior verified degrading gracefully | Honest reporting per roadmap "accuracy alone is misleading" |
 
 ## Known data quirks (verified in Step-1 audit — full detail in docs/dataset-notes.md)
 
