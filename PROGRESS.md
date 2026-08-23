@@ -14,7 +14,7 @@ Reference docs: `project-roadmap.md` (authoritative) · `doctor-diagnosis-assist
 | Step | What | Status |
 |---|---|---|
 | 0 | Repo scaffold, PROGRESS.md, tooling baseline | **done** (2026-08-23) — see Decisions Log; Docker flagged missing |
-| 1 | Data audit + prep (42-disease set), symptom vocabulary | not started |
+| 1 | Data audit + prep (42-disease set), symptom vocabulary | **done** (2026-08-23) — actual data: 131 symptoms / 41 diseases, see docs/dataset-notes.md |
 | 2 | Baseline classifier (LR vs RF), champion model saved | not started |
 
 ## Phase B — Backend
@@ -48,16 +48,21 @@ Reference docs: `project-roadmap.md` (authoritative) · `doctor-diagnosis-assist
 | 2026-08-23 | LLM layer: provider chain `groq → openrouter` behind one OpenAI-compatible client; auto-fallback on 429/error; response cache keyed by case content; lean prompts | Gemini free-tier quota exhaustion was the pain point; stacking two free quotas + cache removes it; Groq gives stronger reasoners (Llama 3.3 70B / GPT-OSS 120B) |
 | 2026-08-23 | Node/npm project init deferred to Step 8 (Vite scaffold owns package.json); root venv shared by backend+ml | Avoids throwaway config Vite would overwrite; single Python env keeps student setup simple |
 | 2026-08-23 | `Data/` gitignored (large source files stay local); sources/licenses to be documented in `docs/data-sources.md` at Step 1 | Standard practice; reproducibility preserved via documented sources + prep scripts |
+| 2026-08-23 | Cleaned train/test CSVs + vocabulary + prep_report are COMMITTED in `ml/artifacts/` (regenerable via `ml/data_prep.py`) | Decouples Steps 2+ from raw `Data/` presence; ~1 MB total; generator script is the source of truth |
+| 2026-08-23 | Dataset reality recorded as 131 symptoms / 41 diseases (not advertised 132/42) — duplicate column name double-counted upstream, and only 41 classes exist in the files | Verified by audit; assertions in data_prep.py now derive expectations from raw shape, not folklore |
 
-## Known data quirks (handled in Step 1)
+## Known data quirks (verified in Step-1 audit — full detail in docs/dataset-notes.md)
 
-- `Training.csv`: duplicate column `fluid_overload` (×2), stray spaces in some names (`spotting_ uration`, `dischromic _patches`, `foul_smell_of urine`), phantom trailing empty column after `prognosis`
-- `Testing.csv`: only 42 rows ≈ 1 per disease → per-class metrics near-meaningless; used once, at end of Step 2
+- Duplicate `fluid_overload` column: first twin is ALL-ZERO dead col, all 114 positives in second → OR-merged (naive keep-first would lose data)
+- Phantom `Unnamed: 133` col in Training (trailing comma artifact, 0 non-null) → dropped
+- Space-broken names ×3 (`spotting_ urination`, etc.) and padded labels `'Diabetes '`, `'Hypertension '` → normalized
+- **Testing.csv = 42 rows over 41 classes** (several classes n=1) → per-class test metrics are noise: select via stratified CV on training, touch test once at end of Step 2
 - Missing vs roadmap: Symptom2Disease + Synthetic-8 datasets absent locally → scale-up target = diseases-symptoms-773 (post-MVP backlog)
 - Synthea ≠ binary symptom vectors → used for realistic e2e case generation only (Step 12), never classifier training
 
 ## Open items / pending decisions
 
-- [ ] **User:** install Docker Desktop before Step 3 (not currently installed)
+- [x] ~~User: install Docker Desktop~~ — installed 2026-08-23; not yet on current shell PATH (terminal restart needed) → verify `docker ps` at start of Step 3
 - [ ] **User:** create free Groq + OpenRouter API keys before Step 7 (email-only signup, no card)
+- [ ] **User:** fill license fields in `docs/data-sources.md` from your Kaggle download history (low priority, before Step 13)
 - [ ] Step 11 decision: local-disk storage vs real S3 bucket for lab uploads

@@ -1,0 +1,166 @@
+{
+  "generated_at": "2026-08-23T17:09:12.137080+00:00",
+  "sources": {
+    "Training.csv": "D:\\Project\\Doctor-Diagnosis-Assistant\\Data\\Kaggle\\disease-prediction-42\\Training.csv",
+    "Testing.csv": "D:\\Project\\Doctor-Diagnosis-Assistant\\Data\\Kaggle\\disease-prediction-42\\Testing.csv"
+  },
+  "outputs": {
+    "train": "D:\\Project\\Doctor-Diagnosis-Assistant\\ml\\artifacts\\cleaned_train.csv",
+    "test": "D:\\Project\\Doctor-Diagnosis-Assistant\\ml\\artifacts\\cleaned_test.csv",
+    "vocabulary": "D:\\Project\\Doctor-Diagnosis-Assistant\\ml\\artifacts\\symptom_vocabulary.json"
+  },
+  "integrity": {
+    "rows_unchanged": true,
+    "split_preserved": true,
+    "symptom_count": 131,
+    "disease_count": 41,
+    "train_class_balance": {
+      "(vertigo) Paroymsal  Positional Vertigo": 120,
+      "AIDS": 120,
+      "Acne": 120,
+      "Alcoholic hepatitis": 120,
+      "Allergy": 120,
+      "Arthritis": 120,
+      "Bronchial Asthma": 120,
+      "Cervical spondylosis": 120,
+      "Chicken pox": 120,
+      "Chronic cholestasis": 120,
+      "Common Cold": 120,
+      "Dengue": 120,
+      "Diabetes": 120,
+      "Dimorphic hemmorhoids(piles)": 120,
+      "Drug Reaction": 120,
+      "Fungal infection": 120,
+      "GERD": 120,
+      "Gastroenteritis": 120,
+      "Heart attack": 120,
+      "Hepatitis B": 120,
+      "Hepatitis C": 120,
+      "Hepatitis D": 120,
+      "Hepatitis E": 120,
+      "Hypertension": 120,
+      "Hyperthyroidism": 120,
+      "Hypoglycemia": 120,
+      "Hypothyroidism": 120,
+      "Impetigo": 120,
+      "Jaundice": 120,
+      "Malaria": 120,
+      "Migraine": 120,
+      "Osteoarthristis": 120,
+      "Paralysis (brain hemorrhage)": 120,
+      "Peptic ulcer diseae": 120,
+      "Pneumonia": 120,
+      "Psoriasis": 120,
+      "Tuberculosis": 120,
+      "Typhoid": 120,
+      "Urinary tract infection": 120,
+      "Varicose veins": 120,
+      "hepatitis A": 120
+    },
+    "test_rows_per_class": {
+      "(vertigo) Paroymsal  Positional Vertigo": 1,
+      "AIDS": 1,
+      "Acne": 1,
+      "Alcoholic hepatitis": 1,
+      "Allergy": 1,
+      "Arthritis": 1,
+      "Bronchial Asthma": 1,
+      "Cervical spondylosis": 1,
+      "Chicken pox": 1,
+      "Chronic cholestasis": 1,
+      "Common Cold": 1,
+      "Dengue": 1,
+      "Diabetes": 1,
+      "Dimorphic hemmorhoids(piles)": 1,
+      "Drug Reaction": 1,
+      "Fungal infection": 2,
+      "GERD": 1,
+      "Gastroenteritis": 1,
+      "Heart attack": 1,
+      "Hepatitis B": 1,
+      "Hepatitis C": 1,
+      "Hepatitis D": 1,
+      "Hepatitis E": 1,
+      "Hypertension": 1,
+      "Hyperthyroidism": 1,
+      "Hypoglycemia": 1,
+      "Hypothyroidism": 1,
+      "Impetigo": 1,
+      "Jaundice": 1,
+      "Malaria": 1,
+      "Migraine": 1,
+      "Osteoarthristis": 1,
+      "Paralysis (brain hemorrhage)": 1,
+      "Peptic ulcer diseae": 1,
+      "Pneumonia": 1,
+      "Psoriasis": 1,
+      "Tuberculosis": 1,
+      "Typhoid": 1,
+      "Urinary tract infection": 1,
+      "Varicose veins": 1,
+      "hepatitis A": 1
+    }
+  },
+  "cleaning_actions": {
+    "Training.csv": {
+      "file": "Training.csv",
+      "dropped_unnamed": [
+        "Unnamed: 133"
+      ],
+      "merged_duplicates": {
+        "fluid_overload": {
+          "variants": [
+            "fluid_overload",
+            "fluid_overload.1"
+          ],
+          "ones_per_variant": [
+            0,
+            114
+          ]
+        }
+      },
+      "renamed_spaces": {
+        "spotting_ urination": "spotting_urination",
+        "foul_smell_of urine": "foul_smell_ofurine",
+        "dischromic _patches": "dischromic_patches"
+      },
+      "raw_shape": [
+        4920,
+        134
+      ],
+      "clean_shape": [
+        4920,
+        132
+      ]
+    },
+    "Testing.csv": {
+      "file": "Testing.csv",
+      "dropped_unnamed": [],
+      "merged_duplicates": {
+        "fluid_overload": {
+          "variants": [
+            "fluid_overload",
+            "fluid_overload.1"
+          ],
+          "ones_per_variant": [
+            0,
+            1
+          ]
+        }
+      },
+      "renamed_spaces": {
+        "spotting_ urination": "spotting_urination",
+        "foul_smell_of urine": "foul_smell_ofurine",
+        "dischromic _patches": "dischromic_patches"
+      },
+      "raw_shape": [
+        42,
+        133
+      ],
+      "clean_shape": [
+        42,
+        132
+      ]
+    }
+  }
+}

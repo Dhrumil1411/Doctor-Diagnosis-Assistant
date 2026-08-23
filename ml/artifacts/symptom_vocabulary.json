@@ -1,0 +1,706 @@
+{
+  "dataset": "Disease Prediction Using Machine Learning (Kaggle)",
+  "label_field": "prognosis",
+  "n_symptoms": 131,
+  "n_diseases": 41,
+  "symptoms": [
+    {
+      "id": "itching",
+      "display_name": "Itching",
+      "column": "itching"
+    },
+    {
+      "id": "skin_rash",
+      "display_name": "Skin rash",
+      "column": "skin_rash"
+    },
+    {
+      "id": "nodal_skin_eruptions",
+      "display_name": "Nodal skin eruptions",
+      "column": "nodal_skin_eruptions"
+    },
+    {
+      "id": "continuous_sneezing",
+      "display_name": "Continuous sneezing",
+      "column": "continuous_sneezing"
+    },
+    {
+      "id": "shivering",
+      "display_name": "Shivering",
+      "column": "shivering"
+    },
+    {
+      "id": "chills",
+      "display_name": "Chills",
+      "column": "chills"
+    },
+    {
+      "id": "joint_pain",
+      "display_name": "Joint pain",
+      "column": "joint_pain"
+    },
+    {
+      "id": "stomach_pain",
+      "display_name": "Stomach pain",
+      "column": "stomach_pain"
+    },
+    {
+      "id": "acidity",
+      "display_name": "Acidity",
+      "column": "acidity"
+    },
+    {
+      "id": "ulcers_on_tongue",
+      "display_name": "Ulcers on tongue",
+      "column": "ulcers_on_tongue"
+    },
+    {
+      "id": "muscle_wasting",
+      "display_name": "Muscle wasting",
+      "column": "muscle_wasting"
+    },
+    {
+      "id": "vomiting",
+      "display_name": "Vomiting",
+      "column": "vomiting"
+    },
+    {
+      "id": "burning_micturition",
+      "display_name": "Burning micturition",
+      "column": "burning_micturition"
+    },
+    {
+      "id": "spotting_urination",
+      "display_name": "Spotting urination",
+      "column": "spotting_urination"
+    },
+    {
+      "id": "fatigue",
+      "display_name": "Fatigue",
+      "column": "fatigue"
+    },
+    {
+      "id": "weight_gain",
+      "display_name": "Weight gain",
+      "column": "weight_gain"
+    },
+    {
+      "id": "anxiety",
+      "display_name": "Anxiety",
+      "column": "anxiety"
+    },
+    {
+      "id": "cold_hands_and_feets",
+      "display_name": "Cold hands and feets",
+      "column": "cold_hands_and_feets"
+    },
+    {
+      "id": "mood_swings",
+      "display_name": "Mood swings",
+      "column": "mood_swings"
+    },
+    {
+      "id": "weight_loss",
+      "display_name": "Weight loss",
+      "column": "weight_loss"
+    },
+    {
+      "id": "restlessness",
+      "display_name": "Restlessness",
+      "column": "restlessness"
+    },
+    {
+      "id": "lethargy",
+      "display_name": "Lethargy",
+      "column": "lethargy"
+    },
+    {
+      "id": "patches_in_throat",
+      "display_name": "Patches in throat",
+      "column": "patches_in_throat"
+    },
+    {
+      "id": "irregular_sugar_level",
+      "display_name": "Irregular sugar level",
+      "column": "irregular_sugar_level"
+    },
+    {
+      "id": "cough",
+      "display_name": "Cough",
+      "column": "cough"
+    },
+    {
+      "id": "high_fever",
+      "display_name": "High fever",
+      "column": "high_fever"
+    },
+    {
+      "id": "sunken_eyes",
+      "display_name": "Sunken eyes",
+      "column": "sunken_eyes"
+    },
+    {
+      "id": "breathlessness",
+      "display_name": "Breathlessness",
+      "column": "breathlessness"
+    },
+    {
+      "id": "sweating",
+      "display_name": "Sweating",
+      "column": "sweating"
+    },
+    {
+      "id": "dehydration",
+      "display_name": "Dehydration",
+      "column": "dehydration"
+    },
+    {
+      "id": "indigestion",
+      "display_name": "Indigestion",
+      "column": "indigestion"
+    },
+    {
+      "id": "headache",
+      "display_name": "Headache",
+      "column": "headache"
+    },
+    {
+      "id": "yellowish_skin",
+      "display_name": "Yellowish skin",
+      "column": "yellowish_skin"
+    },
+    {
+      "id": "dark_urine",
+      "display_name": "Dark urine",
+      "column": "dark_urine"
+    },
+    {
+      "id": "nausea",
+      "display_name": "Nausea",
+      "column": "nausea"
+    },
+    {
+      "id": "loss_of_appetite",
+      "display_name": "Loss of appetite",
+      "column": "loss_of_appetite"
+    },
+    {
+      "id": "pain_behind_the_eyes",
+      "display_name": "Pain behind the eyes",
+      "column": "pain_behind_the_eyes"
+    },
+    {
+      "id": "back_pain",
+      "display_name": "Back pain",
+      "column": "back_pain"
+    },
+    {
+      "id": "constipation",
+      "display_name": "Constipation",
+      "column": "constipation"
+    },
+    {
+      "id": "abdominal_pain",
+      "display_name": "Abdominal pain",
+      "column": "abdominal_pain"
+    },
+    {
+      "id": "diarrhoea",
+      "display_name": "Diarrhoea",
+      "column": "diarrhoea"
+    },
+    {
+      "id": "mild_fever",
+      "display_name": "Mild fever",
+      "column": "mild_fever"
+    },
+    {
+      "id": "yellow_urine",
+      "display_name": "Yellow urine",
+      "column": "yellow_urine"
+    },
+    {
+      "id": "yellowing_of_eyes",
+      "display_name": "Yellowing of eyes",
+      "column": "yellowing_of_eyes"
+    },
+    {
+      "id": "acute_liver_failure",
+      "display_name": "Acute liver failure",
+      "column": "acute_liver_failure"
+    },
+    {
+      "id": "fluid_overload",
+      "display_name": "Fluid overload",
+      "column": "fluid_overload"
+    },
+    {
+      "id": "swelling_of_stomach",
+      "display_name": "Swelling of stomach",
+      "column": "swelling_of_stomach"
+    },
+    {
+      "id": "swelled_lymph_nodes",
+      "display_name": "Swelled lymph nodes",
+      "column": "swelled_lymph_nodes"
+    },
+    {
+      "id": "malaise",
+      "display_name": "Malaise",
+      "column": "malaise"
+    },
+    {
+      "id": "blurred_and_distorted_vision",
+      "display_name": "Blurred and distorted vision",
+      "column": "blurred_and_distorted_vision"
+    },
+    {
+      "id": "phlegm",
+      "display_name": "Phlegm",
+      "column": "phlegm"
+    },
+    {
+      "id": "throat_irritation",
+      "display_name": "Throat irritation",
+      "column": "throat_irritation"
+    },
+    {
+      "id": "redness_of_eyes",
+      "display_name": "Redness of eyes",
+      "column": "redness_of_eyes"
+    },
+    {
+      "id": "sinus_pressure",
+      "display_name": "Sinus pressure",
+      "column": "sinus_pressure"
+    },
+    {
+      "id": "runny_nose",
+      "display_name": "Runny nose",
+      "column": "runny_nose"
+    },
+    {
+      "id": "congestion",
+      "display_name": "Congestion",
+      "column": "congestion"
+    },
+    {
+      "id": "chest_pain",
+      "display_name": "Chest pain",
+      "column": "chest_pain"
+    },
+    {
+      "id": "weakness_in_limbs",
+      "display_name": "Weakness in limbs",
+      "column": "weakness_in_limbs"
+    },
+    {
+      "id": "fast_heart_rate",
+      "display_name": "Fast heart rate",
+      "column": "fast_heart_rate"
+    },
+    {
+      "id": "pain_during_bowel_movements",
+      "display_name": "Pain during bowel movements",
+      "column": "pain_during_bowel_movements"
+    },
+    {
+      "id": "pain_in_anal_region",
+      "display_name": "Pain in anal region",
+      "column": "pain_in_anal_region"
+    },
+    {
+      "id": "bloody_stool",
+      "display_name": "Bloody stool",
+      "column": "bloody_stool"
+    },
+    {
+      "id": "irritation_in_anus",
+      "display_name": "Irritation in anus",
+      "column": "irritation_in_anus"
+    },
+    {
+      "id": "neck_pain",
+      "display_name": "Neck pain",
+      "column": "neck_pain"
+    },
+    {
+      "id": "dizziness",
+      "display_name": "Dizziness",
+      "column": "dizziness"
+    },
+    {
+      "id": "cramps",
+      "display_name": "Cramps",
+      "column": "cramps"
+    },
+    {
+      "id": "bruising",
+      "display_name": "Bruising",
+      "column": "bruising"
+    },
+    {
+      "id": "obesity",
+      "display_name": "Obesity",
+      "column": "obesity"
+    },
+    {
+      "id": "swollen_legs",
+      "display_name": "Swollen legs",
+      "column": "swollen_legs"
+    },
+    {
+      "id": "swollen_blood_vessels",
+      "display_name": "Swollen blood vessels",
+      "column": "swollen_blood_vessels"
+    },
+    {
+      "id": "puffy_face_and_eyes",
+      "display_name": "Puffy face and eyes",
+      "column": "puffy_face_and_eyes"
+    },
+    {
+      "id": "enlarged_thyroid",
+      "display_name": "Enlarged thyroid",
+      "column": "enlarged_thyroid"
+    },
+    {
+      "id": "brittle_nails",
+      "display_name": "Brittle nails",
+      "column": "brittle_nails"
+    },
+    {
+      "id": "swollen_extremeties",
+      "display_name": "Swollen extremeties",
+      "column": "swollen_extremeties"
+    },
+    {
+      "id": "excessive_hunger",
+      "display_name": "Excessive hunger",
+      "column": "excessive_hunger"
+    },
+    {
+      "id": "extra_marital_contacts",
+      "display_name": "Extra marital contacts",
+      "column": "extra_marital_contacts"
+    },
+    {
+      "id": "drying_and_tingling_lips",
+      "display_name": "Drying and tingling lips",
+      "column": "drying_and_tingling_lips"
+    },
+    {
+      "id": "slurred_speech",
+      "display_name": "Slurred speech",
+      "column": "slurred_speech"
+    },
+    {
+      "id": "knee_pain",
+      "display_name": "Knee pain",
+      "column": "knee_pain"
+    },
+    {
+      "id": "hip_joint_pain",
+      "display_name": "Hip joint pain",
+      "column": "hip_joint_pain"
+    },
+    {
+      "id": "muscle_weakness",
+      "display_name": "Muscle weakness",
+      "column": "muscle_weakness"
+    },
+    {
+      "id": "stiff_neck",
+      "display_name": "Stiff neck",
+      "column": "stiff_neck"
+    },
+    {
+      "id": "swelling_joints",
+      "display_name": "Swelling joints",
+      "column": "swelling_joints"
+    },
+    {
+      "id": "movement_stiffness",
+      "display_name": "Movement stiffness",
+      "column": "movement_stiffness"
+    },
+    {
+      "id": "spinning_movements",
+      "display_name": "Spinning movements",
+      "column": "spinning_movements"
+    },
+    {
+      "id": "loss_of_balance",
+      "display_name": "Loss of balance",
+      "column": "loss_of_balance"
+    },
+    {
+      "id": "unsteadiness",
+      "display_name": "Unsteadiness",
+      "column": "unsteadiness"
+    },
+    {
+      "id": "weakness_of_one_body_side",
+      "display_name": "Weakness of one body side",
+      "column": "weakness_of_one_body_side"
+    },
+    {
+      "id": "loss_of_smell",
+      "display_name": "Loss of smell",
+      "column": "loss_of_smell"
+    },
+    {
+      "id": "bladder_discomfort",
+      "display_name": "Bladder discomfort",
+      "column": "bladder_discomfort"
+    },
+    {
+      "id": "foul_smell_ofurine",
+      "display_name": "Foul smell ofurine",
+      "column": "foul_smell_ofurine"
+    },
+    {
+      "id": "continuous_feel_of_urine",
+      "display_name": "Continuous feel of urine",
+      "column": "continuous_feel_of_urine"
+    },
+    {
+      "id": "passage_of_gases",
+      "display_name": "Passage of gases",
+      "column": "passage_of_gases"
+    },
+    {
+      "id": "internal_itching",
+      "display_name": "Internal itching",
+      "column": "internal_itching"
+    },
+    {
+      "id": "toxic_look_(typhos)",
+      "display_name": "Toxic look (typhos)",
+      "column": "toxic_look_(typhos)"
+    },
+    {
+      "id": "depression",
+      "display_name": "Depression",
+      "column": "depression"
+    },
+    {
+      "id": "irritability",
+      "display_name": "Irritability",
+      "column": "irritability"
+    },
+    {
+      "id": "muscle_pain",
+      "display_name": "Muscle pain",
+      "column": "muscle_pain"
+    },
+    {
+      "id": "altered_sensorium",
+      "display_name": "Altered sensorium",
+      "column": "altered_sensorium"
+    },
+    {
+      "id": "red_spots_over_body",
+      "display_name": "Red spots over body",
+      "column": "red_spots_over_body"
+    },
+    {
+      "id": "belly_pain",
+      "display_name": "Belly pain",
+      "column": "belly_pain"
+    },
+    {
+      "id": "abnormal_menstruation",
+      "display_name": "Abnormal menstruation",
+      "column": "abnormal_menstruation"
+    },
+    {
+      "id": "dischromic_patches",
+      "display_name": "Dischromic patches",
+      "column": "dischromic_patches"
+    },
+    {
+      "id": "watering_from_eyes",
+      "display_name": "Watering from eyes",
+      "column": "watering_from_eyes"
+    },
+    {
+      "id": "increased_appetite",
+      "display_name": "Increased appetite",
+      "column": "increased_appetite"
+    },
+    {
+      "id": "polyuria",
+      "display_name": "Polyuria",
+      "column": "polyuria"
+    },
+    {
+      "id": "family_history",
+      "display_name": "Family history",
+      "column": "family_history"
+    },
+    {
+      "id": "mucoid_sputum",
+      "display_name": "Mucoid sputum",
+      "column": "mucoid_sputum"
+    },
+    {
+      "id": "rusty_sputum",
+      "display_name": "Rusty sputum",
+      "column": "rusty_sputum"
+    },
+    {
+      "id": "lack_of_concentration",
+      "display_name": "Lack of concentration",
+      "column": "lack_of_concentration"
+    },
+    {
+      "id": "visual_disturbances",
+      "display_name": "Visual disturbances",
+      "column": "visual_disturbances"
+    },
+    {
+      "id": "receiving_blood_transfusion",
+      "display_name": "Receiving blood transfusion",
+      "column": "receiving_blood_transfusion"
+    },
+    {
+      "id": "receiving_unsterile_injections",
+      "display_name": "Receiving unsterile injections",
+      "column": "receiving_unsterile_injections"
+    },
+    {
+      "id": "coma",
+      "display_name": "Coma",
+      "column": "coma"
+    },
+    {
+      "id": "stomach_bleeding",
+      "display_name": "Stomach bleeding",
+      "column": "stomach_bleeding"
+    },
+    {
+      "id": "distention_of_abdomen",
+      "display_name": "Distention of abdomen",
+      "column": "distention_of_abdomen"
+    },
+    {
+      "id": "history_of_alcohol_consumption",
+      "display_name": "History of alcohol consumption",
+      "column": "history_of_alcohol_consumption"
+    },
+    {
+      "id": "blood_in_sputum",
+      "display_name": "Blood in sputum",
+      "column": "blood_in_sputum"
+    },
+    {
+      "id": "prominent_veins_on_calf",
+      "display_name": "Prominent veins on calf",
+      "column": "prominent_veins_on_calf"
+    },
+    {
+      "id": "palpitations",
+      "display_name": "Palpitations",
+      "column": "palpitations"
+    },
+    {
+      "id": "painful_walking",
+      "display_name": "Painful walking",
+      "column": "painful_walking"
+    },
+    {
+      "id": "pus_filled_pimples",
+      "display_name": "Pus filled pimples",
+      "column": "pus_filled_pimples"
+    },
+    {
+      "id": "blackheads",
+      "display_name": "Blackheads",
+      "column": "blackheads"
+    },
+    {
+      "id": "scurring",
+      "display_name": "Scurring",
+      "column": "scurring"
+    },
+    {
+      "id": "skin_peeling",
+      "display_name": "Skin peeling",
+      "column": "skin_peeling"
+    },
+    {
+      "id": "silver_like_dusting",
+      "display_name": "Silver like dusting",
+      "column": "silver_like_dusting"
+    },
+    {
+      "id": "small_dents_in_nails",
+      "display_name": "Small dents in nails",
+      "column": "small_dents_in_nails"
+    },
+    {
+      "id": "inflammatory_nails",
+      "display_name": "Inflammatory nails",
+      "column": "inflammatory_nails"
+    },
+    {
+      "id": "blister",
+      "display_name": "Blister",
+      "column": "blister"
+    },
+    {
+      "id": "red_sore_around_nose",
+      "display_name": "Red sore around nose",
+      "column": "red_sore_around_nose"
+    },
+    {
+      "id": "yellow_crust_ooze",
+      "display_name": "Yellow crust ooze",
+      "column": "yellow_crust_ooze"
+    }
+  ],
+  "diseases": [
+    "(vertigo) Paroymsal  Positional Vertigo",
+    "AIDS",
+    "Acne",
+    "Alcoholic hepatitis",
+    "Allergy",
+    "Arthritis",
+    "Bronchial Asthma",
+    "Cervical spondylosis",
+    "Chicken pox",
+    "Chronic cholestasis",
+    "Common Cold",
+    "Dengue",
+    "Diabetes",
+    "Dimorphic hemmorhoids(piles)",
+    "Drug Reaction",
+    "Fungal infection",
+    "GERD",
+    "Gastroenteritis",
+    "Heart attack",
+    "Hepatitis B",
+    "Hepatitis C",
+    "Hepatitis D",
+    "Hepatitis E",
+    "Hypertension",
+    "Hyperthyroidism",
+    "Hypoglycemia",
+    "Hypothyroidism",
+    "Impetigo",
+    "Jaundice",
+    "Malaria",
+    "Migraine",
+    "Osteoarthristis",
+    "Paralysis (brain hemorrhage)",
+    "Peptic ulcer diseae",
+    "Pneumonia",
+    "Psoriasis",
+    "Tuberculosis",
+    "Typhoid",
+    "Urinary tract infection",
+    "Varicose veins",
+    "hepatitis A"
+  ]
+}
