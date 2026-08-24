@@ -52,7 +52,7 @@ class Diagnosis(TimestampMixin, Base):
     )
     edited_label: Mapped[str | None] = mapped_column(String(200))
     accepted_suggestion_id: Mapped[uuid.UUID | None] = mapped_column(
-        ForeignKey("diagnoses.id", ondelete="SET NULL"), use_alter=True
+        ForeignKey("diagnoses.id", ondelete="SET NULL")
     )
     raw_payload: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
     decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
