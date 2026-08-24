@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     secret_key: str = "dev-only-secret-change-me-0123456789abcdef0123456789abcdef"
     access_token_expire_minutes: int = 480
     database_url: str = "postgresql+psycopg://dda:dda@localhost:5432/dda"
+    model_artifacts_dir: Path = REPO_ROOT / "ml" / "artifacts"
 
 
 @lru_cache
