@@ -31,7 +31,7 @@ Reference docs: `project-roadmap.md` (authoritative) · `doctor-diagnosis-assist
 
 | Step | What | Status |
 |---|---|---|
-| 8 | Frontend skeleton (Vite + React), login wired | not started |
+| 8 | Frontend skeleton (Vite + React), login wired | **done** (2026-08-24) — create-vite scaffold in `frontend/`; fetch-based API client with Bearer attach + auto-logout-on-401; AuthContext (bootstrap via `/auth/me`, login/logout); login page with proper error states (401 vs disabled-account); protected home route; Vite dev proxy `/api → :8000` (zero CORS config); lint clean, build clean, live proxy round-trip verified with seeded admin |
 | 9 | Intake form UI (sections 5.1–5.9 + notes) | not started |
 | 10 | Results screen + accept/edit/reject feedback loop | not started |
 | 11 | Labs/imaging upload *(skippable if user wants testing sooner)* | not started |
@@ -42,6 +42,7 @@ Reference docs: `project-roadmap.md` (authoritative) · `doctor-diagnosis-assist
 
 | Date | Decision | Rationale |
 |---|---|---|
+| 2026-08-24 | Frontend: plain JSX (no TS), react-router-dom, thin fetch wrapper (no axios), JWT in localStorage, Vite dev proxy instead of CORS config | Student-project simplicity per Decisions Log ethos; proxy kills CORS at the root; localStorage XSS tradeoff accepted for Phase 1 — revisit httpOnly-cookie sessions before Phase 3 |
 | 2026-08-24 | Model names refreshed at Step 7: Step-0 placeholders were stale by Aug 2026 — Groq `llama-3.3-70b-versatile` retired (→ `openai/gpt-oss-120b`), OpenRouter `z-ai/glm-5.2:free` upstream-rate-limited at verify time (fallback default → `nvidia/nemotron-3-super-120b-a12b:free`). Live catalogs queried via each provider's `/models` endpoint with user's keys | Free-tier model catalogs churn; always verify ids against the live API, never trust stale docs |
 | 2026-08-24 | Reason cache key uses `json.dumps(..., default=str)` — Postgres NUMERIC columns arrive as `Decimal` and broke serialization; caught in live smoke, NOT by mocks (test visits had no vitals) | Deterministic string coercion is fine for cache keys; mocks can't cover DB type-mapping gaps |
 | 2026-08-24 | LLM chain = raw httpx against OpenAI-compatible `/chat/completions` (no openai SDK); JSON-mode via strict prompt + lenient extraction (fenced block → outer braces); a parse failure counts as provider failure → next in chain; cache is in-process OrderedDict keyed by SHA256 of canonical case+classifier payload | Fewer deps, fewer moving parts for a student project; every failure mode funnels into one fallback path |
