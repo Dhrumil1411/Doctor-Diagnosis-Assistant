@@ -45,3 +45,10 @@ def require_roles(*roles: UserRole):
         return user
 
     return checker
+
+
+READER_ROLES = tuple(UserRole)
+WRITER_ROLES = (UserRole.doctor, UserRole.admin, UserRole.nurse)
+
+require_reader = require_roles(*READER_ROLES)
+require_writer = require_roles(*WRITER_ROLES)

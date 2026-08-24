@@ -134,6 +134,11 @@ def test_token_of_deactivated_user_is_rejected(
     resp = client.get("/api/auth/me", headers=doctor_headers)
     assert resp.status_code == 401
 
+    client.patch(
+        f"/api/users/{doctor_user.id}", json={"is_active": True}, headers=admin_headers
+    )
+    assert client.get("/api/auth/me", headers=doctor_headers).status_code == 200
+
 
 def test_missing_user_id_in_db_rejected(client: TestClient):
     ghost_id = uuid.uuid4()

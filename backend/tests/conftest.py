@@ -57,6 +57,14 @@ def nurse_user():
 
 
 @pytest.fixture(scope="session")
+def readonly_headers(client):
+    user = make_user(UserRole.read_only)
+    resp = login(client, user.email)
+    assert resp.status_code == 200
+    return {"Authorization": f"Bearer {resp.json()['access_token']}"}
+
+
+@pytest.fixture(scope="session")
 def admin_headers(client, admin_user):
     resp = login(client, admin_user.email)
     assert resp.status_code == 200
