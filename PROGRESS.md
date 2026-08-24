@@ -25,7 +25,7 @@ Reference docs: `project-roadmap.md` (authoritative) · `doctor-diagnosis-assist
 | 4 | Auth + RBAC (doctor/admin/nurse/read-only) | **done** (2026-08-24) — JWT login (`POST /api/auth/login`), `/api/auth/me`, admin-gated user CRUD (`GET/POST/PATCH /api/users`), bcrypt hashing, audit-log entries on login/create/update, `create_admin.py` bootstrap; 17 pytest cases green incl. RBAC matrix + deactivated-user token rejection; live smoke test passed (seeded `dev.admin@example.com`) |
 | 5 | Patients/visits CRUD (form sections 2.1–2.9 + 2.12 persistence) | **done** (2026-08-24) — patient CRUD + search/pagination; nested allergies/history/medications sub-resources; visit CRUD with symptom replace-set, vitals + social-history upserts, visit detail aggregation; RBAC split (readers = all roles, writers = doctor/admin/nurse); audit entries on every mutation; 31 tests green; live smoke test passed |
 | 6 | Classifier inference service (`POST /api/predict`) | **done** (2026-08-24) — `ClassifierService` lazy-loads `model.joblib`; accepts inline `symptoms[]` OR `visit_id` (pulls status='present' symptoms only); unknown symptom ids reported not fatal; top-k ranked with probabilities; writer-role gated; predict calls audited; 40 tests green; smoke: fungal triad → Fungal infection 0.9155 |
-| 7 | LLM reasoning layer — provider chain w/ fallback + cache (`POST /api/reason`) | not started |
+| 7 | LLM reasoning layer — provider chain w/ fallback + cache (`POST /api/reason`) | **done** (2026-08-24) — `groq → openrouter` OpenAI-compatible chain via httpx, auto-fallback on 429/error/malformed JSON, in-memory content-keyed cache (force_refresh escape hatch); structured case assembler (demographics/HPI/symptoms/vitals/social/history/meds/allergies); classifier output fed as cross-check; strict-JSON prompt with lenient extraction; writer-gated + audited; 50 tests green; LIVE-verified: Groq gpt-oss-120b returned coherent CAP differential, cache hit on 2nd call |
 
 ## Phase C — Frontend & Integration
 
@@ -42,6 +42,9 @@ Reference docs: `project-roadmap.md` (authoritative) · `doctor-diagnosis-assist
 
 | Date | Decision | Rationale |
 |---|---|---|
+| 2026-08-24 | Model names refreshed at Step 7: Step-0 placeholders were stale by Aug 2026 — Groq `llama-3.3-70b-versatile` retired (→ `openai/gpt-oss-120b`), OpenRouter `z-ai/glm-5.2:free` upstream-rate-limited at verify time (fallback default → `nvidia/nemotron-3-super-120b-a12b:free`). Live catalogs queried via each provider's `/models` endpoint with user's keys | Free-tier model catalogs churn; always verify ids against the live API, never trust stale docs |
+| 2026-08-24 | Reason cache key uses `json.dumps(..., default=str)` — Postgres NUMERIC columns arrive as `Decimal` and broke serialization; caught in live smoke, NOT by mocks (test visits had no vitals) | Deterministic string coercion is fine for cache keys; mocks can't cover DB type-mapping gaps |
+| 2026-08-24 | LLM chain = raw httpx against OpenAI-compatible `/chat/completions` (no openai SDK); JSON-mode via strict prompt + lenient extraction (fenced block → outer braces); a parse failure counts as provider failure → next in chain; cache is in-process OrderedDict keyed by SHA256 of canonical case+classifier payload | Fewer deps, fewer moving parts for a student project; every failure mode funnels into one fallback path |
 | 2026-08-23 | Stack: FastAPI + Vite/React SPA + PostgreSQL (via Docker) + git from Step 0 | One language for API+ML (FastAPI); simple SPA for form-heavy internal tool; clean DB lifecycle via Docker |
 | 2026-08-23 | Scope: general-medicine MVP; structured symptom entry only (no free-text NLP); macro-F1 as model-selection metric | Roadmap open questions resolved; Symptom2Disease dataset not present in Data/ anyway |
 | 2026-08-23 | Classifier data: use Kaggle Training/Testing split AS-IS (never merge/re-split — near-duplicate leakage risk); CV within Training for selection; single final eval on Testing | User instruction + source-data near-duplicate warning |
@@ -74,6 +77,6 @@ Reference docs: `project-roadmap.md` (authoritative) · `doctor-diagnosis-assist
 ## Open items / pending decisions
 
 - [x] ~~User: install WSL2 + start Docker~~ — done (2026-08-24); Step 3 bring-up completed
-- [ ] **User:** create free Groq + OpenRouter API keys before Step 7 (email-only signup, no card)
+- [x] ~~User: create free Groq + OpenRouter API keys~~ — done (2026-08-24); keys live in `.env`, verified working (note: file must be named exactly `.env` at repo root, not `api.env`)
 - [ ] **User:** fill license fields in `docs/data-sources.md` from your Kaggle download history (low priority, before Step 13)
 - [ ] Step 11 decision: local-disk storage vs real S3 bucket for lab uploads

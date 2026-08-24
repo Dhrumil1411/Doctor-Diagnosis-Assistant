@@ -1,0 +1,155 @@
+import uuid
+
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from app.models.allergies import Allergy
+from app.models.medical_history import MedicalHistory
+from app.models.medications import Medication
+from app.models.patients import Patient
+from app.models.social_history import SocialHistory
+from app.models.symptoms import Symptom, SymptomStatus
+from app.models.visits import Visit
+from app.models.vitals import Vitals
+
+
+def _patient_age(patient: Patient) -> int | None:
+    if patient.date_of_birth is None:
+        return None
+    today = patient.date_of_birth.today()
+    return today.year - patient.date_of_birth.year - (
+        (today.month, today.day) < (patient.date_of_birth.month, patient.date_of_birth.day)
+    )
+
+
+def assemble_case(db: Session, visit_id: uuid.UUID) -> dict:
+    visit = db.get(Visit, visit_id)
+    if visit is None:
+        raise LookupError(f"visit {visit_id} not found")
+    patient = db.get(Patient, visit.patient_id)
+
+    symptoms = [
+        {"name": s.name, "severity": s.severity, "duration": s.duration}
+        for s in db.scalars(
+            select(Symptom).where(
+                Symptom.visit_id == visit.id, Symptom.status == SymptomStatus.present
+            )
+        ).all()
+    ]
+    absent = [
+        s.name
+        for s in db.scalars(
+            select(Symptom).where(
+                Symptom.visit_id == visit.id, Symptom.status == SymptomStatus.absent
+            )
+        ).all()
+    ]
+    unsure = [
+        s.name
+        for s in db.scalars(
+            select(Symptom).where(
+                Symptom.visit_id == visit.id, Symptom.status == SymptomStatus.unsure
+            )
+        ).all()
+    ]
+
+    vitals_row = db.scalar(select(Vitals).where(Vitals.visit_id == visit.id))
+    vitals = None
+    if vitals_row is not None:
+        vitals = {
+            k: getattr(vitals_row, k)
+            for k in (
+                "temperature_c",
+                "systolic_bp",
+                "diastolic_bp",
+                "heart_rate",
+                "respiratory_rate",
+                "spo2",
+                "blood_glucose_mg_dl",
+                "pain_score",
+            )
+            if getattr(vitals_row, k) is not None
+        }
+
+    social_row = db.scalar(select(SocialHistory).where(SocialHistory.visit_id == visit.id))
+    social = None
+    if social_row is not None:
+        social = {
+            k: getattr(social_row, k)
+            for k in (
+                "smoking_status",
+                "pack_years",
+                "alcohol_use",
+                "recreational_drug_use",
+                "diet",
+                "exercise",
+                "living_situation",
+                "occupational_exposure",
+                "travel_history",
+                "sexual_history",
+            )
+            if getattr(social_row, k) is not None
+        }
+
+    history = [
+        {
+            "category": h.category.value,
+            "name": h.name,
+            "onset_year": h.onset_year,
+            "resolved": h.resolved,
+        }
+        for h in db.scalars(
+            select(MedicalHistory).where(MedicalHistory.patient_id == patient.id)
+        ).all()
+    ]
+    medications = [
+        {
+            "name": m.name,
+            "dose": m.dose,
+            "frequency": m.frequency,
+            "is_active": m.is_active,
+        }
+        for m in db.scalars(
+            select(Medication).where(Medication.patient_id == patient.id)
+        ).all()
+    ]
+    allergies = [
+        {"allergen": a.allergen, "type": a.type.value, "reaction": a.reaction}
+        for a in db.scalars(
+            select(Allergy).where(Allergy.patient_id == patient.id)
+        ).all()
+    ]
+
+    return {
+        "patient": {
+            "age": _patient_age(patient),
+            "sex": patient.sex.value,
+            "gender_identity": patient.gender_identity,
+            "weight_kg": float(patient.weight_kg) if patient.weight_kg else None,
+            "height_cm": float(patient.height_cm) if patient.height_cm else None,
+            "occupation": patient.occupation,
+        },
+        "visit": {
+            "type": visit.visit_type.value,
+            "chief_complaint": visit.chief_complaint,
+            "complaint_duration": visit.complaint_duration,
+            "severity_score_1_to_10": visit.severity_score,
+            "progression": visit.progression.value if visit.progression else None,
+            "hpi_onset": visit.hpi_onset,
+            "hpi_location": visit.hpi_location,
+            "hpi_character": visit.hpi_character,
+            "hpi_aggravating_factors": visit.hpi_aggravating_factors,
+            "hpi_relieving_factors": visit.hpi_relieving_factors,
+            "hpi_radiation": visit.hpi_radiation,
+            "hpi_timing": visit.hpi_timing,
+            "working_notes": visit.working_notes,
+        },
+        "symptoms_present": symptoms,
+        "symptoms_absent": absent,
+        "symptoms_unsure": unsure,
+        "vitals": vitals,
+        "social_history": social,
+        "medical_history": history,
+        "medications": medications,
+        "allergies": allergies,
+    }

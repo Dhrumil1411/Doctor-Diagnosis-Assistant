@@ -15,6 +15,15 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://dda:dda@localhost:5432/dda"
     model_artifacts_dir: Path = REPO_ROOT / "ml" / "artifacts"
 
+    llm_provider_chain: str = "groq,openrouter"
+    groq_api_key: str = ""
+    groq_model: str = "openai/gpt-oss-120b"
+    openrouter_api_key: str = ""
+    openrouter_model: str = "nvidia/nemotron-3-super-120b-a12b:free"
+    llm_timeout_seconds: float = 60.0
+    llm_max_tokens: int = 1500
+    reason_cache_size: int = 500
+
 
 @lru_cache
 def get_settings() -> Settings:
