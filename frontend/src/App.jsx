@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./context/AuthContext.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import NewVisitPage from "./pages/NewVisitPage.jsx";
 
 function RequireAuth({ children }) {
   const { user, loading } = useAuth();
@@ -19,6 +20,14 @@ export default function App() {
         element={
           <RequireAuth>
             <HomePage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/new-visit"
+        element={
+          <RequireAuth>
+            <NewVisitPage />
           </RequireAuth>
         }
       />

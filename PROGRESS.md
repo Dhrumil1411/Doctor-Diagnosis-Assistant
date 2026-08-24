@@ -32,7 +32,7 @@ Reference docs: `project-roadmap.md` (authoritative) · `doctor-diagnosis-assist
 | Step | What | Status |
 |---|---|---|
 | 8 | Frontend skeleton (Vite + React), login wired | **done** (2026-08-24) — create-vite scaffold in `frontend/`; fetch-based API client with Bearer attach + auto-logout-on-401; AuthContext (bootstrap via `/auth/me`, login/logout); login page with proper error states (401 vs disabled-account); protected home route; Vite dev proxy `/api → :8000` (zero CORS config); lint clean, build clean, live proxy round-trip verified with seeded admin |
-| 9 | Intake form UI (sections 5.1–5.9 + notes) | not started |
+| 9 | Intake form UI (spec 2.1-2.9 + notes) | **done** (2026-08-24) - NewVisitPage with all 10 spec sections in one page: demographics w/ auto-BMI, visit info (attending = current user), chief complaint, OPQRST HPI, searchable symptom checklist over live /api/symptom-vocabulary (new endpoint) w/ per-symptom status/severity/duration, vitals grid, repeatable history/meds/allergies editors, social history, working notes; sequential save w/ per-step progress + error surfacing; lint+build clean; full call sequence replayed through Vite proxy against live stack |
 | 10 | Results screen + accept/edit/reject feedback loop | not started |
 | 11 | Labs/imaging upload *(skippable if user wants testing sooner)* | not started |
 | 12 | End-to-end testing — Synthea-generated + curated fictional cases | not started |

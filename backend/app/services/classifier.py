@@ -29,6 +29,12 @@ class ClassifierService:
     def known_symptom_ids(self) -> list[str]:
         return list(self._feature_index)
 
+    def vocabulary(self) -> list[dict]:
+        return [
+            {"id": sid, "display_name": self.display_names.get(sid, sid.replace("_", " ").title())}
+            for sid in sorted(self._feature_index)
+        ]
+
     def predict(self, symptom_ids: list[str], top_k: int = 5) -> dict:
         normalized = [s.strip().lower().replace(" ", "_") for s in symptom_ids]
         unknown = sorted({s for s in normalized if s not in self._feature_index})

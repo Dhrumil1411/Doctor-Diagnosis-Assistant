@@ -97,3 +97,151 @@ button:disabled {
   color: #b3261e;
   font-size: 0.9rem;
 }
+
+.success {
+  margin-top: 1rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  background: #e6f4ea;
+  color: #137333;
+  font-size: 0.92rem;
+}
+
+/* ---- intake form ---- */
+
+form h1 {
+  margin-bottom: 1rem;
+}
+
+.section {
+  max-width: 860px;
+  margin-bottom: 1.25rem;
+}
+
+.section h2 {
+  font-size: 1.05rem;
+  margin: 0 0 0.75rem;
+}
+
+.section h3 {
+  font-size: 0.95rem;
+  margin: 1.25rem 0 0.5rem;
+}
+
+.field label {
+  display: block;
+  margin: 0.6rem 0 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0 1rem;
+}
+
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0 1rem;
+}
+
+.grid4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0 1rem;
+}
+
+.entry-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+.entry-table th {
+  text-align: left;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #5a6572;
+  padding: 0.35rem 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.entry-table td {
+  padding: 0.3rem 0.4rem;
+  border-bottom: 1px solid #edf0f4;
+  vertical-align: middle;
+}
+
+.entry-table input,
+.entry-table select {
+  width: 100%;
+  min-width: 90px;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.92rem;
+}
+
+.entry-table input[type="checkbox"] {
+  width: auto;
+  min-width: 0;
+}
+
+.search-results {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.chip {
+  display: inline-block;
+  margin: 0;
+  width: auto;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  background: #eaf1ff;
+  color: #0f3ea8;
+  border: 1px solid #c4d7ff;
+  border-radius: 999px;
+}
+
+.chip:hover {
+  filter: brightness(0.96);
+}
+
+.btn-secondary {
+  width: auto;
+  margin-top: 0.6rem;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.9rem;
+  background: #fff;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.btn-danger {
+  width: auto;
+  margin: 0;
+  padding: 0.35rem 0.6rem;
+  background: transparent;
+  color: #b3261e;
+  border: 1px solid #f3c1bd;
+  font-weight: 700;
+}
+
+.btn-link {
+  display: block;
+  margin-top: 1rem;
+  padding: 0.6rem;
+  text-align: center;
+  border-radius: 6px;
+  background: #eaf1ff;
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}

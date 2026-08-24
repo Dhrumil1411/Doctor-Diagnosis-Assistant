@@ -6,6 +6,7 @@ from app.api.routes.patients import router as patients_router
 from app.api.routes.predict import router as predict_router
 from app.api.routes.reason import router as reason_router
 from app.api.routes.users import router as users_router
+from app.api.routes.vocabulary import router as vocabulary_router
 from app.api.routes.visits import router as visits_router
 
 
@@ -18,6 +19,7 @@ def create_app() -> FastAPI:
     app.include_router(visits_router)
     app.include_router(predict_router)
     app.include_router(reason_router)
+    app.include_router(vocabulary_router)
     return app
 
 

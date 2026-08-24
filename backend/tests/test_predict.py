@@ -140,3 +140,18 @@ def test_diabetes_case_ranks_diabetes_top(client: TestClient, doctor_headers):
     classifier = get_classifier()
     assert all(s in classifier.known_symptom_ids() for s in CLASSIC_FUNGAL)
     assert any("diabetes" in p["disease"].lower() for p in preds)
+
+
+def test_vocabulary_endpoint(client):
+    resp = client.get('/api/symptom-vocabulary')
+    assert resp.status_code == 401
+    from tests.conftest import login, PASSWORD, make_user
+    import uuid as _uuid
+    from app.models.users import UserRole as R
+    u = make_user(R.doctor)
+    tok = login(client, u.email).json()['access_token']
+    resp = client.get('/api/symptom-vocabulary', headers={'Authorization': f'Bearer {tok}'})
+    assert resp.status_code == 200
+    items = resp.json()
+    assert len(items) == 131
+    assert {'id', 'display_name'} == set(items[0].keys())
