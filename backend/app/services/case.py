@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.allergies import Allergy
+from app.models.general_exam import GeneralExam
 from app.models.medical_history import MedicalHistory
 from app.models.medications import Medication
 from app.models.patients import Patient
@@ -75,7 +76,7 @@ def assemble_case(db: Session, visit_id: uuid.UUID) -> dict:
     social = None
     if social_row is not None:
         social = {
-            k: getattr(social_row, k)
+            k: str(getattr(social_row, k)) if k == "lmp_date" else getattr(social_row, k)
             for k in (
                 "smoking_status",
                 "pack_years",
@@ -87,8 +88,26 @@ def assemble_case(db: Session, visit_id: uuid.UUID) -> dict:
                 "occupational_exposure",
                 "travel_history",
                 "sexual_history",
+                "sleep",
+                "bowel_movements",
+                "bladder_frequency",
+                "addictions",
+                "menstrual_history",
+                "lmp_date",
             )
             if getattr(social_row, k) is not None
+        }
+
+    exam_row = db.scalar(select(GeneralExam).where(GeneralExam.visit_id == visit.id))
+    general_exam = None
+    if exam_row is not None:
+        general_exam = {
+            k: getattr(exam_row, k)
+            for k in (
+                "pallor", "edema", "cyanosis", "clubbing",
+                "lymphadenopathy", "dehydration", "extra_notes",
+            )
+            if getattr(exam_row, k) is not None
         }
 
     history = [
@@ -149,6 +168,7 @@ def assemble_case(db: Session, visit_id: uuid.UUID) -> dict:
         "symptoms_unsure": unsure,
         "vitals": vitals,
         "social_history": social,
+        "general_exam": general_exam,
         "medical_history": history,
         "medications": medications,
         "allergies": allergies,

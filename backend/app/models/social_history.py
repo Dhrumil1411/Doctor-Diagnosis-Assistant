@@ -1,7 +1,8 @@
 import enum
 import uuid
+from datetime import date
 
-from sqlalchemy import Enum, ForeignKey, SmallInteger, String, Text, UniqueConstraint
+from sqlalchemy import Date, Enum, ForeignKey, SmallInteger, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
@@ -36,3 +37,9 @@ class SocialHistory(Base):
     occupational_exposure: Mapped[str | None] = mapped_column(String(255))
     travel_history: Mapped[str | None] = mapped_column(Text)
     sexual_history: Mapped[str | None] = mapped_column(Text)
+    sleep: Mapped[str | None] = mapped_column(String(64))
+    bowel_movements: Mapped[str | None] = mapped_column(String(64))
+    bladder_frequency: Mapped[str | None] = mapped_column(String(64))
+    addictions: Mapped[str | None] = mapped_column(String(255))
+    menstrual_history: Mapped[str | None] = mapped_column(String(255))
+    lmp_date: Mapped[date | None] = mapped_column(Date)

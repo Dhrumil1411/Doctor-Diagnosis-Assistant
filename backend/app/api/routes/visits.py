@@ -7,11 +7,14 @@ from sqlalchemy.orm import Session
 from app.api.deps import require_reader, require_writer
 from app.api.routes.patients import _get_patient_or_404
 from app.db.base import get_db
+from app.models.general_exam import GeneralExam
 from app.models.social_history import SocialHistory
 from app.models.symptoms import Symptom
 from app.models.visits import Visit
 from app.models.vitals import Vitals
 from app.schemas.visit import (
+    GeneralExamRead,
+    GeneralExamUpsert,
     SocialHistoryRead,
     SocialHistoryUpsert,
     SymptomEntryCreate,
@@ -80,6 +83,8 @@ def get_visit(
     detail.vitals = db.scalar(select(Vitals).where(Vitals.visit_id == visit.id))
     detail.social_history = db.scalar(
         select(SocialHistory).where(SocialHistory.visit_id == visit.id))
+    detail.general_exam = db.scalar(
+        select(GeneralExam).where(GeneralExam.visit_id == visit.id))
     return detail
 
 
@@ -168,3 +173,28 @@ def upsert_social_history(
     db.commit()
     db.refresh(social)
     return social
+
+
+@router.put("/api/visits/{visit_id}/general-exam", response_model=GeneralExamRead)
+def upsert_general_exam(
+    visit_id: uuid.UUID,
+    payload: GeneralExamUpsert,
+    db: Session = Depends(get_db),
+    user=Depends(require_writer),
+) -> GeneralExam:
+    visit = _get_visit_or_404(db, visit_id)
+    exam = db.scalar(select(GeneralExam).where(GeneralExam.visit_id == visit.id))
+    changes = payload.model_dump(exclude_unset=True)
+    if exam is None:
+        exam = GeneralExam(**changes, visit_id=visit.id)
+        db.add(exam)
+        audited_action = "create"
+    else:
+        for field, value in changes.items():
+            setattr(exam, field, value)
+        audited_action = "update"
+    record_audit(db, actor_user_id=user.id, action=audited_action,
+                 entity_type="general_exam", entity_id=exam.id)
+    db.commit()
+    db.refresh(exam)
+    return exam

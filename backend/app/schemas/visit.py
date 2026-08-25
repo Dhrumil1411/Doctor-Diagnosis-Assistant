@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import date, datetime
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -63,9 +63,45 @@ class SocialHistoryUpsert(BaseModel):
     occupational_exposure: str | None = Field(default=None, max_length=255)
     travel_history: str | None = None
     sexual_history: str | None = None
+    sleep: str | None = Field(default=None, max_length=64)
+    bowel_movements: str | None = Field(default=None, max_length=64)
+    bladder_frequency: str | None = Field(default=None, max_length=64)
+    addictions: str | None = Field(default=None, max_length=255)
+    menstrual_history: str | None = Field(default=None, max_length=255)
+    lmp_date: date | None = None
 
 
 class SocialHistoryRead(SocialHistoryUpsert):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    visit_id: uuid.UUID
+
+
+EXAM_SIGN_VALUES = {"present", "absent"}
+
+
+class GeneralExamUpsert(BaseModel):
+    pallor: str | None = Field(default=None, max_length=24)
+    edema: str | None = Field(default=None, max_length=24)
+    cyanosis: str | None = Field(default=None, max_length=24)
+    clubbing: str | None = Field(default=None, max_length=24)
+    lymphadenopathy: str | None = Field(default=None, max_length=24)
+    dehydration: str | None = Field(default=None, max_length=24)
+    extra_notes: str | None = None
+
+    @model_validator(mode="after")
+    def check_signs(self) -> "GeneralExamUpsert":
+        for field in (
+            "pallor", "edema", "cyanosis", "clubbing", "lymphadenopathy", "dehydration",
+        ):
+            value = getattr(self, field)
+            if value is not None and value not in EXAM_SIGN_VALUES:
+                raise ValueError(f"{field} must be one of: absent, present")
+        return self
+
+
+class GeneralExamRead(GeneralExamUpsert):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID
@@ -123,3 +159,4 @@ class VisitDetail(VisitRead):
     symptoms: list[SymptomEntryRead] = []
     vitals: VitalsRead | None = None
     social_history: SocialHistoryRead | None = None
+    general_exam: GeneralExamRead | None = None

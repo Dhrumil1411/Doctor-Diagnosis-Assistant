@@ -5,6 +5,9 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   server: {
+    // allowedHosts:true permits temporary trycloudflare.com demo tunnels;
+    // remove when not tunneling.
+    allowedHosts: true,
     proxy: {
       '/api': {
         target: 'http://localhost:8000',

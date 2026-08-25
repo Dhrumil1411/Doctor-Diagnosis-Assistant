@@ -42,6 +42,22 @@ const EMPTY_SOCIAL = {
   occupational_exposure: "",
   travel_history: "",
   sexual_history: "",
+  sleep: "",
+  bowel_movements: "",
+  bladder_frequency: "",
+  addictions: "",
+  menstrual_history: "",
+  lmp_date: "",
+};
+
+const EMPTY_EXAM = {
+  pallor: "",
+  edema: "",
+  cyanosis: "",
+  clubbing: "",
+  lymphadenopathy: "",
+  dehydration: "",
+  extra_notes: "",
 };
 
 export default function NewVisitPage() {
@@ -69,6 +85,7 @@ export default function NewVisitPage() {
   const [medications, setMedications] = useState([]);
   const [allergies, setAllergies] = useState([]);
   const [social, setSocial] = useState(EMPTY_SOCIAL);
+  const [exam, setExam] = useState(EMPTY_EXAM);
   const [workingNotes, setWorkingNotes] = useState("");
 
   const [busyLabel, setBusyLabel] = useState("");
@@ -134,8 +151,18 @@ export default function NewVisitPage() {
         await api.put(`/visits/${vid}/vitals`, vitalsPayload);
       }
       const socialPayload = compact(social);
-      if (Object.keys(socialPayload).length > 1 || social.smoking_status !== "unknown") {
-        await api.put(`/visits/${vid}/social-history`, socialPayload);
+      const hasSocial =
+        Object.keys(socialPayload).length > 1 || social.smoking_status !== "unknown";
+      if (hasSocial) {
+        await api.put(`/visits/${vid}/social-history`, {
+          ...socialPayload,
+          lmp_date: social.lmp_date || undefined,
+        });
+      }
+
+      const examPayload = compact(exam);
+      if (Object.keys(examPayload).length > 0) {
+        await api.put(`/visits/${vid}/general-exam`, examPayload);
       }
 
       navigate("/", { state: { savedVisitId: vid, patientName: patient.full_name } });
@@ -238,7 +265,8 @@ export default function NewVisitPage() {
         </div>
       </FormSection>
 
-      <FormSection title="2.7 Past medical history">
+      <FormSection title="2.7 Past medical history"
+        hint="Use Category = Family history to record diseases in parents/siblings.">
         <ListEditor
           entries={history}
           onChange={setHistory}
@@ -291,7 +319,8 @@ export default function NewVisitPage() {
         />
       </FormSection>
 
-      <FormSection title="2.9 Social & lifestyle history" hint="Only what is clinically relevant.">
+      <FormSection title="2.9 Personal history" hint="Fill what is relevant for this case.">
+        <h3>Personal & social</h3>
         <div className="grid3">
           <SelectInput id="smoke" label="Smoking" value={social.smoking_status} onChange={(v) => setSocial((s) => ({ ...s, smoking_status: v }))}
             options={[
@@ -302,14 +331,66 @@ export default function NewVisitPage() {
             ]} />
           <TextInput id="packyears" label="Pack-years" type="number" min="0" value={social.pack_years} onChange={(v) => setSocial((s) => ({ ...s, pack_years: v }))} />
           <TextInput id="alc" label="Alcohol use" value={social.alcohol_use} onChange={(v) => setSocial((s) => ({ ...s, alcohol_use: v }))} />
+          <SelectInput id="diet" label="Diet" value={social.diet} onChange={(v) => setSocial((s) => ({ ...s, diet: v }))}
+            options={[
+              { value: "", label: "-" },
+              { value: "vegetarian", label: "Vegetarian" },
+              { value: "non_veg", label: "Non-veg" },
+              { value: "eggetarian", label: "Eggetarian" },
+            ]} />
+          <SelectInput id="sleep" label="Sleep" value={social.sleep} onChange={(v) => setSocial((s) => ({ ...s, sleep: v }))}
+            options={[
+              { value: "", label: "-" },
+              { value: "adequate", label: "Adequate" },
+              { value: "inadequate", label: "Not adequate" },
+            ]} />
+          <SelectInput id="bowel" label="Bowel movements" value={social.bowel_movements} onChange={(v) => setSocial((s) => ({ ...s, bowel_movements: v }))}
+            options={[
+              { value: "", label: "-" },
+              { value: "regular", label: "Regular" },
+              { value: "irregular", label: "Irregular" },
+            ]} />
+          <SelectInput id="bladder" label="Bladder frequency" value={social.bladder_frequency} onChange={(v) => setSocial((s) => ({ ...s, bladder_frequency: v }))}
+            options={[
+              { value: "", label: "-" },
+              { value: "normal", label: "Normal" },
+              { value: "abnormal", label: "Abnormal" },
+            ]} />
+          <TextInput id="addictions" label="Addictions (tobacco etc.)" value={social.addictions} onChange={(v) => setSocial((s) => ({ ...s, addictions: v }))} />
           <TextInput id="drugs" label="Recreational drugs" value={social.recreational_drug_use} onChange={(v) => setSocial((s) => ({ ...s, recreational_drug_use: v }))} />
-          <TextInput id="diet" label="Diet" value={social.diet} onChange={(v) => setSocial((s) => ({ ...s, diet: v }))} />
           <TextInput id="exer" label="Exercise" value={social.exercise} onChange={(v) => setSocial((s) => ({ ...s, exercise: v }))} />
           <TextInput id="living" label="Living situation" value={social.living_situation} onChange={(v) => setSocial((s) => ({ ...s, living_situation: v }))} />
           <TextInput id="occexp" label="Occupational exposure" value={social.occupational_exposure} onChange={(v) => setSocial((s) => ({ ...s, occupational_exposure: v }))} />
         </div>
+        {demo.sex === "female" && (
+          <>
+            <h3>Menstrual history (if applicable)</h3>
+            <div className="grid2">
+              <TextInput id="lmp" label="LMP - last menstrual period" type="date" value={social.lmp_date} onChange={(v) => setSocial((s) => ({ ...s, lmp_date: v }))} />
+              <TextInput id="menstrual" label="Cycle details" placeholder="e.g. regular 28-day cycles" value={social.menstrual_history} onChange={(v) => setSocial((s) => ({ ...s, menstrual_history: v }))} />
+            </div>
+          </>
+        )}
         <TextArea id="travel" label="Travel history" value={social.travel_history} onChange={(v) => setSocial((s) => ({ ...s, travel_history: v }))} rows={2} />
         <TextArea id="sexual" label="Sexual history (only if relevant)" value={social.sexual_history} onChange={(v) => setSocial((s) => ({ ...s, sexual_history: v }))} rows={2} />
+      </FormSection>
+
+      <FormSection title="General examination"
+        hint="Leave as '-' for anything not assessed.">
+        <div className="grid3">
+          {[["pallor", "Pallor"], ["edema", "Edema"], ["cyanosis", "Cyanosis"],
+            ["clubbing", "Clubbing"], ["lymphadenopathy", "Lymphadenopathy"],
+            ["dehydration", "Dehydration"]].map(([key, label]) => (
+            <SelectInput key={key} id={key} label={label} value={exam[key]}
+              onChange={(v) => setExam((s) => ({ ...s, [key]: v }))}
+              options={[
+                { value: "", label: "-" },
+                { value: "absent", label: "Absent" },
+                { value: "present", label: "Present" },
+              ]} />
+          ))}
+        </div>
+        <TextArea id="examnotes" label="Other exam findings" value={exam.extra_notes} onChange={(v) => setExam((s) => ({ ...s, extra_notes: v }))} rows={2} />
       </FormSection>
 
       <FormSection title="2.12 Working notes" hint="Free-text clinical impressions - sent to the reasoning engine as extra context.">

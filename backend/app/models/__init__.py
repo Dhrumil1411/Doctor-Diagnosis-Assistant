@@ -6,6 +6,7 @@ from app.models.diagnoses import (
     DiagnosisSource,
     DoctorDecision,
 )
+from app.models.general_exam import GeneralExam
 from app.models.lab_results import LabCategory, LabResult
 from app.models.medical_history import HistoryCategory, MedicalHistory
 from app.models.medications import Medication
@@ -24,6 +25,7 @@ __all__ = [
     "Diagnosis",
     "DiagnosisSource",
     "DoctorDecision",
+    "GeneralExam",
     "HistoryCategory",
     "LabCategory",
     "LabResult",

@@ -262,6 +262,67 @@ def test_social_history_upsert(client: TestClient, doctor_headers):
     assert detail["social_history"]["smoking_status"] == "current"
 
 
+def test_personal_history_fields_round_trip(client: TestClient, doctor_headers):
+    pid = client.post(
+        "/api/patients", json=patient_payload(sex="female"), headers=doctor_headers
+    ).json()["id"]
+    vid = client.post("/api/visits", json=visit_payload(pid), headers=doctor_headers).json()["id"]
+
+    resp = client.put(
+        f"/api/visits/{vid}/social-history",
+        json={
+            "diet": "vegetarian",
+            "sleep": "adequate",
+            "bowel_movements": "regular",
+            "bladder_frequency": "normal",
+            "addictions": "none reported",
+            "menstrual_history": "regular 28-day cycles",
+            "lmp_date": "2026-08-10",
+        },
+        headers=doctor_headers,
+    )
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["diet"] == "vegetarian"
+    assert body["sleep"] == "adequate"
+    assert body["bowel_movements"] == "regular"
+    assert body["bladder_frequency"] == "normal"
+    assert body["lmp_date"] == "2026-08-10"
+
+    detail = client.get(f"/api/visits/{vid}", headers=doctor_headers).json()
+    assert detail["social_history"]["menstrual_history"] == "regular 28-day cycles"
+
+
+def test_general_exam_upsert_and_validation(client: TestClient, doctor_headers):
+    pid = client.post(
+        "/api/patients", json=patient_payload(), headers=doctor_headers
+    ).json()["id"]
+    vid = client.post("/api/visits", json=visit_payload(pid), headers=doctor_headers).json()["id"]
+
+    created = client.put(
+        f"/api/visits/{vid}/general-exam",
+        json={"pallor": "present", "edema": "absent", "cyanosis": "absent",
+              "clubbing": "absent", "lymphadenopathy": "absent", "dehydration": "absent"},
+        headers=doctor_headers,
+    )
+    assert created.status_code == 200
+    assert created.json()["pallor"] == "present"
+
+    updated = client.put(
+        f"/api/visits/{vid}/general-exam", json={"pallor": "absent"}, headers=doctor_headers
+    )
+    assert updated.json()["pallor"] == "absent"
+    assert updated.json()["edema"] == "absent"
+
+    bad = client.put(
+        f"/api/visits/{vid}/general-exam", json={"pallor": "maybe"}, headers=doctor_headers
+    )
+    assert bad.status_code == 422
+
+    detail = client.get(f"/api/visits/{vid}", headers=doctor_headers).json()
+    assert detail["general_exam"]["pallor"] == "absent"
+
+
 def test_read_only_can_read_not_write(client: TestClient, readonly_headers, doctor_headers):
     pid = client.post(
         "/api/patients", json=patient_payload(), headers=doctor_headers
