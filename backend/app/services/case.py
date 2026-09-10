@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.models.allergies import Allergy
 from app.models.general_exam import GeneralExam
+from app.models.lab_results import LabResult
 from app.models.medical_history import MedicalHistory
 from app.models.medications import Medication
 from app.models.patients import Patient
@@ -138,6 +139,18 @@ def assemble_case(db: Session, visit_id: uuid.UUID) -> dict:
             select(Allergy).where(Allergy.patient_id == patient.id)
         ).all()
     ]
+    labs = [
+        {
+            "category": l.category.value,
+            "test_name": l.test_name,
+            "result_summary": l.result_summary,
+            "performed_at": str(l.performed_at) if l.performed_at else None,
+            "has_file": bool(l.file_path),
+        }
+        for l in db.scalars(
+            select(LabResult).where(LabResult.visit_id == visit.id).order_by(LabResult.id.asc())
+        ).all()
+    ]
 
     return {
         "patient": {
@@ -169,6 +182,7 @@ def assemble_case(db: Session, visit_id: uuid.UUID) -> dict:
         "vitals": vitals,
         "social_history": social,
         "general_exam": general_exam,
+        "lab_results": labs,
         "medical_history": history,
         "medications": medications,
         "allergies": allergies,

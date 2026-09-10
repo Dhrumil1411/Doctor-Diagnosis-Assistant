@@ -32,8 +32,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="login-wrap">
-      <form className="card login-card" onSubmit={handleSubmit}>
+    <div className="container">
+      <form className="card card-auth" onSubmit={handleSubmit}>
         <h1>Doctor Diagnosis Assistant</h1>
         <p className="muted">Clinical decision support - sign in to continue</p>
 

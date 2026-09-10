@@ -70,62 +70,64 @@ export default function SymptomChecklist({ entries, onChange }) {
       {entries.length === 0 ? (
         <p className="muted">No symptoms marked yet. Search above to add them.</p>
       ) : (
-        <table className="entry-table">
-          <thead>
-            <tr>
-              <th>Symptom</th>
-              <th>Status</th>
-              <th>Severity (1-10)</th>
-              <th>Duration</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map((e, i) => (
-              <tr key={e.name}>
-                <td>{nameOf(e.name)}</td>
-                <td>
-                  <select
-                    value={e.status}
-                    onChange={(ev) => update(i, { status: ev.target.value })}
-                  >
-                    <option value="present">Present</option>
-                    <option value="absent">Absent</option>
-                    <option value="unsure">Unsure</option>
-                  </select>
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    min="1"
-                    max="10"
-                    value={e.severity}
-                    disabled={e.status !== "present"}
-                    onChange={(ev) => update(i, { severity: toNum(ev.target.value) ?? "" })}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    placeholder="e.g. 3 days"
-                    value={e.duration}
-                    onChange={(ev) => update(i, { duration: ev.target.value })}
-                  />
-                </td>
-                <td>
-                  <button
-                    type="button"
-                    className="btn-danger"
-                    onClick={() => remove(i)}
-                    aria-label={`Remove ${nameOf(e.name)}`}
-                  >
-                    x
-                  </button>
-                </td>
+        <div className="table-responsive">
+          <table className="entry-table">
+            <thead>
+              <tr>
+                <th>Symptom</th>
+                <th>Status</th>
+                <th>Severity (1-10)</th>
+                <th>Duration</th>
+                <th></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {entries.map((e, i) => (
+                <tr key={e.name}>
+                  <td>{nameOf(e.name)}</td>
+                  <td>
+                    <select
+                      value={e.status}
+                      onChange={(ev) => update(i, { status: ev.target.value })}
+                    >
+                      <option value="present">Present</option>
+                      <option value="absent">Absent</option>
+                      <option value="unsure">Unsure</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="1"
+                      max="10"
+                      value={e.severity}
+                      disabled={e.status !== "present"}
+                      onChange={(ev) => update(i, { severity: toNum(ev.target.value) ?? "" })}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      placeholder="e.g. 3 days"
+                      value={e.duration}
+                      onChange={(ev) => update(i, { duration: ev.target.value })}
+                    />
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      className="btn-danger"
+                      onClick={() => remove(i)}
+                      aria-label={`Remove ${nameOf(e.name)}`}
+                    >
+                      ✕
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

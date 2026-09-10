@@ -3,8 +3,18 @@ import uuid
 from datetime import datetime
 from typing import Any
 
-from sqlalchemy import Boolean, DateTime, Enum, Float, ForeignKey, Integer, String, Text, func
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    DateTime,
+    Enum,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    func,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base, TimestampMixin
@@ -54,5 +64,5 @@ class Diagnosis(TimestampMixin, Base):
     accepted_suggestion_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("diagnoses.id", ondelete="SET NULL")
     )
-    raw_payload: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
+    raw_payload: Mapped[dict[str, Any] | None] = mapped_column(JSON)
     decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

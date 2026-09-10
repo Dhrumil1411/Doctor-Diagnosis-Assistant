@@ -165,7 +165,7 @@ export default function NewVisitPage() {
         await api.put(`/visits/${vid}/general-exam`, examPayload);
       }
 
-      navigate("/", { state: { savedVisitId: vid, patientName: patient.full_name } });
+      navigate(`/visits/${vid}/results`);
     } catch (err) {
       setError(`Save failed while ${busyLabel || "starting"} - ${err.message}`);
       setBusyLabel("");
@@ -177,11 +177,12 @@ export default function NewVisitPage() {
   const setH = (key) => (v) => setHpi((s) => ({ ...s, [key]: v }));
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>New consultation</h1>
+    <div className="container">
+      <form onSubmit={handleSubmit}>
+        <h1>New consultation</h1>
 
-      <FormSection title="2.1 Patient demographics">
-        <div className="grid2">
+        <FormSection title="2.1 Patient demographics">
+          <div className="grid-2">
           <TextInput id="full_name" label="Full name *" value={demo.full_name} onChange={setD("full_name")} />
           <TextInput id="mrn" label="MRN (optional)" value={demo.mrn} onChange={setD("mrn")} />
           <TextInput id="dob" label="Date of birth" type="date" value={demo.date_of_birth} onChange={setD("date_of_birth")} />
@@ -203,7 +204,7 @@ export default function NewVisitPage() {
       </FormSection>
 
       <FormSection title="2.2 Visit information">
-        <div className="grid3">
+        <div className="grid-3">
           <TextInput id="occurred_at" label="Date & time" type="datetime-local" value={visitInfo.occurred_at} onChange={setV("occurred_at")} />
           <SelectInput id="vtype" label="Visit type" value={visitInfo.visit_type} onChange={setV("visit_type")}
             options={[
@@ -219,7 +220,7 @@ export default function NewVisitPage() {
 
       <FormSection title="2.3 Chief complaint">
         <TextArea id="cc" label="What brought the patient in today?" value={visitInfo.chief_complaint} onChange={setV("chief_complaint")} rows={2} />
-        <div className="grid3">
+        <div className="grid-3">
           <TextInput id="cdur" label="Duration" placeholder="e.g. 3 days" value={visitInfo.complaint_duration} onChange={setV("complaint_duration")} />
           <TextInput id="sev" label="Severity (1-10)" type="number" min="1" max="10" value={visitInfo.severity_score} onChange={setV("severity_score")} />
           <SelectInput id="prog" label="Progression" value={visitInfo.progression} onChange={setV("progression")}
@@ -234,14 +235,14 @@ export default function NewVisitPage() {
       </FormSection>
 
       <FormSection title="2.4 History of present illness (OPQRST)" hint="Optional - fill what is relevant.">
-        <div className="grid2">
+        <div className="grid-2">
           <TextInput id="onset" label="Onset (sudden/gradual)" value={hpi.hpi_onset} onChange={setH("hpi_onset")} />
           <TextInput id="loc" label="Location" value={hpi.hpi_location} onChange={setH("hpi_location")} />
           <TextInput id="char" label="Character (sharp/dull/burning...)" value={hpi.hpi_character} onChange={setH("hpi_character")} />
           <TextInput id="timing" label="Timing (constant/intermittent...)" value={hpi.hpi_timing} onChange={setH("hpi_timing")} />
           <TextInput id="rad" label="Radiation" value={hpi.hpi_radiation} onChange={setH("hpi_radiation")} />
         </div>
-        <div className="grid2">
+        <div className="grid-2">
           <TextArea id="agg" label="Aggravating factors" value={hpi.hpi_aggravating_factors} onChange={setH("hpi_aggravating_factors")} rows={2} />
           <TextArea id="rel" label="Relieving factors" value={hpi.hpi_relieving_factors} onChange={setH("hpi_relieving_factors")} rows={2} />
         </div>
@@ -253,7 +254,7 @@ export default function NewVisitPage() {
       </FormSection>
 
       <FormSection title="2.6 Vitals" hint="Leave blank what was not measured.">
-        <div className="grid4">
+        <div className="grid-4">
           <TextInput id="temp" label="Temp (C)" type="number" step="0.1" value={vitals.temperature_c} onChange={(v) => setVitals((s) => ({ ...s, temperature_c: v }))} />
           <TextInput id="sysbp" label="Systolic BP" type="number" value={vitals.systolic_bp} onChange={(v) => setVitals((s) => ({ ...s, systolic_bp: v }))} />
           <TextInput id="diabp" label="Diastolic BP" type="number" value={vitals.diastolic_bp} onChange={(v) => setVitals((s) => ({ ...s, diastolic_bp: v }))} />
@@ -321,7 +322,7 @@ export default function NewVisitPage() {
 
       <FormSection title="2.9 Personal history" hint="Fill what is relevant for this case.">
         <h3>Personal & social</h3>
-        <div className="grid3">
+        <div className="grid-3">
           <SelectInput id="smoke" label="Smoking" value={social.smoking_status} onChange={(v) => setSocial((s) => ({ ...s, smoking_status: v }))}
             options={[
               { value: "never", label: "Never" },
@@ -365,7 +366,7 @@ export default function NewVisitPage() {
         {demo.sex === "female" && (
           <>
             <h3>Menstrual history (if applicable)</h3>
-            <div className="grid2">
+            <div className="grid-2">
               <TextInput id="lmp" label="LMP - last menstrual period" type="date" value={social.lmp_date} onChange={(v) => setSocial((s) => ({ ...s, lmp_date: v }))} />
               <TextInput id="menstrual" label="Cycle details" placeholder="e.g. regular 28-day cycles" value={social.menstrual_history} onChange={(v) => setSocial((s) => ({ ...s, menstrual_history: v }))} />
             </div>
@@ -377,7 +378,7 @@ export default function NewVisitPage() {
 
       <FormSection title="General examination"
         hint="Leave as '-' for anything not assessed.">
-        <div className="grid3">
+        <div className="grid-3">
           {[["pallor", "Pallor"], ["edema", "Edema"], ["cyanosis", "Cyanosis"],
             ["clubbing", "Clubbing"], ["lymphadenopathy", "Lymphadenopathy"],
             ["dehydration", "Dehydration"]].map(([key, label]) => (
@@ -402,5 +403,6 @@ export default function NewVisitPage() {
         {busyLabel || "Save consultation"}
       </button>
     </form>
+    </div>
   );
 }

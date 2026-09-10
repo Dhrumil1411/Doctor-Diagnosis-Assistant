@@ -17,9 +17,9 @@ class Settings(BaseSettings):
 
     llm_provider_chain: str = "groq,openrouter"
     groq_api_key: str = ""
-    groq_model: str = "openai/gpt-oss-120b"
+    groq_model: str = "openai/gpt-oss-20b"
     openrouter_api_key: str = ""
-    openrouter_model: str = "nvidia/nemotron-3-super-120b-a12b:free"
+    openrouter_model: str = "nvidia/nemotron-3.5-lightning:free"
     llm_timeout_seconds: float = 60.0
     llm_max_tokens: int = 1500
     reason_cache_size: int = 500

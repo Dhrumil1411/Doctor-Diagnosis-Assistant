@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from app.models.social_history import SmokingStatus
 from app.models.symptoms import SymptomStatus
 from app.models.visits import Progression, VisitType
+from app.schemas.lab_result import LabResultRead
 
 
 class SymptomEntryCreate(BaseModel):
@@ -160,3 +161,4 @@ class VisitDetail(VisitRead):
     vitals: VitalsRead | None = None
     social_history: SocialHistoryRead | None = None
     general_exam: GeneralExamRead | None = None
+    labs: list[LabResultRead] = []

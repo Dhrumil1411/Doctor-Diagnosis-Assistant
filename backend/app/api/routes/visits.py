@@ -8,10 +8,12 @@ from app.api.deps import require_reader, require_writer
 from app.api.routes.patients import _get_patient_or_404
 from app.db.base import get_db
 from app.models.general_exam import GeneralExam
+from app.models.lab_results import LabResult
 from app.models.social_history import SocialHistory
 from app.models.symptoms import Symptom
 from app.models.visits import Visit
 from app.models.vitals import Vitals
+from app.api.routes.labs import _to_read_schema
 from app.schemas.visit import (
     GeneralExamRead,
     GeneralExamUpsert,
@@ -85,6 +87,10 @@ def get_visit(
         select(SocialHistory).where(SocialHistory.visit_id == visit.id))
     detail.general_exam = db.scalar(
         select(GeneralExam).where(GeneralExam.visit_id == visit.id))
+    labs = list(db.scalars(
+        select(LabResult).where(LabResult.visit_id == visit.id).order_by(LabResult.id.asc())
+    ).all())
+    detail.labs = [_to_read_schema(lab) for lab in labs]
     return detail
 
 

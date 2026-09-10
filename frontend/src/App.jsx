@@ -4,6 +4,7 @@ import { useAuth } from "./context/AuthContext.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import NewVisitPage from "./pages/NewVisitPage.jsx";
+import ResultsPage from "./pages/ResultsPage.jsx";
 
 function RequireAuth({ children }) {
   const { user, loading } = useAuth();
@@ -28,6 +29,14 @@ export default function App() {
         element={
           <RequireAuth>
             <NewVisitPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/visits/:visitId/results"
+        element={
+          <RequireAuth>
+            <ResultsPage />
           </RequireAuth>
         }
       />

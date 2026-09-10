@@ -80,21 +80,30 @@ class ReasonCache:
 
 
 def extract_json_object(text: str) -> dict | None:
-    fenced = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
-    candidates = []
-    if fenced:
-        candidates.append(fenced.group(1))
-    brace_start = text.find("{")
-    brace_end = text.rfind("}")
-    if brace_start != -1 and brace_end > brace_start:
-        candidates.append(text[brace_start : brace_end + 1])
-    for candidate in candidates:
+    # 1. Look for ```json ... ``` blocks first
+    fenced_matches = re.findall(r"```(?:json)?\s*([\s\S]*?)\s*```", text)
+    for match in reversed(fenced_matches):
+        start = match.find("{")
+        end = match.rfind("}")
+        if start != -1 and end > start:
+            try:
+                parsed = json.loads(match[start : end + 1])
+                if isinstance(parsed, dict):
+                    return parsed
+            except json.JSONDecodeError:
+                continue
+
+    # 2. Look for outermost braces in full response
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end > start:
         try:
-            parsed = json.loads(candidate)
+            parsed = json.loads(text[start : end + 1])
             if isinstance(parsed, dict):
                 return parsed
         except json.JSONDecodeError:
-            continue
+            pass
+
     return None
 
 
@@ -106,18 +115,20 @@ class LLMClient:
         self._transport = transport
 
     def _call_provider(self, provider: LLMProvider, messages: list[dict]) -> str:
+        body = {
+            "model": provider.model,
+            "messages": messages,
+            "max_tokens": self.settings.llm_max_tokens,
+            "temperature": 0.2,
+            "response_format": {"type": "json_object"},
+        }
         with httpx.Client(
             timeout=self.settings.llm_timeout_seconds, transport=self._transport
         ) as client:
             resp = client.post(
                 f"{provider.base_url}/chat/completions",
                 headers={"Authorization": f"Bearer {provider.api_key}"},
-                json={
-                    "model": provider.model,
-                    "messages": messages,
-                    "max_tokens": self.settings.llm_max_tokens,
-                    "temperature": 0.2,
-                },
+                json=body,
             )
         if resp.status_code != 200:
             raise LLMError(f"{provider.name} HTTP {resp.status_code}: {resp.text[:200]}")
