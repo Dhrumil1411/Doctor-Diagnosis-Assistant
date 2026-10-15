@@ -13,6 +13,7 @@ from app.models.social_history import SocialHistory
 from app.models.symptoms import Symptom, SymptomStatus
 from app.models.visits import Visit
 from app.models.vitals import Vitals
+from app.services.symptom_mapper import get_symptom_mapper
 
 
 def _patient_age(patient: Patient) -> int | None:
@@ -29,31 +30,48 @@ def assemble_case(db: Session, visit_id: uuid.UUID) -> dict:
     if visit is None:
         raise LookupError(f"visit {visit_id} not found")
     patient = db.get(Patient, visit.patient_id)
+    mapper = get_symptom_mapper()
 
-    symptoms = [
-        {"name": s.name, "severity": s.severity, "duration": s.duration}
-        for s in db.scalars(
-            select(Symptom).where(
-                Symptom.visit_id == visit.id, Symptom.status == SymptomStatus.present
-            )
-        ).all()
-    ]
-    absent = [
-        s.name
-        for s in db.scalars(
-            select(Symptom).where(
-                Symptom.visit_id == visit.id, Symptom.status == SymptomStatus.absent
-            )
-        ).all()
-    ]
-    unsure = [
-        s.name
-        for s in db.scalars(
-            select(Symptom).where(
-                Symptom.visit_id == visit.id, Symptom.status == SymptomStatus.unsure
-            )
-        ).all()
-    ]
+    raw_present_symptoms = db.scalars(
+        select(Symptom).where(
+            Symptom.visit_id == visit.id, Symptom.status == SymptomStatus.present
+        )
+    ).all()
+
+    symptoms = []
+    for s in raw_present_symptoms:
+        resolved = mapper.resolve_symptom(s.name)
+        symptoms.append({
+            "name": s.name,
+            "canonical_name": resolved.get("feature_id") or s.name,
+            "hpo_id": resolved.get("hpo_id") or s.code,
+            "hpo_label": resolved.get("hpo_label"),
+            "category": resolved.get("category"),
+            "severity": s.severity,
+            "duration": s.duration,
+        })
+
+    absent_raw = db.scalars(
+        select(Symptom).where(
+            Symptom.visit_id == visit.id, Symptom.status == SymptomStatus.absent
+        )
+    ).all()
+    absent = []
+    for s in absent_raw:
+        resolved = mapper.resolve_symptom(s.name)
+        absent.append({
+            "name": s.name,
+            "canonical_name": resolved.get("feature_id") or s.name,
+            "hpo_id": resolved.get("hpo_id") or s.code,
+        })
+    absent_names = [s["name"] for s in absent]
+
+    unsure_raw = db.scalars(
+        select(Symptom).where(
+            Symptom.visit_id == visit.id, Symptom.status == SymptomStatus.unsure
+        )
+    ).all()
+    unsure = [s.name for s in unsure_raw]
 
     vitals_row = db.scalar(select(Vitals).where(Vitals.visit_id == visit.id))
     vitals = None
@@ -152,32 +170,59 @@ def assemble_case(db: Session, visit_id: uuid.UUID) -> dict:
         ).all()
     ]
 
+    patient_block = {
+        "age": _patient_age(patient),
+        "sex": patient.sex.value,
+        "gender_identity": patient.gender_identity,
+        "weight_kg": float(patient.weight_kg) if patient.weight_kg else None,
+        "height_cm": float(patient.height_cm) if patient.height_cm else None,
+        "occupation": patient.occupation,
+    }
+
+    visit_block = {
+        "type": visit.visit_type.value,
+        "chief_complaint": visit.chief_complaint,
+        "complaint_duration": visit.complaint_duration,
+        "severity_score_1_to_10": visit.severity_score,
+        "progression": visit.progression.value if visit.progression else None,
+        "hpi_onset": visit.hpi_onset,
+        "hpi_location": visit.hpi_location,
+        "hpi_character": visit.hpi_character,
+        "hpi_aggravating_factors": visit.hpi_aggravating_factors,
+        "hpi_relieving_factors": visit.hpi_relieving_factors,
+        "hpi_radiation": visit.hpi_radiation,
+        "hpi_timing": visit.hpi_timing,
+        "working_notes": visit.working_notes,
+    }
+
+    # DDXPlus Clinical Ontological Structure (Antecedents vs Active Evidences vs Pertinent Negatives)
+    antecedents = {
+        "demographics": patient_block,
+        "past_medical_history": history,
+        "current_medications": medications,
+        "known_allergies": allergies,
+        "social_and_risk_factors": social,
+    }
+
+    active_evidences = {
+        "chief_complaint_and_hpi": visit_block,
+        "presenting_symptoms_with_hpo": symptoms,
+        "vital_signs": vitals,
+        "physical_examination": general_exam,
+        "diagnostic_labs_and_imaging": labs,
+    }
+
+    pertinent_negatives = {
+        "absent_symptoms": absent,
+        "unsure_symptoms": unsure,
+    }
+
     return {
-        "patient": {
-            "age": _patient_age(patient),
-            "sex": patient.sex.value,
-            "gender_identity": patient.gender_identity,
-            "weight_kg": float(patient.weight_kg) if patient.weight_kg else None,
-            "height_cm": float(patient.height_cm) if patient.height_cm else None,
-            "occupation": patient.occupation,
-        },
-        "visit": {
-            "type": visit.visit_type.value,
-            "chief_complaint": visit.chief_complaint,
-            "complaint_duration": visit.complaint_duration,
-            "severity_score_1_to_10": visit.severity_score,
-            "progression": visit.progression.value if visit.progression else None,
-            "hpi_onset": visit.hpi_onset,
-            "hpi_location": visit.hpi_location,
-            "hpi_character": visit.hpi_character,
-            "hpi_aggravating_factors": visit.hpi_aggravating_factors,
-            "hpi_relieving_factors": visit.hpi_relieving_factors,
-            "hpi_radiation": visit.hpi_radiation,
-            "hpi_timing": visit.hpi_timing,
-            "working_notes": visit.working_notes,
-        },
+        # Backward-compatible top-level keys
+        "patient": patient_block,
+        "visit": visit_block,
         "symptoms_present": symptoms,
-        "symptoms_absent": absent,
+        "symptoms_absent": absent_names,
         "symptoms_unsure": unsure,
         "vitals": vitals,
         "social_history": social,
@@ -186,4 +231,8 @@ def assemble_case(db: Session, visit_id: uuid.UUID) -> dict:
         "medical_history": history,
         "medications": medications,
         "allergies": allergies,
+        # DDXPlus Structured Evidence Blocks
+        "antecedents": antecedents,
+        "active_evidences": active_evidences,
+        "pertinent_negatives": pertinent_negatives,
     }

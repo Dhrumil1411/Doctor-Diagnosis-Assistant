@@ -49,6 +49,8 @@ def require_roles(*roles: UserRole):
 
 READER_ROLES = tuple(UserRole)
 WRITER_ROLES = (UserRole.doctor, UserRole.admin, UserRole.nurse)
+ADMIN_ROLES = (UserRole.admin,)
 
 require_reader = require_roles(*READER_ROLES)
 require_writer = require_roles(*WRITER_ROLES)
+require_admin = require_roles(*ADMIN_ROLES)

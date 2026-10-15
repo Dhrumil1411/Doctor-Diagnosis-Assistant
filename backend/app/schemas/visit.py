@@ -82,6 +82,22 @@ class SocialHistoryRead(SocialHistoryUpsert):
 EXAM_SIGN_VALUES = {"present", "absent"}
 
 
+def normalize_exam_sign(val: str | None) -> str | None:
+    if val is None:
+        return None
+    cleaned = str(val).strip().lower()
+    if not cleaned or cleaned in {"-", "none", "null", "not assessed", ""}:
+        return None
+    if cleaned in {"absent", "no", "negative", "normal", "nil", "0"}:
+        return "absent"
+    if cleaned in {
+        "present", "yes", "positive", "abnormal", "mild", "moderate",
+        "severe", "trace", "1+", "2+", "3+", "4+",
+    }:
+        return "present"
+    return cleaned
+
+
 class GeneralExamUpsert(BaseModel):
     pallor: str | None = Field(default=None, max_length=24)
     edema: str | None = Field(default=None, max_length=24)
@@ -90,6 +106,17 @@ class GeneralExamUpsert(BaseModel):
     lymphadenopathy: str | None = Field(default=None, max_length=24)
     dehydration: str | None = Field(default=None, max_length=24)
     extra_notes: str | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_signs_before(cls, data: object) -> object:
+        if isinstance(data, dict):
+            for field in (
+                "pallor", "edema", "cyanosis", "clubbing", "lymphadenopathy", "dehydration",
+            ):
+                if field in data:
+                    data[field] = normalize_exam_sign(data[field])
+        return data
 
     @model_validator(mode="after")
     def check_signs(self) -> "GeneralExamUpsert":

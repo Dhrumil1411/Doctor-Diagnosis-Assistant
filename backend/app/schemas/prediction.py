@@ -4,9 +4,9 @@ from pydantic import BaseModel, Field, model_validator
 
 
 class PredictRequest(BaseModel):
-    symptoms: list[str] | None = Field(default=None, min_length=1, max_length=131)
+    symptoms: list[str] | None = Field(default=None, min_length=1, max_length=500)
     visit_id: uuid.UUID | None = None
-    top_k: int = Field(default=5, ge=1, le=41)
+    top_k: int = Field(default=5, ge=1, le=50)
 
     @model_validator(mode="after")
     def check_exactly_one_source(self) -> "PredictRequest":
@@ -27,3 +27,4 @@ class PredictResponse(BaseModel):
     recognized_symptoms: list[str]
     unknown_symptoms: list[str]
     model_name: str
+    hpo_mappings: dict[str, str | None] = Field(default_factory=dict)

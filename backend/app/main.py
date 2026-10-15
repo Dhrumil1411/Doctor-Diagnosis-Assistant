@@ -3,10 +3,12 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
+from app.api.routes.audit import router as audit_router
 from app.api.routes.auth import router as auth_router
 from app.api.routes.diagnoses import router as diagnoses_router
 from app.api.routes.health import router as health_router
 from app.api.routes.labs import router as labs_router
+from app.api.routes.note_extractor import router as note_extractor_router
 from app.api.routes.patients import router as patients_router
 from app.api.routes.predict import router as predict_router
 from app.api.routes.reason import router as reason_router
@@ -26,6 +28,7 @@ def create_app() -> FastAPI:
     app.include_router(health_router)
     app.include_router(auth_router)
     app.include_router(users_router)
+    app.include_router(audit_router)
     app.include_router(patients_router)
     app.include_router(visits_router)
     app.include_router(labs_router)
@@ -33,6 +36,7 @@ def create_app() -> FastAPI:
     app.include_router(reason_router)
     app.include_router(vocabulary_router)
     app.include_router(diagnoses_router)
+    app.include_router(note_extractor_router)
     return app
 
 
