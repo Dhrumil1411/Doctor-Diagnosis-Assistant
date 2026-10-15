@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import ListEditor from "../components/ListEditor.jsx";
 import SymptomChecklist from "../components/SymptomChecklist.jsx";
+import ClinicalNoteExtractor from "../components/ClinicalNoteExtractor.jsx";
 import {
   FormSection,
   SelectInput,
@@ -90,6 +91,7 @@ export default function NewVisitPage() {
 
   const [busyLabel, setBusyLabel] = useState("");
   const [error, setError] = useState("");
+  const [fillFeedback, setFillFeedback] = useState("");
 
   const bmi = useMemo(() => {
     const w = toNum(demo.weight_kg);
@@ -97,6 +99,158 @@ export default function NewVisitPage() {
     if (!w || !h) return null;
     return (w / Math.pow(h / 100, 2)).toFixed(1);
   }, [demo.weight_kg, demo.height_cm]);
+
+  function handleExtractAndFill(extracted) {
+    if (!extracted) return;
+
+    // 1. Demographics
+    setDemo((prev) => ({
+      ...prev,
+      full_name: extracted.demographics?.full_name || prev.full_name || (extracted.demographics?.age_years ? `Patient (${extracted.demographics.sex || "Unknown"}, ${extracted.demographics.age_years}yo)` : prev.full_name),
+      sex: extracted.demographics?.sex || prev.sex,
+      date_of_birth: extracted.demographics?.date_of_birth || prev.date_of_birth,
+      weight_kg: extracted.demographics?.weight_kg !== undefined && extracted.demographics?.weight_kg !== null ? String(extracted.demographics.weight_kg) : prev.weight_kg,
+      height_cm: extracted.demographics?.height_cm !== undefined && extracted.demographics?.height_cm !== null ? String(extracted.demographics.height_cm) : prev.height_cm,
+      occupation: extracted.demographics?.occupation || prev.occupation,
+    }));
+
+    // 2. Visit Info
+    setVisitInfo((prev) => ({
+      ...prev,
+      chief_complaint: extracted.visit_info?.chief_complaint || prev.chief_complaint,
+      complaint_duration: extracted.visit_info?.complaint_duration || prev.complaint_duration,
+      severity_score: extracted.visit_info?.severity_score !== undefined && extracted.visit_info?.severity_score !== null ? String(extracted.visit_info.severity_score) : prev.severity_score,
+      progression: extracted.visit_info?.progression || prev.progression,
+    }));
+
+    // 3. HPI
+    setHpi((prev) => ({
+      ...prev,
+      hpi_onset: extracted.hpi?.hpi_onset || prev.hpi_onset,
+      hpi_location: extracted.hpi?.hpi_location || prev.hpi_location,
+      hpi_character: extracted.hpi?.hpi_character || prev.hpi_character,
+      hpi_aggravating_factors: extracted.hpi?.hpi_aggravating_factors || prev.hpi_aggravating_factors,
+      hpi_relieving_factors: extracted.hpi?.hpi_relieving_factors || prev.hpi_relieving_factors,
+      hpi_radiation: extracted.hpi?.hpi_radiation || prev.hpi_radiation,
+      hpi_timing: extracted.hpi?.hpi_timing || prev.hpi_timing,
+    }));
+
+    // 4. Vitals
+    setVitals((prev) => {
+      const v = extracted.vitals || {};
+      return {
+        ...prev,
+        temperature_c: v.temperature_c !== undefined && v.temperature_c !== null ? String(v.temperature_c) : prev.temperature_c,
+        systolic_bp: v.systolic_bp !== undefined && v.systolic_bp !== null ? String(v.systolic_bp) : prev.systolic_bp,
+        diastolic_bp: v.diastolic_bp !== undefined && v.diastolic_bp !== null ? String(v.diastolic_bp) : prev.diastolic_bp,
+        heart_rate: v.heart_rate !== undefined && v.heart_rate !== null ? String(v.heart_rate) : prev.heart_rate,
+        respiratory_rate: v.respiratory_rate !== undefined && v.respiratory_rate !== null ? String(v.respiratory_rate) : prev.respiratory_rate,
+        spo2: v.spo2 !== undefined && v.spo2 !== null ? String(v.spo2) : prev.spo2,
+        blood_glucose_mg_dl: v.blood_glucose_mg_dl !== undefined && v.blood_glucose_mg_dl !== null ? String(v.blood_glucose_mg_dl) : prev.blood_glucose_mg_dl,
+        pain_score: v.pain_score !== undefined && v.pain_score !== null ? String(v.pain_score) : prev.pain_score,
+      };
+    });
+
+    // 5. Symptoms
+    const newSymptoms = [];
+    const seen = new Set();
+    
+    (extracted.symptoms_present || []).forEach((s) => {
+      const id = s.canonical_id || s.name.toLowerCase().replace(/\s+/g, "_");
+      if (!seen.has(id)) {
+        seen.add(id);
+        newSymptoms.push({ name: id, status: "present", severity: "", duration: "" });
+      }
+    });
+
+    (extracted.symptoms_absent || []).forEach((s) => {
+      const id = s.canonical_id || s.name.toLowerCase().replace(/\s+/g, "_");
+      if (!seen.has(id)) {
+        seen.add(id);
+        newSymptoms.push({ name: id, status: "absent", severity: "", duration: "" });
+      }
+    });
+
+    if (newSymptoms.length > 0) {
+      setSymptoms(newSymptoms);
+    }
+
+    // 6. Medical History
+    if (extracted.medical_history && extracted.medical_history.length > 0) {
+      setHistory(extracted.medical_history.map((h) => ({
+        category: h.category || "general",
+        name: h.name,
+        details: h.details || "",
+        onset_year: h.onset_year ? String(h.onset_year) : "",
+        resolved: Boolean(h.resolved),
+      })));
+    }
+
+    // 7. Medications
+    if (extracted.medications && extracted.medications.length > 0) {
+      setMedications(extracted.medications.map((m) => ({
+        name: m.name,
+        dose: m.dose || "",
+        frequency: m.frequency || "",
+        is_active: m.is_active !== false,
+        notes: m.notes || "",
+      })));
+    }
+
+    // 8. Allergies
+    if (extracted.allergies && extracted.allergies.length > 0) {
+      setAllergies(extracted.allergies.map((a) => ({
+        allergen: a.allergen,
+        type: a.type || "medication",
+        reaction: a.reaction || "",
+        severity: a.severity || "",
+        notes: a.notes || "",
+      })));
+    }
+
+    // 9. Social History
+    if (extracted.social_history) {
+      setSocial((prev) => ({
+        ...prev,
+        smoking_status: extracted.social_history.smoking_status || prev.smoking_status,
+        pack_years: extracted.social_history.pack_years !== undefined && extracted.social_history.pack_years !== null ? String(extracted.social_history.pack_years) : prev.pack_years,
+        alcohol_use: extracted.social_history.alcohol_use || prev.alcohol_use,
+        recreational_drug_use: extracted.social_history.recreational_drug_use || prev.recreational_drug_use,
+        diet: extracted.social_history.diet || prev.diet,
+        exercise: extracted.social_history.exercise || prev.exercise,
+        living_situation: extracted.social_history.living_situation || prev.living_situation,
+        occupational_exposure: extracted.social_history.occupational_exposure || prev.occupational_exposure,
+        travel_history: extracted.social_history.travel_history || prev.travel_history,
+        sleep: extracted.social_history.sleep || prev.sleep,
+      }));
+    }
+
+    // 10. Physical Exam
+    if (extracted.physical_exam) {
+      const sanitizeSign = (v) => {
+        if (!v) return "";
+        const s = String(v).toLowerCase().trim();
+        if (["absent", "no", "none", "negative", "nil", "normal"].includes(s)) return "absent";
+        if (["present", "yes", "positive", "abnormal", "mild", "moderate", "severe", "1+", "2+", "3+", "4+"].includes(s)) return "present";
+        return "";
+      };
+
+      setExam((prev) => ({
+        ...prev,
+        pallor: sanitizeSign(extracted.physical_exam.pallor) || prev.pallor,
+        edema: sanitizeSign(extracted.physical_exam.edema) || prev.edema,
+        cyanosis: sanitizeSign(extracted.physical_exam.cyanosis) || prev.cyanosis,
+        clubbing: sanitizeSign(extracted.physical_exam.clubbing) || prev.clubbing,
+        lymphadenopathy: sanitizeSign(extracted.physical_exam.lymphadenopathy) || prev.lymphadenopathy,
+        dehydration: sanitizeSign(extracted.physical_exam.dehydration) || prev.dehydration,
+        extra_notes: extracted.physical_exam.extra_notes || prev.extra_notes,
+      }));
+    }
+
+    // Feedback Banner
+    setFillFeedback("✨ Form successfully autofilled from clinical note! You can review and adjust any field below before submitting.");
+    setTimeout(() => setFillFeedback(""), 8000);
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -160,14 +314,22 @@ export default function NewVisitPage() {
         });
       }
 
-      const examPayload = compact(exam);
+      const examPayload = compact(
+        Object.fromEntries(
+          Object.entries(exam).map(([k, v]) => [
+            k,
+            k === "extra_notes" ? (v || undefined) : (v ? v : undefined),
+          ])
+        )
+      );
       if (Object.keys(examPayload).length > 0) {
         await api.put(`/visits/${vid}/general-exam`, examPayload);
       }
 
       navigate(`/visits/${vid}/results`);
     } catch (err) {
-      setError(`Save failed while ${busyLabel || "starting"} - ${err.message}`);
+      const msg = err.readableMessage || err.message || "Failed to save consultation.";
+      setError(`Save failed: ${msg}`);
       setBusyLabel("");
     }
   }
@@ -179,7 +341,27 @@ export default function NewVisitPage() {
   return (
     <div className="container">
       <form onSubmit={handleSubmit}>
-        <h1>New consultation</h1>
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <div>
+            <h1>New consultation</h1>
+            <p className="text-sm text-slate-500">Record a patient encounter, extract notes, and generate an AI-assisted differential diagnosis.</p>
+          </div>
+        </div>
+
+        {fillFeedback && (
+          <div className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50/90 p-4 text-sm font-medium text-emerald-800 shadow-sm flex items-center justify-between dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200">
+            <span>{fillFeedback}</span>
+            <button
+              type="button"
+              onClick={() => setFillFeedback("")}
+              className="text-emerald-700 hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-100 font-bold ml-3"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
+        <ClinicalNoteExtractor onExtractAndFill={handleExtractAndFill} />
 
         <FormSection title="2.1 Patient demographics">
           <div className="grid-2">

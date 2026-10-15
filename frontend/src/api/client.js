@@ -10,11 +10,41 @@ export function setToken(token) {
   else localStorage.removeItem(TOKEN_KEY);
 }
 
+export function formatErrorDetail(detail) {
+  if (!detail) return "An unexpected error occurred.";
+  if (typeof detail === "string") return detail;
+
+  if (Array.isArray(detail)) {
+    const formatted = detail.map((err) => {
+      if (!err || typeof err !== "object") return String(err);
+      const loc = Array.isArray(err.loc)
+        ? err.loc.filter((p) => p !== "body" && p !== "__root__").join(" > ")
+        : "";
+      let msg = err.msg || "Invalid value";
+      msg = msg.replace(/^Value error,\s*/i, "");
+      return loc ? `${loc}: ${msg}` : msg;
+    });
+    return formatted.filter(Boolean).join("; ");
+  }
+
+  if (typeof detail === "object") {
+    if (detail.msg) return String(detail.msg).replace(/^Value error,\s*/i, "");
+    if (detail.message) return String(detail.message);
+    return Object.entries(detail)
+      .map(([k, v]) => `${k}: ${typeof v === "string" ? v : JSON.stringify(v)}`)
+      .join("; ");
+  }
+
+  return String(detail);
+}
+
 export class ApiError extends Error {
   constructor(status, detail) {
-    super(typeof detail === "string" ? detail : JSON.stringify(detail));
+    const readableMessage = formatErrorDetail(detail);
+    super(readableMessage);
     this.status = status;
     this.detail = detail;
+    this.readableMessage = readableMessage;
   }
 }
 

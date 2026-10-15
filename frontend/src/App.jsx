@@ -1,16 +1,30 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import { useAuth } from "./context/AuthContext.jsx";
+import AuditLogsPage from "./pages/AuditLogsPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import NewVisitPage from "./pages/NewVisitPage.jsx";
 import ResultsPage from "./pages/ResultsPage.jsx";
 
+import Navbar from "./components/Navbar.jsx";
+
 function RequireAuth({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <p className="center muted">Loading...</p>;
+  if (loading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
+        <div className="spinner spinner-primary" style={{ width: "32px", height: "32px" }}></div>
+      </div>
+    );
+  }
   if (!user) return <Navigate to="/login" replace />;
-  return children;
+  return (
+    <>
+      <Navbar />
+      <main className="main-layout">{children}</main>
+    </>
+  );
 }
 
 export default function App() {
@@ -37,6 +51,14 @@ export default function App() {
         element={
           <RequireAuth>
             <ResultsPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/audit-logs"
+        element={
+          <RequireAuth>
+            <AuditLogsPage />
           </RequireAuth>
         }
       />

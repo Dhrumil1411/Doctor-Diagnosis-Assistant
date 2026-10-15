@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api/client.js";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function HomePage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     async function loadPatients() {
@@ -14,7 +15,7 @@ export default function HomePage() {
         const list = await api.get("/patients");
         setPatients(list);
       } catch {
-        // ignore load errors for dashboard initial render
+        // ignore load errors
       } finally {
         setLoading(false);
       }
@@ -22,40 +23,70 @@ export default function HomePage() {
     loadPatients();
   }, []);
 
+  const filteredPatients = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return patients;
+    return patients.filter((p) =>
+      (p.full_name && p.full_name.toLowerCase().includes(q)) ||
+      (p.mrn && p.mrn.toLowerCase().includes(q)) ||
+      (p.phone && p.phone.includes(q))
+    );
+  }, [patients, searchTerm]);
+
   return (
     <div className="container">
-      <div className="card flex-between">
-        <div>
-          <h1>Doctor Diagnosis Assistant</h1>
-          <p className="muted">
-            Signed in as <strong>{user.full_name}</strong> ({user.email}) | Role:{" "}
-            <span style={{ textTransform: "uppercase", fontWeight: "bold" }}>{user.role}</span>
-          </p>
+      {/* Top Banner / Actions */}
+      <div className="card" style={{ background: "linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)", border: "1px solid #bae6fd" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "1rem" }}>
+          <div>
+            <h1 style={{ color: "#0f172a" }}>Clinical Encounters & Patient Records</h1>
+            <p className="text-muted">
+              Select an existing patient file to review differential diagnoses or start a new encounter.
+            </p>
+          </div>
+          <Link to="/new-visit" className="btn-link" style={{ fontSize: "0.95rem", padding: "0.65rem 1.25rem", boxShadow: "var(--shadow-md)" }}>
+            ➕ Start New Consultation
+          </Link>
         </div>
-        <button
-          onClick={logout}
-          className="btn-danger"
-          style={{ width: "auto", minWidth: "100px" }}
-        >
-          Sign out
-        </button>
       </div>
 
-      <div style={{ marginBottom: "1.25rem" }}>
-        <Link className="btn-link" to="/new-visit">
-          + Start New Patient Consultation
-        </Link>
-      </div>
-
+      {/* Patients Section */}
       <div className="card">
-        <h2>Recent Patient Records</h2>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "0.75rem", marginBottom: "1.25rem" }}>
+          <div>
+            <h2 style={{ margin: 0 }}>Registered Patients ({filteredPatients.length})</h2>
+            <span className="text-muted" style={{ fontSize: "0.8rem" }}>
+              Electronic Health Records and Clinical Diagnostic Trajectories
+            </span>
+          </div>
+          <div style={{ width: "100%", maxWidth: "300px" }}>
+            <input
+              type="search"
+              placeholder="Search by patient name, MRN, phone..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ fontSize: "0.85rem", padding: "0.45rem 0.75rem" }}
+            />
+          </div>
+        </div>
+
         {loading ? (
-          <p className="muted">Loading patient records...</p>
-        ) : patients.length === 0 ? (
-          <p className="muted">No patient consultations recorded yet.</p>
+          <div style={{ padding: "2rem", textAlign: "center" }}>
+            <div className="spinner spinner-primary" style={{ width: "28px", height: "28px", margin: "0 auto 0.5rem" }} />
+            <p className="text-muted">Loading clinical records...</p>
+          </div>
+        ) : filteredPatients.length === 0 ? (
+          <div style={{ padding: "2.5rem 1rem", textAlign: "center", background: "#f8fafc", borderRadius: "8px", border: "1px dashed #cbd5e1" }}>
+            <p style={{ color: "var(--text-muted)", marginBottom: "0.75rem" }}>
+              {searchTerm ? "No patient records match your search criteria." : "No patient consultations recorded in the clinic yet."}
+            </p>
+            <Link to="/new-visit" className="btn-primary" style={{ padding: "0.45rem 0.9rem", fontSize: "0.82rem" }}>
+              Record First Consultation
+            </Link>
+          </div>
         ) : (
-          <div style={{ display: "grid", gap: "1rem", marginTop: "1rem" }}>
-            {patients.map((pt) => (
+          <div style={{ display: "grid", gap: "0.85rem" }}>
+            {filteredPatients.map((pt) => (
               <PatientCard key={pt.id} patient={pt} />
             ))}
           </div>
@@ -86,38 +117,76 @@ function PatientCard({ patient }) {
   return (
     <div
       style={{
-        border: "1px solid var(--border-color)",
-        borderRadius: "8px",
+        border: "1px solid var(--border-subtle)",
+        borderRadius: "var(--radius-sm)",
         padding: "1rem",
-        background: "rgba(15, 23, 42, 0.4)",
+        background: "#ffffff",
+        boxShadow: "0 1px 2px rgba(0, 0, 0, 0.03)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.5rem",
       }}
     >
-      <div className="flex-between">
-        <h3 style={{ margin: 0 }}>{patient.full_name}</h3>
-        <span className="muted">
-          Sex: {patient.sex} | {patient.phone || "No phone"}
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "0.5rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+          <div
+            style={{
+              width: "32px",
+              height: "32px",
+              borderRadius: "50%",
+              background: "#e0f2fe",
+              color: "#0369a1",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: "700",
+              fontSize: "0.85rem",
+            }}
+          >
+            {patient.full_name ? patient.full_name.charAt(0).toUpperCase() : "P"}
+          </div>
+          <div>
+            <h3 style={{ margin: 0, fontSize: "0.95rem", color: "var(--text-main)" }}>
+              {patient.full_name}
+            </h3>
+            <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+              MRN: {patient.mrn || "N/A"} • Sex: {patient.sex} • DOB: {patient.date_of_birth || "N/A"}
+            </span>
+          </div>
+        </div>
+
+        <span className="badge badge-neutral">
+          {visits.length} {visits.length === 1 ? "Encounter" : "Encounters"}
         </span>
       </div>
 
-      <div style={{ marginTop: "0.75rem" }}>
+      <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: "0.5rem", marginTop: "0.25rem" }}>
         {loadingVisits ? (
-          <p className="muted" style={{ fontSize: "0.85rem" }}>
-            Loading visits...
-          </p>
+          <p className="text-muted" style={{ fontSize: "0.78rem" }}>Loading encounter history...</p>
         ) : visits.length === 0 ? (
-          <p className="muted" style={{ fontSize: "0.85rem" }}>
-            No visits recorded.
-          </p>
+          <p className="text-muted" style={{ fontSize: "0.78rem" }}>No visit encounters recorded for this patient.</p>
         ) : (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.45rem" }}>
             {visits.map((v) => (
               <Link
                 key={v.id}
                 to={`/visits/${v.id}/results`}
-                className="chip"
-                style={{ borderRadius: "6px" }}
+                className="btn-secondary"
+                style={{
+                  fontSize: "0.75rem",
+                  padding: "0.25rem 0.6rem",
+                  borderRadius: "4px",
+                  borderColor: "#bae6fd",
+                  background: "#f0f9ff",
+                  color: "#0369a1",
+                }}
               >
-                🔍 View AI Results ({new Date(v.occurred_at || Date.now()).toLocaleDateString()})
+                🔬 AI Differential ({new Date(v.occurred_at || Date.now()).toLocaleDateString()})
+                {v.chief_complaint && (
+                  <span style={{ opacity: 0.8, maxWidth: "160px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    — {v.chief_complaint}
+                  </span>
+                )}
               </Link>
             ))}
           </div>
