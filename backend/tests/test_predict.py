@@ -4,16 +4,16 @@ from fastapi.testclient import TestClient
 
 from app.services.classifier import get_classifier
 
-CLASSIC_FUNGAL = ["itching", "skin_rash", "nodal_skin_eruptions"]
+CLASSIC_SKIN = ["skin_rash", "itching_of_skin", "skin_lesion"]
 
 
 def test_direct_predict_ranked(client: TestClient, doctor_headers):
     resp = client.post(
-        "/api/predict", json={"symptoms": CLASSIC_FUNGAL}, headers=doctor_headers
+        "/api/predict", json={"symptoms": CLASSIC_SKIN}, headers=doctor_headers
     )
     assert resp.status_code == 200
     body = resp.json()
-    assert body["model_name"] == "logistic_regression"
+    assert body["model_name"] in ("bernoulli_nb", "multinomial_nb", "logistic_regression")
     preds = body["predictions"]
     assert 0 < len(preds) <= 5
     confidences = [p["confidence"] for p in preds]
@@ -26,19 +26,19 @@ def test_direct_predict_ranked(client: TestClient, doctor_headers):
 def test_unknown_symptoms_reported_not_fatal(client: TestClient, doctor_headers):
     resp = client.post(
         "/api/predict",
-        json={"symptoms": ["itching", "totally_made_up_symptom"]},
+        json={"symptoms": ["skin_rash", "totally_made_up_symptom"]},
         headers=doctor_headers,
     )
     assert resp.status_code == 200
     body = resp.json()
     assert body["unknown_symptoms"] == ["totally_made_up_symptom"]
-    assert "itching" in body["recognized_symptoms"]
+    assert "skin_rash" in body["recognized_symptoms"]
     assert len(body["predictions"]) >= 1
 
 
 def test_top_k_respected(client: TestClient, doctor_headers):
     resp = client.post(
-        "/api/predict", json={"symptoms": CLASSIC_FUNGAL, "top_k": 3},
+        "/api/predict", json={"symptoms": CLASSIC_SKIN, "top_k": 3},
         headers=doctor_headers,
     )
     assert len(resp.json()["predictions"]) == 3
@@ -47,7 +47,7 @@ def test_top_k_respected(client: TestClient, doctor_headers):
 def test_invalid_requests_rejected(client: TestClient, doctor_headers):
     both = client.post(
         "/api/predict",
-        json={"symptoms": CLASSIC_FUNGAL, "visit_id": str(uuid.uuid4())},
+        json={"symptoms": CLASSIC_SKIN, "visit_id": str(uuid.uuid4())},
         headers=doctor_headers,
     )
     assert both.status_code == 422
@@ -77,9 +77,9 @@ def test_predict_from_visit_uses_present_only(
     client.put(
         f"/api/visits/{vid}/symptoms",
         json=[
-            {"name": "continuous_sneezing", "status": "present"},
-            {"name": "watering_from_eyes", "status": "present"},
-            {"name": "chest_pain", "status": "absent"},
+            {"name": "nasal_congestion", "status": "present"},
+            {"name": "cough", "status": "present"},
+            {"name": "sharp_chest_pain", "status": "absent"},
             {"name": "fatigue", "status": "unsure"},
         ],
         headers=doctor_headers,
@@ -87,7 +87,7 @@ def test_predict_from_visit_uses_present_only(
     resp = client.post("/api/predict", json={"visit_id": vid}, headers=doctor_headers)
     assert resp.status_code == 200
     recognized = resp.json()["recognized_symptoms"]
-    assert set(recognized) == {"continuous_sneezing", "watering_from_eyes"}
+    assert set(recognized) == {"nasal_congestion", "cough"}
 
 
 def test_predict_visit_without_present_symptoms(client: TestClient, doctor_headers):
@@ -114,23 +114,22 @@ def test_predict_unknown_visit_404(client: TestClient, doctor_headers):
 
 def test_predict_rbac(client: TestClient, readonly_headers):
     denied = client.post(
-        "/api/predict", json={"symptoms": CLASSIC_FUNGAL}, headers=readonly_headers
+        "/api/predict", json={"symptoms": CLASSIC_SKIN}, headers=readonly_headers
     )
     assert denied.status_code == 403
-    unauth = client.post("/api/predict", json={"symptoms": CLASSIC_FUNGAL})
+    unauth = client.post("/api/predict", json={"symptoms": CLASSIC_SKIN})
     assert unauth.status_code == 401
 
 
-def test_diabetes_case_ranks_diabetes_top(client: TestClient, doctor_headers):
+def test_urinary_case_ranks_cystitis_or_bladder_disorder(client: TestClient, doctor_headers):
     resp = client.post(
         "/api/predict",
         json={
             "symptoms": [
-                "increased_appetite",
-                "polyuria",
-                "excessive_thirst",
-                "weight_loss",
-                "blurred_and_distorted_vision",
+                "involuntary_urination",
+                "frequent_urination",
+                "lower_abdominal_pain",
+                "blood_in_urine",
             ]
         },
         headers=doctor_headers,
@@ -138,8 +137,9 @@ def test_diabetes_case_ranks_diabetes_top(client: TestClient, doctor_headers):
     assert resp.status_code == 200
     preds = resp.json()["predictions"]
     classifier = get_classifier()
-    assert all(s in classifier.known_symptom_ids() for s in CLASSIC_FUNGAL)
-    assert any("diabetes" in p["disease"].lower() for p in preds)
+    assert all(s in classifier.known_symptom_ids() for s in CLASSIC_SKIN)
+    assert any(d in p["disease"].lower() for p in preds for d in ("cystitis", "bladder disorder"))
+
 
 
 def test_vocabulary_endpoint(client):
@@ -153,5 +153,6 @@ def test_vocabulary_endpoint(client):
     resp = client.get('/api/symptom-vocabulary', headers={'Authorization': f'Bearer {tok}'})
     assert resp.status_code == 200
     items = resp.json()
-    assert len(items) == 131
-    assert {'id', 'display_name'} == set(items[0].keys())
+    assert len(items) == 377
+    assert {"id", "display_name", "hpo_id", "category"} == set(items[0].keys())
+

@@ -76,3 +76,10 @@ def doctor_headers(client, doctor_user):
     resp = login(client, doctor_user.email)
     assert resp.status_code == 200
     return {"Authorization": f"Bearer {resp.json()['access_token']}"}
+
+
+@pytest.fixture(scope="session")
+def nurse_headers(client, nurse_user):
+    resp = login(client, nurse_user.email)
+    assert resp.status_code == 200
+    return {"Authorization": f"Bearer {resp.json()['access_token']}"}

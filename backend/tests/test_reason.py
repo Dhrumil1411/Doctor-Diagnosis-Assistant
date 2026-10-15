@@ -238,3 +238,31 @@ def test_extract_json_variants():
     assert extract_json_object(f"Sure! {FENCED_JSON} hope it helps")["summary"]
     assert extract_json_object('prefix {"a": 1} suffix') == {"a": 1}
     assert extract_json_object("no json here") is None
+
+
+def test_assemble_case_ddxplus_structure(client: TestClient, doctor_headers):
+    from app.db.base import get_db
+    from app.services.case import assemble_case
+    from uuid import UUID
+
+    vid_str = seed_visit(client, doctor_headers)
+    db = next(get_db())
+    try:
+        case = assemble_case(db, UUID(vid_str))
+        # Verify DDXPlus structural blocks
+        assert "antecedents" in case
+        assert "active_evidences" in case
+        assert "pertinent_negatives" in case
+
+        # Verify HPO resolution in symptoms
+        symptoms_present = case["active_evidences"]["presenting_symptoms_with_hpo"]
+        assert len(symptoms_present) == 2
+        fever_sym = next(s for s in symptoms_present if s["name"] == "fever")
+        assert fever_sym["hpo_id"] == "HP:0001945"
+        assert fever_sym["hpo_label"] == "Fever"
+
+        # Verify pertinent negatives
+        absent_syms = case["pertinent_negatives"]["absent_symptoms"]
+        assert any(s["name"] == "vomiting" for s in absent_syms)
+    finally:
+        db.close()
