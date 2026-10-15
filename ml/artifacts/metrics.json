@@ -1,448 +1,54 @@
 {
-  "generated_at": "2026-08-23T17:16:45.430007+00:00",
+  "generated_at": "2026-09-10T06:59:28.154034+00:00",
   "dataset": {
-    "n_train": 4920,
-    "n_test": 42,
-    "n_features": 131,
-    "n_classes": 41,
+    "n_train": 197559,
+    "n_test": 49386,
+    "n_features": 377,
+    "n_classes": 773,
     "sha256": {
-      "cleaned_train.csv": "6237b9a4edd1fad7815c83ad043224623c11aefa7207cc0111590393d038394e",
-      "cleaned_test.csv": "08484f53d77fd74c7548798f8e03398e89206312bafd5d6149c2142006dfad94"
+      "cleaned_train.csv": "d2ff7d25c9a19873bbd10414a220e6296c79de699ecfe3f63fd6037ec58faec1",
+      "cleaned_test.csv": "b285e576f6e7ecd629f45628d39a9c935bbf4fb03c65deb9e4698ceffc39c21c"
     }
   },
   "models": {
     "dummy_most_frequent": {
       "params": "{'constant': None, 'random_state': 42, 'strategy': 'most_frequent'}",
-      "cv": {
-        "f1_macro": {
-          "mean": 0.0012,
-          "std": 0.0
-        },
-        "accuracy": {
-          "mean": 0.0244,
-          "std": 0.0
-        },
-        "precision_macro": {
-          "mean": 0.0006,
-          "std": 0.0
-        },
-        "recall_macro": {
-          "mean": 0.0244,
-          "std": 0.0
-        },
-        "per_fold": {
-          "f1_macro": [
-            0.0012,
-            0.0012,
-            0.0012,
-            0.0012,
-            0.0012
-          ],
-          "accuracy": [
-            0.0244,
-            0.0244,
-            0.0244,
-            0.0244,
-            0.0244
-          ],
-          "precision_macro": [
-            0.0006,
-            0.0006,
-            0.0006,
-            0.0006,
-            0.0006
-          ],
-          "recall_macro": [
-            0.0244,
-            0.0244,
-            0.0244,
-            0.0244,
-            0.0244
-          ]
-        }
-      }
+      "train_time_sec": 0.17,
+      "top1_accuracy": 0.0049,
+      "top5_accuracy": 0.0128,
+      "top10_accuracy": 0.0185
     },
-    "logistic_regression": {
-      "params": "{'C': 1.0, 'class_weight': 'balanced', 'dual': False, 'fit_intercept': True, 'intercept_scaling': 1, 'l1_ratio': 0.0, 'max_iter': 2000, 'n_jobs': None, 'penalty': 'deprecated', 'random_state': 42, 'solver': 'lbfgs', 'tol': 0.0001, 'verbose': 0, 'warm_start': False}",
-      "cv": {
-        "f1_macro": {
-          "mean": 1.0,
-          "std": 0.0
-        },
-        "accuracy": {
-          "mean": 1.0,
-          "std": 0.0
-        },
-        "precision_macro": {
-          "mean": 1.0,
-          "std": 0.0
-        },
-        "recall_macro": {
-          "mean": 1.0,
-          "std": 0.0
-        },
-        "per_fold": {
-          "f1_macro": [
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0
-          ],
-          "accuracy": [
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0
-          ],
-          "precision_macro": [
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0
-          ],
-          "recall_macro": [
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      }
+    "multinomial_nb": {
+      "params": "{'alpha': 0.1, 'class_prior': None, 'fit_prior': True, 'force_alpha': True}",
+      "train_time_sec": 2.15,
+      "top1_accuracy": 0.8602,
+      "top5_accuracy": 0.9773,
+      "top10_accuracy": 0.9921
     },
-    "random_forest": {
-      "params": "{'bootstrap': True, 'ccp_alpha': 0.0, 'class_weight': 'balanced', 'criterion': 'gini', 'max_depth': None, 'max_features': 'sqrt', 'max_leaf_nodes': None, 'max_samples': None, 'min_impurity_decrease': 0.0, 'min_samples_leaf': 1, 'min_samples_split': 2, 'min_weight_fraction_leaf': 0.0, 'monotonic_cst': None, 'n_estimators': 400, 'n_jobs': -1, 'oob_score': False, 'random_state': 42, 'verbose': 0, 'warm_start': False}",
-      "cv": {
-        "f1_macro": {
-          "mean": 1.0,
-          "std": 0.0
-        },
-        "accuracy": {
-          "mean": 1.0,
-          "std": 0.0
-        },
-        "precision_macro": {
-          "mean": 1.0,
-          "std": 0.0
-        },
-        "recall_macro": {
-          "mean": 1.0,
-          "std": 0.0
-        },
-        "per_fold": {
-          "f1_macro": [
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0
-          ],
-          "accuracy": [
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0
-          ],
-          "precision_macro": [
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0
-          ],
-          "recall_macro": [
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      }
+    "bernoulli_nb": {
+      "params": "{'alpha': 0.1, 'binarize': 0.0, 'class_prior': None, 'fit_prior': True, 'force_alpha': True}",
+      "train_time_sec": 2.21,
+      "top1_accuracy": 0.87,
+      "top5_accuracy": 0.9821,
+      "top10_accuracy": 0.9937
     }
   },
   "champion": {
-    "name": "logistic_regression",
+    "name": "bernoulli_nb",
+    "reported_model_name": "bernoulli_nb",
     "candidates_considered": [
-      "logistic_regression",
-      "random_forest"
+      "bernoulli_nb",
+      "multinomial_nb"
     ],
     "baseline_floor_included": "dummy_most_frequent"
   },
   "final_test_eval": {
-    "accuracy": 1.0,
-    "f1_macro": 1.0,
-    "precision_macro": 1.0,
-    "recall_macro": 1.0,
-    "per_class": {
-      "(vertigo) Paroymsal  Positional Vertigo": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "AIDS": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Acne": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Alcoholic hepatitis": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Allergy": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Arthritis": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Bronchial Asthma": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Cervical spondylosis": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Chicken pox": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Chronic cholestasis": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Common Cold": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Dengue": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Diabetes": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Dimorphic hemmorhoids(piles)": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Drug Reaction": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Fungal infection": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 2.0
-      },
-      "GERD": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Gastroenteritis": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Heart attack": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Hepatitis B": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Hepatitis C": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Hepatitis D": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Hepatitis E": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Hypertension": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Hyperthyroidism": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Hypoglycemia": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Hypothyroidism": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Impetigo": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Jaundice": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Malaria": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Migraine": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Osteoarthristis": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Paralysis (brain hemorrhage)": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Peptic ulcer diseae": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Pneumonia": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Psoriasis": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Tuberculosis": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Typhoid": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Urinary tract infection": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "Varicose veins": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "hepatitis A": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 1.0
-      },
-      "accuracy": 1.0,
-      "macro avg": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 42.0
-      },
-      "weighted avg": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 42.0
-      }
-    },
-    "caveat": "42 test rows across 41 classes; several classes have a single case"
+    "top1_accuracy": 0.87,
+    "top5_accuracy": 0.9821,
+    "top10_accuracy": 0.9937
   },
   "artifact": {
     "path": "D:\\Project\\Doctor-Diagnosis-Assistant\\ml\\artifacts\\model.joblib",
-    "sha256": "96134aacad72cfd83d317b3dd49772d8be2440d06ec57d33c6886c28ef2a01fd"
+    "sha256": "ded39f6a12f62fb86fd1119a4054edc29687b7ff29e1a03bf609dcddb9688384"
   }
 }

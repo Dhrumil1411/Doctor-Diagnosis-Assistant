@@ -1,706 +1,3045 @@
 {
-  "dataset": "Disease Prediction Using Machine Learning (Kaggle)",
-  "label_field": "prognosis",
-  "n_symptoms": 131,
-  "n_diseases": 41,
+  "dataset": "Diseases and Symptoms Dataset (Kaggle)",
+  "label_field": "diseases",
+  "n_symptoms": 377,
+  "n_diseases": 773,
   "symptoms": [
     {
-      "id": "itching",
-      "display_name": "Itching",
-      "column": "itching"
-    },
-    {
-      "id": "skin_rash",
-      "display_name": "Skin rash",
-      "column": "skin_rash"
-    },
-    {
-      "id": "nodal_skin_eruptions",
-      "display_name": "Nodal skin eruptions",
-      "column": "nodal_skin_eruptions"
-    },
-    {
-      "id": "continuous_sneezing",
-      "display_name": "Continuous sneezing",
-      "column": "continuous_sneezing"
-    },
-    {
-      "id": "shivering",
-      "display_name": "Shivering",
-      "column": "shivering"
-    },
-    {
-      "id": "chills",
-      "display_name": "Chills",
-      "column": "chills"
-    },
-    {
-      "id": "joint_pain",
-      "display_name": "Joint pain",
-      "column": "joint_pain"
-    },
-    {
-      "id": "stomach_pain",
-      "display_name": "Stomach pain",
-      "column": "stomach_pain"
-    },
-    {
-      "id": "acidity",
-      "display_name": "Acidity",
-      "column": "acidity"
-    },
-    {
-      "id": "ulcers_on_tongue",
-      "display_name": "Ulcers on tongue",
-      "column": "ulcers_on_tongue"
-    },
-    {
-      "id": "muscle_wasting",
-      "display_name": "Muscle wasting",
-      "column": "muscle_wasting"
-    },
-    {
-      "id": "vomiting",
-      "display_name": "Vomiting",
-      "column": "vomiting"
-    },
-    {
-      "id": "burning_micturition",
-      "display_name": "Burning micturition",
-      "column": "burning_micturition"
-    },
-    {
-      "id": "spotting_urination",
-      "display_name": "Spotting urination",
-      "column": "spotting_urination"
-    },
-    {
-      "id": "fatigue",
-      "display_name": "Fatigue",
-      "column": "fatigue"
-    },
-    {
-      "id": "weight_gain",
-      "display_name": "Weight gain",
-      "column": "weight_gain"
-    },
-    {
-      "id": "anxiety",
-      "display_name": "Anxiety",
-      "column": "anxiety"
-    },
-    {
-      "id": "cold_hands_and_feets",
-      "display_name": "Cold hands and feets",
-      "column": "cold_hands_and_feets"
-    },
-    {
-      "id": "mood_swings",
-      "display_name": "Mood swings",
-      "column": "mood_swings"
-    },
-    {
-      "id": "weight_loss",
-      "display_name": "Weight loss",
-      "column": "weight_loss"
-    },
-    {
-      "id": "restlessness",
-      "display_name": "Restlessness",
-      "column": "restlessness"
-    },
-    {
-      "id": "lethargy",
-      "display_name": "Lethargy",
-      "column": "lethargy"
-    },
-    {
-      "id": "patches_in_throat",
-      "display_name": "Patches in throat",
-      "column": "patches_in_throat"
-    },
-    {
-      "id": "irregular_sugar_level",
-      "display_name": "Irregular sugar level",
-      "column": "irregular_sugar_level"
-    },
-    {
-      "id": "cough",
-      "display_name": "Cough",
-      "column": "cough"
-    },
-    {
-      "id": "high_fever",
-      "display_name": "High fever",
-      "column": "high_fever"
-    },
-    {
-      "id": "sunken_eyes",
-      "display_name": "Sunken eyes",
-      "column": "sunken_eyes"
-    },
-    {
-      "id": "breathlessness",
-      "display_name": "Breathlessness",
-      "column": "breathlessness"
-    },
-    {
-      "id": "sweating",
-      "display_name": "Sweating",
-      "column": "sweating"
-    },
-    {
-      "id": "dehydration",
-      "display_name": "Dehydration",
-      "column": "dehydration"
-    },
-    {
-      "id": "indigestion",
-      "display_name": "Indigestion",
-      "column": "indigestion"
-    },
-    {
-      "id": "headache",
-      "display_name": "Headache",
-      "column": "headache"
-    },
-    {
-      "id": "yellowish_skin",
-      "display_name": "Yellowish skin",
-      "column": "yellowish_skin"
-    },
-    {
-      "id": "dark_urine",
-      "display_name": "Dark urine",
-      "column": "dark_urine"
-    },
-    {
-      "id": "nausea",
-      "display_name": "Nausea",
-      "column": "nausea"
-    },
-    {
-      "id": "loss_of_appetite",
-      "display_name": "Loss of appetite",
-      "column": "loss_of_appetite"
-    },
-    {
-      "id": "pain_behind_the_eyes",
-      "display_name": "Pain behind the eyes",
-      "column": "pain_behind_the_eyes"
-    },
-    {
-      "id": "back_pain",
-      "display_name": "Back pain",
-      "column": "back_pain"
-    },
-    {
-      "id": "constipation",
-      "display_name": "Constipation",
-      "column": "constipation"
-    },
-    {
-      "id": "abdominal_pain",
-      "display_name": "Abdominal pain",
-      "column": "abdominal_pain"
-    },
-    {
-      "id": "diarrhoea",
-      "display_name": "Diarrhoea",
-      "column": "diarrhoea"
-    },
-    {
-      "id": "mild_fever",
-      "display_name": "Mild fever",
-      "column": "mild_fever"
-    },
-    {
-      "id": "yellow_urine",
-      "display_name": "Yellow urine",
-      "column": "yellow_urine"
-    },
-    {
-      "id": "yellowing_of_eyes",
-      "display_name": "Yellowing of eyes",
-      "column": "yellowing_of_eyes"
-    },
-    {
-      "id": "acute_liver_failure",
-      "display_name": "Acute liver failure",
-      "column": "acute_liver_failure"
-    },
-    {
-      "id": "fluid_overload",
-      "display_name": "Fluid overload",
-      "column": "fluid_overload"
-    },
-    {
-      "id": "swelling_of_stomach",
-      "display_name": "Swelling of stomach",
-      "column": "swelling_of_stomach"
-    },
-    {
-      "id": "swelled_lymph_nodes",
-      "display_name": "Swelled lymph nodes",
-      "column": "swelled_lymph_nodes"
-    },
-    {
-      "id": "malaise",
-      "display_name": "Malaise",
-      "column": "malaise"
-    },
-    {
-      "id": "blurred_and_distorted_vision",
-      "display_name": "Blurred and distorted vision",
-      "column": "blurred_and_distorted_vision"
-    },
-    {
-      "id": "phlegm",
-      "display_name": "Phlegm",
-      "column": "phlegm"
-    },
-    {
-      "id": "throat_irritation",
-      "display_name": "Throat irritation",
-      "column": "throat_irritation"
-    },
-    {
-      "id": "redness_of_eyes",
-      "display_name": "Redness of eyes",
-      "column": "redness_of_eyes"
-    },
-    {
-      "id": "sinus_pressure",
-      "display_name": "Sinus pressure",
-      "column": "sinus_pressure"
-    },
-    {
-      "id": "runny_nose",
-      "display_name": "Runny nose",
-      "column": "runny_nose"
-    },
-    {
-      "id": "congestion",
-      "display_name": "Congestion",
-      "column": "congestion"
-    },
-    {
-      "id": "chest_pain",
-      "display_name": "Chest pain",
-      "column": "chest_pain"
-    },
-    {
-      "id": "weakness_in_limbs",
-      "display_name": "Weakness in limbs",
-      "column": "weakness_in_limbs"
-    },
-    {
-      "id": "fast_heart_rate",
-      "display_name": "Fast heart rate",
-      "column": "fast_heart_rate"
-    },
-    {
-      "id": "pain_during_bowel_movements",
-      "display_name": "Pain during bowel movements",
-      "column": "pain_during_bowel_movements"
-    },
-    {
-      "id": "pain_in_anal_region",
-      "display_name": "Pain in anal region",
-      "column": "pain_in_anal_region"
-    },
-    {
-      "id": "bloody_stool",
-      "display_name": "Bloody stool",
-      "column": "bloody_stool"
-    },
-    {
-      "id": "irritation_in_anus",
-      "display_name": "Irritation in anus",
-      "column": "irritation_in_anus"
-    },
-    {
-      "id": "neck_pain",
-      "display_name": "Neck pain",
-      "column": "neck_pain"
-    },
-    {
-      "id": "dizziness",
-      "display_name": "Dizziness",
-      "column": "dizziness"
-    },
-    {
-      "id": "cramps",
-      "display_name": "Cramps",
-      "column": "cramps"
-    },
-    {
-      "id": "bruising",
-      "display_name": "Bruising",
-      "column": "bruising"
-    },
-    {
-      "id": "obesity",
-      "display_name": "Obesity",
-      "column": "obesity"
-    },
-    {
-      "id": "swollen_legs",
-      "display_name": "Swollen legs",
-      "column": "swollen_legs"
-    },
-    {
-      "id": "swollen_blood_vessels",
-      "display_name": "Swollen blood vessels",
-      "column": "swollen_blood_vessels"
-    },
-    {
-      "id": "puffy_face_and_eyes",
-      "display_name": "Puffy face and eyes",
-      "column": "puffy_face_and_eyes"
-    },
-    {
-      "id": "enlarged_thyroid",
-      "display_name": "Enlarged thyroid",
-      "column": "enlarged_thyroid"
-    },
-    {
-      "id": "brittle_nails",
-      "display_name": "Brittle nails",
-      "column": "brittle_nails"
-    },
-    {
-      "id": "swollen_extremeties",
-      "display_name": "Swollen extremeties",
-      "column": "swollen_extremeties"
-    },
-    {
-      "id": "excessive_hunger",
-      "display_name": "Excessive hunger",
-      "column": "excessive_hunger"
-    },
-    {
-      "id": "extra_marital_contacts",
-      "display_name": "Extra marital contacts",
-      "column": "extra_marital_contacts"
-    },
-    {
-      "id": "drying_and_tingling_lips",
-      "display_name": "Drying and tingling lips",
-      "column": "drying_and_tingling_lips"
-    },
-    {
-      "id": "slurred_speech",
-      "display_name": "Slurred speech",
-      "column": "slurred_speech"
-    },
-    {
-      "id": "knee_pain",
-      "display_name": "Knee pain",
-      "column": "knee_pain"
-    },
-    {
-      "id": "hip_joint_pain",
-      "display_name": "Hip joint pain",
-      "column": "hip_joint_pain"
-    },
-    {
-      "id": "muscle_weakness",
-      "display_name": "Muscle weakness",
-      "column": "muscle_weakness"
-    },
-    {
-      "id": "stiff_neck",
-      "display_name": "Stiff neck",
-      "column": "stiff_neck"
-    },
-    {
-      "id": "swelling_joints",
-      "display_name": "Swelling joints",
-      "column": "swelling_joints"
-    },
-    {
-      "id": "movement_stiffness",
-      "display_name": "Movement stiffness",
-      "column": "movement_stiffness"
-    },
-    {
-      "id": "spinning_movements",
-      "display_name": "Spinning movements",
-      "column": "spinning_movements"
-    },
-    {
-      "id": "loss_of_balance",
-      "display_name": "Loss of balance",
-      "column": "loss_of_balance"
-    },
-    {
-      "id": "unsteadiness",
-      "display_name": "Unsteadiness",
-      "column": "unsteadiness"
-    },
-    {
-      "id": "weakness_of_one_body_side",
-      "display_name": "Weakness of one body side",
-      "column": "weakness_of_one_body_side"
-    },
-    {
-      "id": "loss_of_smell",
-      "display_name": "Loss of smell",
-      "column": "loss_of_smell"
-    },
-    {
-      "id": "bladder_discomfort",
-      "display_name": "Bladder discomfort",
-      "column": "bladder_discomfort"
-    },
-    {
-      "id": "foul_smell_ofurine",
-      "display_name": "Foul smell ofurine",
-      "column": "foul_smell_ofurine"
-    },
-    {
-      "id": "continuous_feel_of_urine",
-      "display_name": "Continuous feel of urine",
-      "column": "continuous_feel_of_urine"
-    },
-    {
-      "id": "passage_of_gases",
-      "display_name": "Passage of gases",
-      "column": "passage_of_gases"
-    },
-    {
-      "id": "internal_itching",
-      "display_name": "Internal itching",
-      "column": "internal_itching"
-    },
-    {
-      "id": "toxic_look_(typhos)",
-      "display_name": "Toxic look (typhos)",
-      "column": "toxic_look_(typhos)"
+      "id": "anxiety_and_nervousness",
+      "display_name": "Anxiety And Nervousness",
+      "column": "anxiety_and_nervousness",
+      "raw_name": "anxiety and nervousness"
     },
     {
       "id": "depression",
       "display_name": "Depression",
-      "column": "depression"
+      "column": "depression",
+      "raw_name": "depression"
     },
     {
-      "id": "irritability",
-      "display_name": "Irritability",
-      "column": "irritability"
+      "id": "shortness_of_breath",
+      "display_name": "Shortness Of Breath",
+      "column": "shortness_of_breath",
+      "raw_name": "shortness of breath"
     },
     {
-      "id": "muscle_pain",
-      "display_name": "Muscle pain",
-      "column": "muscle_pain"
+      "id": "depressive_or_psychotic_symptoms",
+      "display_name": "Depressive Or Psychotic Symptoms",
+      "column": "depressive_or_psychotic_symptoms",
+      "raw_name": "depressive or psychotic symptoms"
     },
     {
-      "id": "altered_sensorium",
-      "display_name": "Altered sensorium",
-      "column": "altered_sensorium"
+      "id": "sharp_chest_pain",
+      "display_name": "Sharp Chest Pain",
+      "column": "sharp_chest_pain",
+      "raw_name": "sharp chest pain"
     },
     {
-      "id": "red_spots_over_body",
-      "display_name": "Red spots over body",
-      "column": "red_spots_over_body"
+      "id": "dizziness",
+      "display_name": "Dizziness",
+      "column": "dizziness",
+      "raw_name": "dizziness"
     },
     {
-      "id": "belly_pain",
-      "display_name": "Belly pain",
-      "column": "belly_pain"
+      "id": "insomnia",
+      "display_name": "Insomnia",
+      "column": "insomnia",
+      "raw_name": "insomnia"
     },
     {
-      "id": "abnormal_menstruation",
-      "display_name": "Abnormal menstruation",
-      "column": "abnormal_menstruation"
+      "id": "abnormal_involuntary_movements",
+      "display_name": "Abnormal Involuntary Movements",
+      "column": "abnormal_involuntary_movements",
+      "raw_name": "abnormal involuntary movements"
     },
     {
-      "id": "dischromic_patches",
-      "display_name": "Dischromic patches",
-      "column": "dischromic_patches"
-    },
-    {
-      "id": "watering_from_eyes",
-      "display_name": "Watering from eyes",
-      "column": "watering_from_eyes"
-    },
-    {
-      "id": "increased_appetite",
-      "display_name": "Increased appetite",
-      "column": "increased_appetite"
-    },
-    {
-      "id": "polyuria",
-      "display_name": "Polyuria",
-      "column": "polyuria"
-    },
-    {
-      "id": "family_history",
-      "display_name": "Family history",
-      "column": "family_history"
-    },
-    {
-      "id": "mucoid_sputum",
-      "display_name": "Mucoid sputum",
-      "column": "mucoid_sputum"
-    },
-    {
-      "id": "rusty_sputum",
-      "display_name": "Rusty sputum",
-      "column": "rusty_sputum"
-    },
-    {
-      "id": "lack_of_concentration",
-      "display_name": "Lack of concentration",
-      "column": "lack_of_concentration"
-    },
-    {
-      "id": "visual_disturbances",
-      "display_name": "Visual disturbances",
-      "column": "visual_disturbances"
-    },
-    {
-      "id": "receiving_blood_transfusion",
-      "display_name": "Receiving blood transfusion",
-      "column": "receiving_blood_transfusion"
-    },
-    {
-      "id": "receiving_unsterile_injections",
-      "display_name": "Receiving unsterile injections",
-      "column": "receiving_unsterile_injections"
-    },
-    {
-      "id": "coma",
-      "display_name": "Coma",
-      "column": "coma"
-    },
-    {
-      "id": "stomach_bleeding",
-      "display_name": "Stomach bleeding",
-      "column": "stomach_bleeding"
-    },
-    {
-      "id": "distention_of_abdomen",
-      "display_name": "Distention of abdomen",
-      "column": "distention_of_abdomen"
-    },
-    {
-      "id": "history_of_alcohol_consumption",
-      "display_name": "History of alcohol consumption",
-      "column": "history_of_alcohol_consumption"
-    },
-    {
-      "id": "blood_in_sputum",
-      "display_name": "Blood in sputum",
-      "column": "blood_in_sputum"
-    },
-    {
-      "id": "prominent_veins_on_calf",
-      "display_name": "Prominent veins on calf",
-      "column": "prominent_veins_on_calf"
+      "id": "chest_tightness",
+      "display_name": "Chest Tightness",
+      "column": "chest_tightness",
+      "raw_name": "chest tightness"
     },
     {
       "id": "palpitations",
       "display_name": "Palpitations",
-      "column": "palpitations"
+      "column": "palpitations",
+      "raw_name": "palpitations"
     },
     {
-      "id": "painful_walking",
-      "display_name": "Painful walking",
-      "column": "painful_walking"
+      "id": "irregular_heartbeat",
+      "display_name": "Irregular Heartbeat",
+      "column": "irregular_heartbeat",
+      "raw_name": "irregular heartbeat"
     },
     {
-      "id": "pus_filled_pimples",
-      "display_name": "Pus filled pimples",
-      "column": "pus_filled_pimples"
+      "id": "breathing_fast",
+      "display_name": "Breathing Fast",
+      "column": "breathing_fast",
+      "raw_name": "breathing fast"
     },
     {
-      "id": "blackheads",
-      "display_name": "Blackheads",
-      "column": "blackheads"
+      "id": "hoarse_voice",
+      "display_name": "Hoarse Voice",
+      "column": "hoarse_voice",
+      "raw_name": "hoarse voice"
     },
     {
-      "id": "scurring",
-      "display_name": "Scurring",
-      "column": "scurring"
+      "id": "sore_throat",
+      "display_name": "Sore Throat",
+      "column": "sore_throat",
+      "raw_name": "sore throat"
     },
     {
-      "id": "skin_peeling",
-      "display_name": "Skin peeling",
-      "column": "skin_peeling"
+      "id": "difficulty_speaking",
+      "display_name": "Difficulty Speaking",
+      "column": "difficulty_speaking",
+      "raw_name": "difficulty speaking"
     },
     {
-      "id": "silver_like_dusting",
-      "display_name": "Silver like dusting",
-      "column": "silver_like_dusting"
+      "id": "cough",
+      "display_name": "Cough",
+      "column": "cough",
+      "raw_name": "cough"
     },
     {
-      "id": "small_dents_in_nails",
-      "display_name": "Small dents in nails",
-      "column": "small_dents_in_nails"
+      "id": "nasal_congestion",
+      "display_name": "Nasal Congestion",
+      "column": "nasal_congestion",
+      "raw_name": "nasal congestion"
     },
     {
-      "id": "inflammatory_nails",
-      "display_name": "Inflammatory nails",
-      "column": "inflammatory_nails"
+      "id": "throat_swelling",
+      "display_name": "Throat Swelling",
+      "column": "throat_swelling",
+      "raw_name": "throat swelling"
     },
     {
-      "id": "blister",
-      "display_name": "Blister",
-      "column": "blister"
+      "id": "diminished_hearing",
+      "display_name": "Diminished Hearing",
+      "column": "diminished_hearing",
+      "raw_name": "diminished hearing"
     },
     {
-      "id": "red_sore_around_nose",
-      "display_name": "Red sore around nose",
-      "column": "red_sore_around_nose"
+      "id": "lump_in_throat",
+      "display_name": "Lump In Throat",
+      "column": "lump_in_throat",
+      "raw_name": "lump in throat"
     },
     {
-      "id": "yellow_crust_ooze",
-      "display_name": "Yellow crust ooze",
-      "column": "yellow_crust_ooze"
+      "id": "throat_feels_tight",
+      "display_name": "Throat Feels Tight",
+      "column": "throat_feels_tight",
+      "raw_name": "throat feels tight"
+    },
+    {
+      "id": "difficulty_in_swallowing",
+      "display_name": "Difficulty In Swallowing",
+      "column": "difficulty_in_swallowing",
+      "raw_name": "difficulty in swallowing"
+    },
+    {
+      "id": "skin_swelling",
+      "display_name": "Skin Swelling",
+      "column": "skin_swelling",
+      "raw_name": "skin swelling"
+    },
+    {
+      "id": "retention_of_urine",
+      "display_name": "Retention Of Urine",
+      "column": "retention_of_urine",
+      "raw_name": "retention of urine"
+    },
+    {
+      "id": "groin_mass",
+      "display_name": "Groin Mass",
+      "column": "groin_mass",
+      "raw_name": "groin mass"
+    },
+    {
+      "id": "leg_pain",
+      "display_name": "Leg Pain",
+      "column": "leg_pain",
+      "raw_name": "leg pain"
+    },
+    {
+      "id": "hip_pain",
+      "display_name": "Hip Pain",
+      "column": "hip_pain",
+      "raw_name": "hip pain"
+    },
+    {
+      "id": "suprapubic_pain",
+      "display_name": "Suprapubic Pain",
+      "column": "suprapubic_pain",
+      "raw_name": "suprapubic pain"
+    },
+    {
+      "id": "blood_in_stool",
+      "display_name": "Blood In Stool",
+      "column": "blood_in_stool",
+      "raw_name": "blood in stool"
+    },
+    {
+      "id": "lack_of_growth",
+      "display_name": "Lack Of Growth",
+      "column": "lack_of_growth",
+      "raw_name": "lack of growth"
+    },
+    {
+      "id": "emotional_symptoms",
+      "display_name": "Emotional Symptoms",
+      "column": "emotional_symptoms",
+      "raw_name": "emotional symptoms"
+    },
+    {
+      "id": "elbow_weakness",
+      "display_name": "Elbow Weakness",
+      "column": "elbow_weakness",
+      "raw_name": "elbow weakness"
+    },
+    {
+      "id": "back_weakness",
+      "display_name": "Back Weakness",
+      "column": "back_weakness",
+      "raw_name": "back weakness"
+    },
+    {
+      "id": "pus_in_sputum",
+      "display_name": "Pus In Sputum",
+      "column": "pus_in_sputum",
+      "raw_name": "pus in sputum"
+    },
+    {
+      "id": "symptoms_of_the_scrotum_and_testes",
+      "display_name": "Symptoms Of The Scrotum And Testes",
+      "column": "symptoms_of_the_scrotum_and_testes",
+      "raw_name": "symptoms of the scrotum and testes"
+    },
+    {
+      "id": "swelling_of_scrotum",
+      "display_name": "Swelling Of Scrotum",
+      "column": "swelling_of_scrotum",
+      "raw_name": "swelling of scrotum"
+    },
+    {
+      "id": "pain_in_testicles",
+      "display_name": "Pain In Testicles",
+      "column": "pain_in_testicles",
+      "raw_name": "pain in testicles"
+    },
+    {
+      "id": "flatulence",
+      "display_name": "Flatulence",
+      "column": "flatulence",
+      "raw_name": "flatulence"
+    },
+    {
+      "id": "pus_draining_from_ear",
+      "display_name": "Pus Draining From Ear",
+      "column": "pus_draining_from_ear",
+      "raw_name": "pus draining from ear"
+    },
+    {
+      "id": "jaundice",
+      "display_name": "Jaundice",
+      "column": "jaundice",
+      "raw_name": "jaundice"
+    },
+    {
+      "id": "mass_in_scrotum",
+      "display_name": "Mass In Scrotum",
+      "column": "mass_in_scrotum",
+      "raw_name": "mass in scrotum"
+    },
+    {
+      "id": "white_discharge_from_eye",
+      "display_name": "White Discharge From Eye",
+      "column": "white_discharge_from_eye",
+      "raw_name": "white discharge from eye"
+    },
+    {
+      "id": "irritable_infant",
+      "display_name": "Irritable Infant",
+      "column": "irritable_infant",
+      "raw_name": "irritable infant"
+    },
+    {
+      "id": "abusing_alcohol",
+      "display_name": "Abusing Alcohol",
+      "column": "abusing_alcohol",
+      "raw_name": "abusing alcohol"
+    },
+    {
+      "id": "fainting",
+      "display_name": "Fainting",
+      "column": "fainting",
+      "raw_name": "fainting"
+    },
+    {
+      "id": "hostile_behavior",
+      "display_name": "Hostile Behavior",
+      "column": "hostile_behavior",
+      "raw_name": "hostile behavior"
+    },
+    {
+      "id": "drug_abuse",
+      "display_name": "Drug Abuse",
+      "column": "drug_abuse",
+      "raw_name": "drug abuse"
+    },
+    {
+      "id": "sharp_abdominal_pain",
+      "display_name": "Sharp Abdominal Pain",
+      "column": "sharp_abdominal_pain",
+      "raw_name": "sharp abdominal pain"
+    },
+    {
+      "id": "feeling_ill",
+      "display_name": "Feeling Ill",
+      "column": "feeling_ill",
+      "raw_name": "feeling ill"
+    },
+    {
+      "id": "vomiting",
+      "display_name": "Vomiting",
+      "column": "vomiting",
+      "raw_name": "vomiting"
+    },
+    {
+      "id": "headache",
+      "display_name": "Headache",
+      "column": "headache",
+      "raw_name": "headache"
+    },
+    {
+      "id": "nausea",
+      "display_name": "Nausea",
+      "column": "nausea",
+      "raw_name": "nausea"
+    },
+    {
+      "id": "diarrhea",
+      "display_name": "Diarrhea",
+      "column": "diarrhea",
+      "raw_name": "diarrhea"
+    },
+    {
+      "id": "vaginal_itching",
+      "display_name": "Vaginal Itching",
+      "column": "vaginal_itching",
+      "raw_name": "vaginal itching"
+    },
+    {
+      "id": "vaginal_dryness",
+      "display_name": "Vaginal Dryness",
+      "column": "vaginal_dryness",
+      "raw_name": "vaginal dryness"
+    },
+    {
+      "id": "painful_urination",
+      "display_name": "Painful Urination",
+      "column": "painful_urination",
+      "raw_name": "painful urination"
+    },
+    {
+      "id": "involuntary_urination",
+      "display_name": "Involuntary Urination",
+      "column": "involuntary_urination",
+      "raw_name": "involuntary urination"
+    },
+    {
+      "id": "pain_during_intercourse",
+      "display_name": "Pain During Intercourse",
+      "column": "pain_during_intercourse",
+      "raw_name": "pain during intercourse"
+    },
+    {
+      "id": "frequent_urination",
+      "display_name": "Frequent Urination",
+      "column": "frequent_urination",
+      "raw_name": "frequent urination"
+    },
+    {
+      "id": "lower_abdominal_pain",
+      "display_name": "Lower Abdominal Pain",
+      "column": "lower_abdominal_pain",
+      "raw_name": "lower abdominal pain"
+    },
+    {
+      "id": "vaginal_discharge",
+      "display_name": "Vaginal Discharge",
+      "column": "vaginal_discharge",
+      "raw_name": "vaginal discharge"
+    },
+    {
+      "id": "blood_in_urine",
+      "display_name": "Blood In Urine",
+      "column": "blood_in_urine",
+      "raw_name": "blood in urine"
+    },
+    {
+      "id": "hot_flashes",
+      "display_name": "Hot Flashes",
+      "column": "hot_flashes",
+      "raw_name": "hot flashes"
+    },
+    {
+      "id": "intermenstrual_bleeding",
+      "display_name": "Intermenstrual Bleeding",
+      "column": "intermenstrual_bleeding",
+      "raw_name": "intermenstrual bleeding"
+    },
+    {
+      "id": "hand_or_finger_pain",
+      "display_name": "Hand Or Finger Pain",
+      "column": "hand_or_finger_pain",
+      "raw_name": "hand or finger pain"
+    },
+    {
+      "id": "wrist_pain",
+      "display_name": "Wrist Pain",
+      "column": "wrist_pain",
+      "raw_name": "wrist pain"
+    },
+    {
+      "id": "hand_or_finger_swelling",
+      "display_name": "Hand Or Finger Swelling",
+      "column": "hand_or_finger_swelling",
+      "raw_name": "hand or finger swelling"
+    },
+    {
+      "id": "arm_pain",
+      "display_name": "Arm Pain",
+      "column": "arm_pain",
+      "raw_name": "arm pain"
+    },
+    {
+      "id": "wrist_swelling",
+      "display_name": "Wrist Swelling",
+      "column": "wrist_swelling",
+      "raw_name": "wrist swelling"
+    },
+    {
+      "id": "arm_stiffness_or_tightness",
+      "display_name": "Arm Stiffness Or Tightness",
+      "column": "arm_stiffness_or_tightness",
+      "raw_name": "arm stiffness or tightness"
+    },
+    {
+      "id": "arm_swelling",
+      "display_name": "Arm Swelling",
+      "column": "arm_swelling",
+      "raw_name": "arm swelling"
+    },
+    {
+      "id": "hand_or_finger_stiffness_or_tightness",
+      "display_name": "Hand Or Finger Stiffness Or Tightness",
+      "column": "hand_or_finger_stiffness_or_tightness",
+      "raw_name": "hand or finger stiffness or tightness"
+    },
+    {
+      "id": "wrist_stiffness_or_tightness",
+      "display_name": "Wrist Stiffness Or Tightness",
+      "column": "wrist_stiffness_or_tightness",
+      "raw_name": "wrist stiffness or tightness"
+    },
+    {
+      "id": "lip_swelling",
+      "display_name": "Lip Swelling",
+      "column": "lip_swelling",
+      "raw_name": "lip swelling"
+    },
+    {
+      "id": "toothache",
+      "display_name": "Toothache",
+      "column": "toothache",
+      "raw_name": "toothache"
+    },
+    {
+      "id": "abnormal_appearing_skin",
+      "display_name": "Abnormal Appearing Skin",
+      "column": "abnormal_appearing_skin",
+      "raw_name": "abnormal appearing skin"
+    },
+    {
+      "id": "skin_lesion",
+      "display_name": "Skin Lesion",
+      "column": "skin_lesion",
+      "raw_name": "skin lesion"
+    },
+    {
+      "id": "acne_or_pimples",
+      "display_name": "Acne Or Pimples",
+      "column": "acne_or_pimples",
+      "raw_name": "acne or pimples"
+    },
+    {
+      "id": "dry_lips",
+      "display_name": "Dry Lips",
+      "column": "dry_lips",
+      "raw_name": "dry lips"
+    },
+    {
+      "id": "facial_pain",
+      "display_name": "Facial Pain",
+      "column": "facial_pain",
+      "raw_name": "facial pain"
+    },
+    {
+      "id": "mouth_ulcer",
+      "display_name": "Mouth Ulcer",
+      "column": "mouth_ulcer",
+      "raw_name": "mouth ulcer"
+    },
+    {
+      "id": "skin_growth",
+      "display_name": "Skin Growth",
+      "column": "skin_growth",
+      "raw_name": "skin growth"
+    },
+    {
+      "id": "eye_deviation",
+      "display_name": "Eye Deviation",
+      "column": "eye_deviation",
+      "raw_name": "eye deviation"
+    },
+    {
+      "id": "diminished_vision",
+      "display_name": "Diminished Vision",
+      "column": "diminished_vision",
+      "raw_name": "diminished vision"
+    },
+    {
+      "id": "double_vision",
+      "display_name": "Double Vision",
+      "column": "double_vision",
+      "raw_name": "double vision"
+    },
+    {
+      "id": "crosseyed",
+      "display_name": "Cross-eyed",
+      "column": "crosseyed",
+      "raw_name": "cross-eyed"
+    },
+    {
+      "id": "symptoms_of_eye",
+      "display_name": "Symptoms Of Eye",
+      "column": "symptoms_of_eye",
+      "raw_name": "symptoms of eye"
+    },
+    {
+      "id": "pain_in_eye",
+      "display_name": "Pain In Eye",
+      "column": "pain_in_eye",
+      "raw_name": "pain in eye"
+    },
+    {
+      "id": "eye_moves_abnormally",
+      "display_name": "Eye Moves Abnormally",
+      "column": "eye_moves_abnormally",
+      "raw_name": "eye moves abnormally"
+    },
+    {
+      "id": "abnormal_movement_of_eyelid",
+      "display_name": "Abnormal Movement Of Eyelid",
+      "column": "abnormal_movement_of_eyelid",
+      "raw_name": "abnormal movement of eyelid"
+    },
+    {
+      "id": "foreign_body_sensation_in_eye",
+      "display_name": "Foreign Body Sensation In Eye",
+      "column": "foreign_body_sensation_in_eye",
+      "raw_name": "foreign body sensation in eye"
+    },
+    {
+      "id": "irregular_appearing_scalp",
+      "display_name": "Irregular Appearing Scalp",
+      "column": "irregular_appearing_scalp",
+      "raw_name": "irregular appearing scalp"
+    },
+    {
+      "id": "swollen_lymph_nodes",
+      "display_name": "Swollen Lymph Nodes",
+      "column": "swollen_lymph_nodes",
+      "raw_name": "swollen lymph nodes"
+    },
+    {
+      "id": "back_pain",
+      "display_name": "Back Pain",
+      "column": "back_pain",
+      "raw_name": "back pain"
+    },
+    {
+      "id": "neck_pain",
+      "display_name": "Neck Pain",
+      "column": "neck_pain",
+      "raw_name": "neck pain"
+    },
+    {
+      "id": "low_back_pain",
+      "display_name": "Low Back Pain",
+      "column": "low_back_pain",
+      "raw_name": "low back pain"
+    },
+    {
+      "id": "pain_of_the_anus",
+      "display_name": "Pain Of The Anus",
+      "column": "pain_of_the_anus",
+      "raw_name": "pain of the anus"
+    },
+    {
+      "id": "pain_during_pregnancy",
+      "display_name": "Pain During Pregnancy",
+      "column": "pain_during_pregnancy",
+      "raw_name": "pain during pregnancy"
+    },
+    {
+      "id": "pelvic_pain",
+      "display_name": "Pelvic Pain",
+      "column": "pelvic_pain",
+      "raw_name": "pelvic pain"
+    },
+    {
+      "id": "impotence",
+      "display_name": "Impotence",
+      "column": "impotence",
+      "raw_name": "impotence"
+    },
+    {
+      "id": "infant_spitting_up",
+      "display_name": "Infant Spitting Up",
+      "column": "infant_spitting_up",
+      "raw_name": "infant spitting up"
+    },
+    {
+      "id": "vomiting_blood",
+      "display_name": "Vomiting Blood",
+      "column": "vomiting_blood",
+      "raw_name": "vomiting blood"
+    },
+    {
+      "id": "regurgitation",
+      "display_name": "Regurgitation",
+      "column": "regurgitation",
+      "raw_name": "regurgitation"
+    },
+    {
+      "id": "burning_abdominal_pain",
+      "display_name": "Burning Abdominal Pain",
+      "column": "burning_abdominal_pain",
+      "raw_name": "burning abdominal pain"
+    },
+    {
+      "id": "restlessness",
+      "display_name": "Restlessness",
+      "column": "restlessness",
+      "raw_name": "restlessness"
+    },
+    {
+      "id": "symptoms_of_infants",
+      "display_name": "Symptoms Of Infants",
+      "column": "symptoms_of_infants",
+      "raw_name": "symptoms of infants"
+    },
+    {
+      "id": "wheezing",
+      "display_name": "Wheezing",
+      "column": "wheezing",
+      "raw_name": "wheezing"
+    },
+    {
+      "id": "peripheral_edema",
+      "display_name": "Peripheral Edema",
+      "column": "peripheral_edema",
+      "raw_name": "peripheral edema"
+    },
+    {
+      "id": "neck_mass",
+      "display_name": "Neck Mass",
+      "column": "neck_mass",
+      "raw_name": "neck mass"
+    },
+    {
+      "id": "ear_pain",
+      "display_name": "Ear Pain",
+      "column": "ear_pain",
+      "raw_name": "ear pain"
+    },
+    {
+      "id": "jaw_swelling",
+      "display_name": "Jaw Swelling",
+      "column": "jaw_swelling",
+      "raw_name": "jaw swelling"
+    },
+    {
+      "id": "mouth_dryness",
+      "display_name": "Mouth Dryness",
+      "column": "mouth_dryness",
+      "raw_name": "mouth dryness"
+    },
+    {
+      "id": "neck_swelling",
+      "display_name": "Neck Swelling",
+      "column": "neck_swelling",
+      "raw_name": "neck swelling"
+    },
+    {
+      "id": "knee_pain",
+      "display_name": "Knee Pain",
+      "column": "knee_pain",
+      "raw_name": "knee pain"
+    },
+    {
+      "id": "foot_or_toe_pain",
+      "display_name": "Foot Or Toe Pain",
+      "column": "foot_or_toe_pain",
+      "raw_name": "foot or toe pain"
+    },
+    {
+      "id": "bowlegged_or_knockkneed",
+      "display_name": "Bowlegged Or Knock-kneed",
+      "column": "bowlegged_or_knockkneed",
+      "raw_name": "bowlegged or knock-kneed"
+    },
+    {
+      "id": "ankle_pain",
+      "display_name": "Ankle Pain",
+      "column": "ankle_pain",
+      "raw_name": "ankle pain"
+    },
+    {
+      "id": "bones_are_painful",
+      "display_name": "Bones Are Painful",
+      "column": "bones_are_painful",
+      "raw_name": "bones are painful"
+    },
+    {
+      "id": "knee_weakness",
+      "display_name": "Knee Weakness",
+      "column": "knee_weakness",
+      "raw_name": "knee weakness"
+    },
+    {
+      "id": "elbow_pain",
+      "display_name": "Elbow Pain",
+      "column": "elbow_pain",
+      "raw_name": "elbow pain"
+    },
+    {
+      "id": "knee_swelling",
+      "display_name": "Knee Swelling",
+      "column": "knee_swelling",
+      "raw_name": "knee swelling"
+    },
+    {
+      "id": "skin_moles",
+      "display_name": "Skin Moles",
+      "column": "skin_moles",
+      "raw_name": "skin moles"
+    },
+    {
+      "id": "knee_lump_or_mass",
+      "display_name": "Knee Lump Or Mass",
+      "column": "knee_lump_or_mass",
+      "raw_name": "knee lump or mass"
+    },
+    {
+      "id": "weight_gain",
+      "display_name": "Weight Gain",
+      "column": "weight_gain",
+      "raw_name": "weight gain"
+    },
+    {
+      "id": "problems_with_movement",
+      "display_name": "Problems With Movement",
+      "column": "problems_with_movement",
+      "raw_name": "problems with movement"
+    },
+    {
+      "id": "knee_stiffness_or_tightness",
+      "display_name": "Knee Stiffness Or Tightness",
+      "column": "knee_stiffness_or_tightness",
+      "raw_name": "knee stiffness or tightness"
+    },
+    {
+      "id": "leg_swelling",
+      "display_name": "Leg Swelling",
+      "column": "leg_swelling",
+      "raw_name": "leg swelling"
+    },
+    {
+      "id": "foot_or_toe_swelling",
+      "display_name": "Foot Or Toe Swelling",
+      "column": "foot_or_toe_swelling",
+      "raw_name": "foot or toe swelling"
+    },
+    {
+      "id": "heartburn",
+      "display_name": "Heartburn",
+      "column": "heartburn",
+      "raw_name": "heartburn"
+    },
+    {
+      "id": "smoking_problems",
+      "display_name": "Smoking Problems",
+      "column": "smoking_problems",
+      "raw_name": "smoking problems"
+    },
+    {
+      "id": "muscle_pain",
+      "display_name": "Muscle Pain",
+      "column": "muscle_pain",
+      "raw_name": "muscle pain"
+    },
+    {
+      "id": "infant_feeding_problem",
+      "display_name": "Infant Feeding Problem",
+      "column": "infant_feeding_problem",
+      "raw_name": "infant feeding problem"
+    },
+    {
+      "id": "recent_weight_loss",
+      "display_name": "Recent Weight Loss",
+      "column": "recent_weight_loss",
+      "raw_name": "recent weight loss"
+    },
+    {
+      "id": "problems_with_shape_or_size_of_breast",
+      "display_name": "Problems With Shape Or Size Of Breast",
+      "column": "problems_with_shape_or_size_of_breast",
+      "raw_name": "problems with shape or size of breast"
+    },
+    {
+      "id": "underweight",
+      "display_name": "Underweight",
+      "column": "underweight",
+      "raw_name": "underweight"
+    },
+    {
+      "id": "difficulty_eating",
+      "display_name": "Difficulty Eating",
+      "column": "difficulty_eating",
+      "raw_name": "difficulty eating"
+    },
+    {
+      "id": "scanty_menstrual_flow",
+      "display_name": "Scanty Menstrual Flow",
+      "column": "scanty_menstrual_flow",
+      "raw_name": "scanty menstrual flow"
+    },
+    {
+      "id": "vaginal_pain",
+      "display_name": "Vaginal Pain",
+      "column": "vaginal_pain",
+      "raw_name": "vaginal pain"
+    },
+    {
+      "id": "vaginal_redness",
+      "display_name": "Vaginal Redness",
+      "column": "vaginal_redness",
+      "raw_name": "vaginal redness"
+    },
+    {
+      "id": "vulvar_irritation",
+      "display_name": "Vulvar Irritation",
+      "column": "vulvar_irritation",
+      "raw_name": "vulvar irritation"
+    },
+    {
+      "id": "weakness",
+      "display_name": "Weakness",
+      "column": "weakness",
+      "raw_name": "weakness"
+    },
+    {
+      "id": "decreased_heart_rate",
+      "display_name": "Decreased Heart Rate",
+      "column": "decreased_heart_rate",
+      "raw_name": "decreased heart rate"
+    },
+    {
+      "id": "increased_heart_rate",
+      "display_name": "Increased Heart Rate",
+      "column": "increased_heart_rate",
+      "raw_name": "increased heart rate"
+    },
+    {
+      "id": "bleeding_or_discharge_from_nipple",
+      "display_name": "Bleeding Or Discharge From Nipple",
+      "column": "bleeding_or_discharge_from_nipple",
+      "raw_name": "bleeding or discharge from nipple"
+    },
+    {
+      "id": "ringing_in_ear",
+      "display_name": "Ringing In Ear",
+      "column": "ringing_in_ear",
+      "raw_name": "ringing in ear"
+    },
+    {
+      "id": "plugged_feeling_in_ear",
+      "display_name": "Plugged Feeling In Ear",
+      "column": "plugged_feeling_in_ear",
+      "raw_name": "plugged feeling in ear"
+    },
+    {
+      "id": "itchy_ears",
+      "display_name": "Itchy Ear(s)",
+      "column": "itchy_ears",
+      "raw_name": "itchy ear(s)"
+    },
+    {
+      "id": "frontal_headache",
+      "display_name": "Frontal Headache",
+      "column": "frontal_headache",
+      "raw_name": "frontal headache"
+    },
+    {
+      "id": "fluid_in_ear",
+      "display_name": "Fluid In Ear",
+      "column": "fluid_in_ear",
+      "raw_name": "fluid in ear"
+    },
+    {
+      "id": "neck_stiffness_or_tightness",
+      "display_name": "Neck Stiffness Or Tightness",
+      "column": "neck_stiffness_or_tightness",
+      "raw_name": "neck stiffness or tightness"
+    },
+    {
+      "id": "spots_or_clouds_in_vision",
+      "display_name": "Spots Or Clouds In Vision",
+      "column": "spots_or_clouds_in_vision",
+      "raw_name": "spots or clouds in vision"
+    },
+    {
+      "id": "eye_redness",
+      "display_name": "Eye Redness",
+      "column": "eye_redness",
+      "raw_name": "eye redness"
+    },
+    {
+      "id": "lacrimation",
+      "display_name": "Lacrimation",
+      "column": "lacrimation",
+      "raw_name": "lacrimation"
+    },
+    {
+      "id": "itchiness_of_eye",
+      "display_name": "Itchiness Of Eye",
+      "column": "itchiness_of_eye",
+      "raw_name": "itchiness of eye"
+    },
+    {
+      "id": "blindness",
+      "display_name": "Blindness",
+      "column": "blindness",
+      "raw_name": "blindness"
+    },
+    {
+      "id": "eye_burns_or_stings",
+      "display_name": "Eye Burns Or Stings",
+      "column": "eye_burns_or_stings",
+      "raw_name": "eye burns or stings"
+    },
+    {
+      "id": "itchy_eyelid",
+      "display_name": "Itchy Eyelid",
+      "column": "itchy_eyelid",
+      "raw_name": "itchy eyelid"
+    },
+    {
+      "id": "feeling_cold",
+      "display_name": "Feeling Cold",
+      "column": "feeling_cold",
+      "raw_name": "feeling cold"
+    },
+    {
+      "id": "decreased_appetite",
+      "display_name": "Decreased Appetite",
+      "column": "decreased_appetite",
+      "raw_name": "decreased appetite"
+    },
+    {
+      "id": "excessive_appetite",
+      "display_name": "Excessive Appetite",
+      "column": "excessive_appetite",
+      "raw_name": "excessive appetite"
+    },
+    {
+      "id": "excessive_anger",
+      "display_name": "Excessive Anger",
+      "column": "excessive_anger",
+      "raw_name": "excessive anger"
+    },
+    {
+      "id": "loss_of_sensation",
+      "display_name": "Loss Of Sensation",
+      "column": "loss_of_sensation",
+      "raw_name": "loss of sensation"
+    },
+    {
+      "id": "focal_weakness",
+      "display_name": "Focal Weakness",
+      "column": "focal_weakness",
+      "raw_name": "focal weakness"
+    },
+    {
+      "id": "slurring_words",
+      "display_name": "Slurring Words",
+      "column": "slurring_words",
+      "raw_name": "slurring words"
+    },
+    {
+      "id": "symptoms_of_the_face",
+      "display_name": "Symptoms Of The Face",
+      "column": "symptoms_of_the_face",
+      "raw_name": "symptoms of the face"
+    },
+    {
+      "id": "disturbance_of_memory",
+      "display_name": "Disturbance Of Memory",
+      "column": "disturbance_of_memory",
+      "raw_name": "disturbance of memory"
+    },
+    {
+      "id": "paresthesia",
+      "display_name": "Paresthesia",
+      "column": "paresthesia",
+      "raw_name": "paresthesia"
+    },
+    {
+      "id": "side_pain",
+      "display_name": "Side Pain",
+      "column": "side_pain",
+      "raw_name": "side pain"
+    },
+    {
+      "id": "fever",
+      "display_name": "Fever",
+      "column": "fever",
+      "raw_name": "fever"
+    },
+    {
+      "id": "shoulder_pain",
+      "display_name": "Shoulder Pain",
+      "column": "shoulder_pain",
+      "raw_name": "shoulder pain"
+    },
+    {
+      "id": "shoulder_stiffness_or_tightness",
+      "display_name": "Shoulder Stiffness Or Tightness",
+      "column": "shoulder_stiffness_or_tightness",
+      "raw_name": "shoulder stiffness or tightness"
+    },
+    {
+      "id": "shoulder_weakness",
+      "display_name": "Shoulder Weakness",
+      "column": "shoulder_weakness",
+      "raw_name": "shoulder weakness"
+    },
+    {
+      "id": "arm_cramps_or_spasms",
+      "display_name": "Arm Cramps Or Spasms",
+      "column": "arm_cramps_or_spasms",
+      "raw_name": "arm cramps or spasms"
+    },
+    {
+      "id": "shoulder_swelling",
+      "display_name": "Shoulder Swelling",
+      "column": "shoulder_swelling",
+      "raw_name": "shoulder swelling"
+    },
+    {
+      "id": "tongue_lesions",
+      "display_name": "Tongue Lesions",
+      "column": "tongue_lesions",
+      "raw_name": "tongue lesions"
+    },
+    {
+      "id": "leg_cramps_or_spasms",
+      "display_name": "Leg Cramps Or Spasms",
+      "column": "leg_cramps_or_spasms",
+      "raw_name": "leg cramps or spasms"
+    },
+    {
+      "id": "abnormal_appearing_tongue",
+      "display_name": "Abnormal Appearing Tongue",
+      "column": "abnormal_appearing_tongue",
+      "raw_name": "abnormal appearing tongue"
+    },
+    {
+      "id": "ache_all_over",
+      "display_name": "Ache All Over",
+      "column": "ache_all_over",
+      "raw_name": "ache all over"
+    },
+    {
+      "id": "lower_body_pain",
+      "display_name": "Lower Body Pain",
+      "column": "lower_body_pain",
+      "raw_name": "lower body pain"
+    },
+    {
+      "id": "problems_during_pregnancy",
+      "display_name": "Problems During Pregnancy",
+      "column": "problems_during_pregnancy",
+      "raw_name": "problems during pregnancy"
+    },
+    {
+      "id": "spotting_or_bleeding_during_pregnancy",
+      "display_name": "Spotting Or Bleeding During Pregnancy",
+      "column": "spotting_or_bleeding_during_pregnancy",
+      "raw_name": "spotting or bleeding during pregnancy"
+    },
+    {
+      "id": "cramps_and_spasms",
+      "display_name": "Cramps And Spasms",
+      "column": "cramps_and_spasms",
+      "raw_name": "cramps and spasms"
+    },
+    {
+      "id": "upper_abdominal_pain",
+      "display_name": "Upper Abdominal Pain",
+      "column": "upper_abdominal_pain",
+      "raw_name": "upper abdominal pain"
+    },
+    {
+      "id": "stomach_bloating",
+      "display_name": "Stomach Bloating",
+      "column": "stomach_bloating",
+      "raw_name": "stomach bloating"
+    },
+    {
+      "id": "changes_in_stool_appearance",
+      "display_name": "Changes In Stool Appearance",
+      "column": "changes_in_stool_appearance",
+      "raw_name": "changes in stool appearance"
+    },
+    {
+      "id": "unusual_color_or_odor_to_urine",
+      "display_name": "Unusual Color Or Odor To Urine",
+      "column": "unusual_color_or_odor_to_urine",
+      "raw_name": "unusual color or odor to urine"
+    },
+    {
+      "id": "kidney_mass",
+      "display_name": "Kidney Mass",
+      "column": "kidney_mass",
+      "raw_name": "kidney mass"
+    },
+    {
+      "id": "swollen_abdomen",
+      "display_name": "Swollen Abdomen",
+      "column": "swollen_abdomen",
+      "raw_name": "swollen abdomen"
+    },
+    {
+      "id": "symptoms_of_prostate",
+      "display_name": "Symptoms Of Prostate",
+      "column": "symptoms_of_prostate",
+      "raw_name": "symptoms of prostate"
+    },
+    {
+      "id": "leg_stiffness_or_tightness",
+      "display_name": "Leg Stiffness Or Tightness",
+      "column": "leg_stiffness_or_tightness",
+      "raw_name": "leg stiffness or tightness"
+    },
+    {
+      "id": "difficulty_breathing",
+      "display_name": "Difficulty Breathing",
+      "column": "difficulty_breathing",
+      "raw_name": "difficulty breathing"
+    },
+    {
+      "id": "rib_pain",
+      "display_name": "Rib Pain",
+      "column": "rib_pain",
+      "raw_name": "rib pain"
+    },
+    {
+      "id": "joint_pain",
+      "display_name": "Joint Pain",
+      "column": "joint_pain",
+      "raw_name": "joint pain"
+    },
+    {
+      "id": "muscle_stiffness_or_tightness",
+      "display_name": "Muscle Stiffness Or Tightness",
+      "column": "muscle_stiffness_or_tightness",
+      "raw_name": "muscle stiffness or tightness"
+    },
+    {
+      "id": "pallor",
+      "display_name": "Pallor",
+      "column": "pallor",
+      "raw_name": "pallor"
+    },
+    {
+      "id": "hand_or_finger_lump_or_mass",
+      "display_name": "Hand Or Finger Lump Or Mass",
+      "column": "hand_or_finger_lump_or_mass",
+      "raw_name": "hand or finger lump or mass"
+    },
+    {
+      "id": "chills",
+      "display_name": "Chills",
+      "column": "chills",
+      "raw_name": "chills"
+    },
+    {
+      "id": "groin_pain",
+      "display_name": "Groin Pain",
+      "column": "groin_pain",
+      "raw_name": "groin pain"
+    },
+    {
+      "id": "fatigue",
+      "display_name": "Fatigue",
+      "column": "fatigue",
+      "raw_name": "fatigue"
+    },
+    {
+      "id": "abdominal_distention",
+      "display_name": "Abdominal Distention",
+      "column": "abdominal_distention",
+      "raw_name": "abdominal distention"
+    },
+    {
+      "id": "regurgitation1",
+      "display_name": "Regurgitation.1",
+      "column": "regurgitation1",
+      "raw_name": "regurgitation.1"
+    },
+    {
+      "id": "symptoms_of_the_kidneys",
+      "display_name": "Symptoms Of The Kidneys",
+      "column": "symptoms_of_the_kidneys",
+      "raw_name": "symptoms of the kidneys"
+    },
+    {
+      "id": "melena",
+      "display_name": "Melena",
+      "column": "melena",
+      "raw_name": "melena"
+    },
+    {
+      "id": "flushing",
+      "display_name": "Flushing",
+      "column": "flushing",
+      "raw_name": "flushing"
+    },
+    {
+      "id": "coughing_up_sputum",
+      "display_name": "Coughing Up Sputum",
+      "column": "coughing_up_sputum",
+      "raw_name": "coughing up sputum"
+    },
+    {
+      "id": "seizures",
+      "display_name": "Seizures",
+      "column": "seizures",
+      "raw_name": "seizures"
+    },
+    {
+      "id": "delusions_or_hallucinations",
+      "display_name": "Delusions Or Hallucinations",
+      "column": "delusions_or_hallucinations",
+      "raw_name": "delusions or hallucinations"
+    },
+    {
+      "id": "shoulder_cramps_or_spasms",
+      "display_name": "Shoulder Cramps Or Spasms",
+      "column": "shoulder_cramps_or_spasms",
+      "raw_name": "shoulder cramps or spasms"
+    },
+    {
+      "id": "joint_stiffness_or_tightness",
+      "display_name": "Joint Stiffness Or Tightness",
+      "column": "joint_stiffness_or_tightness",
+      "raw_name": "joint stiffness or tightness"
+    },
+    {
+      "id": "pain_or_soreness_of_breast",
+      "display_name": "Pain Or Soreness Of Breast",
+      "column": "pain_or_soreness_of_breast",
+      "raw_name": "pain or soreness of breast"
+    },
+    {
+      "id": "excessive_urination_at_night",
+      "display_name": "Excessive Urination At Night",
+      "column": "excessive_urination_at_night",
+      "raw_name": "excessive urination at night"
+    },
+    {
+      "id": "bleeding_from_eye",
+      "display_name": "Bleeding From Eye",
+      "column": "bleeding_from_eye",
+      "raw_name": "bleeding from eye"
+    },
+    {
+      "id": "rectal_bleeding",
+      "display_name": "Rectal Bleeding",
+      "column": "rectal_bleeding",
+      "raw_name": "rectal bleeding"
+    },
+    {
+      "id": "constipation",
+      "display_name": "Constipation",
+      "column": "constipation",
+      "raw_name": "constipation"
+    },
+    {
+      "id": "temper_problems",
+      "display_name": "Temper Problems",
+      "column": "temper_problems",
+      "raw_name": "temper problems"
+    },
+    {
+      "id": "coryza",
+      "display_name": "Coryza",
+      "column": "coryza",
+      "raw_name": "coryza"
+    },
+    {
+      "id": "wrist_weakness",
+      "display_name": "Wrist Weakness",
+      "column": "wrist_weakness",
+      "raw_name": "wrist weakness"
+    },
+    {
+      "id": "eye_strain",
+      "display_name": "Eye Strain",
+      "column": "eye_strain",
+      "raw_name": "eye strain"
+    },
+    {
+      "id": "hemoptysis",
+      "display_name": "Hemoptysis",
+      "column": "hemoptysis",
+      "raw_name": "hemoptysis"
+    },
+    {
+      "id": "lymphedema",
+      "display_name": "Lymphedema",
+      "column": "lymphedema",
+      "raw_name": "lymphedema"
+    },
+    {
+      "id": "skin_on_leg_or_foot_looks_infected",
+      "display_name": "Skin On Leg Or Foot Looks Infected",
+      "column": "skin_on_leg_or_foot_looks_infected",
+      "raw_name": "skin on leg or foot looks infected"
+    },
+    {
+      "id": "allergic_reaction",
+      "display_name": "Allergic Reaction",
+      "column": "allergic_reaction",
+      "raw_name": "allergic reaction"
+    },
+    {
+      "id": "congestion_in_chest",
+      "display_name": "Congestion In Chest",
+      "column": "congestion_in_chest",
+      "raw_name": "congestion in chest"
+    },
+    {
+      "id": "muscle_swelling",
+      "display_name": "Muscle Swelling",
+      "column": "muscle_swelling",
+      "raw_name": "muscle swelling"
+    },
+    {
+      "id": "pus_in_urine",
+      "display_name": "Pus In Urine",
+      "column": "pus_in_urine",
+      "raw_name": "pus in urine"
+    },
+    {
+      "id": "abnormal_size_or_shape_of_ear",
+      "display_name": "Abnormal Size Or Shape Of Ear",
+      "column": "abnormal_size_or_shape_of_ear",
+      "raw_name": "abnormal size or shape of ear"
+    },
+    {
+      "id": "low_back_weakness",
+      "display_name": "Low Back Weakness",
+      "column": "low_back_weakness",
+      "raw_name": "low back weakness"
+    },
+    {
+      "id": "sleepiness",
+      "display_name": "Sleepiness",
+      "column": "sleepiness",
+      "raw_name": "sleepiness"
+    },
+    {
+      "id": "apnea",
+      "display_name": "Apnea",
+      "column": "apnea",
+      "raw_name": "apnea"
+    },
+    {
+      "id": "abnormal_breathing_sounds",
+      "display_name": "Abnormal Breathing Sounds",
+      "column": "abnormal_breathing_sounds",
+      "raw_name": "abnormal breathing sounds"
+    },
+    {
+      "id": "excessive_growth",
+      "display_name": "Excessive Growth",
+      "column": "excessive_growth",
+      "raw_name": "excessive growth"
+    },
+    {
+      "id": "elbow_cramps_or_spasms",
+      "display_name": "Elbow Cramps Or Spasms",
+      "column": "elbow_cramps_or_spasms",
+      "raw_name": "elbow cramps or spasms"
+    },
+    {
+      "id": "feeling_hot_and_cold",
+      "display_name": "Feeling Hot And Cold",
+      "column": "feeling_hot_and_cold",
+      "raw_name": "feeling hot and cold"
+    },
+    {
+      "id": "blood_clots_during_menstrual_periods",
+      "display_name": "Blood Clots During Menstrual Periods",
+      "column": "blood_clots_during_menstrual_periods",
+      "raw_name": "blood clots during menstrual periods"
+    },
+    {
+      "id": "absence_of_menstruation",
+      "display_name": "Absence Of Menstruation",
+      "column": "absence_of_menstruation",
+      "raw_name": "absence of menstruation"
+    },
+    {
+      "id": "pulling_at_ears",
+      "display_name": "Pulling At Ears",
+      "column": "pulling_at_ears",
+      "raw_name": "pulling at ears"
+    },
+    {
+      "id": "gum_pain",
+      "display_name": "Gum Pain",
+      "column": "gum_pain",
+      "raw_name": "gum pain"
+    },
+    {
+      "id": "redness_in_ear",
+      "display_name": "Redness In Ear",
+      "column": "redness_in_ear",
+      "raw_name": "redness in ear"
+    },
+    {
+      "id": "fluid_retention",
+      "display_name": "Fluid Retention",
+      "column": "fluid_retention",
+      "raw_name": "fluid retention"
+    },
+    {
+      "id": "flulike_syndrome",
+      "display_name": "Flu-like Syndrome",
+      "column": "flulike_syndrome",
+      "raw_name": "flu-like syndrome"
+    },
+    {
+      "id": "sinus_congestion",
+      "display_name": "Sinus Congestion",
+      "column": "sinus_congestion",
+      "raw_name": "sinus congestion"
+    },
+    {
+      "id": "painful_sinuses",
+      "display_name": "Painful Sinuses",
+      "column": "painful_sinuses",
+      "raw_name": "painful sinuses"
+    },
+    {
+      "id": "fears_and_phobias",
+      "display_name": "Fears And Phobias",
+      "column": "fears_and_phobias",
+      "raw_name": "fears and phobias"
+    },
+    {
+      "id": "recent_pregnancy",
+      "display_name": "Recent Pregnancy",
+      "column": "recent_pregnancy",
+      "raw_name": "recent pregnancy"
+    },
+    {
+      "id": "uterine_contractions",
+      "display_name": "Uterine Contractions",
+      "column": "uterine_contractions",
+      "raw_name": "uterine contractions"
+    },
+    {
+      "id": "burning_chest_pain",
+      "display_name": "Burning Chest Pain",
+      "column": "burning_chest_pain",
+      "raw_name": "burning chest pain"
+    },
+    {
+      "id": "back_cramps_or_spasms",
+      "display_name": "Back Cramps Or Spasms",
+      "column": "back_cramps_or_spasms",
+      "raw_name": "back cramps or spasms"
+    },
+    {
+      "id": "stiffness_all_over",
+      "display_name": "Stiffness All Over",
+      "column": "stiffness_all_over",
+      "raw_name": "stiffness all over"
+    },
+    {
+      "id": "muscle_cramps_contractures_or_spasms",
+      "display_name": "Muscle Cramps, Contractures, Or Spasms",
+      "column": "muscle_cramps_contractures_or_spasms",
+      "raw_name": "muscle cramps, contractures, or spasms"
+    },
+    {
+      "id": "low_back_cramps_or_spasms",
+      "display_name": "Low Back Cramps Or Spasms",
+      "column": "low_back_cramps_or_spasms",
+      "raw_name": "low back cramps or spasms"
+    },
+    {
+      "id": "back_mass_or_lump",
+      "display_name": "Back Mass Or Lump",
+      "column": "back_mass_or_lump",
+      "raw_name": "back mass or lump"
+    },
+    {
+      "id": "nosebleed",
+      "display_name": "Nosebleed",
+      "column": "nosebleed",
+      "raw_name": "nosebleed"
+    },
+    {
+      "id": "long_menstrual_periods",
+      "display_name": "Long Menstrual Periods",
+      "column": "long_menstrual_periods",
+      "raw_name": "long menstrual periods"
+    },
+    {
+      "id": "heavy_menstrual_flow",
+      "display_name": "Heavy Menstrual Flow",
+      "column": "heavy_menstrual_flow",
+      "raw_name": "heavy menstrual flow"
+    },
+    {
+      "id": "unpredictable_menstruation",
+      "display_name": "Unpredictable Menstruation",
+      "column": "unpredictable_menstruation",
+      "raw_name": "unpredictable menstruation"
+    },
+    {
+      "id": "painful_menstruation",
+      "display_name": "Painful Menstruation",
+      "column": "painful_menstruation",
+      "raw_name": "painful menstruation"
+    },
+    {
+      "id": "infertility",
+      "display_name": "Infertility",
+      "column": "infertility",
+      "raw_name": "infertility"
+    },
+    {
+      "id": "frequent_menstruation",
+      "display_name": "Frequent Menstruation",
+      "column": "frequent_menstruation",
+      "raw_name": "frequent menstruation"
+    },
+    {
+      "id": "sweating",
+      "display_name": "Sweating",
+      "column": "sweating",
+      "raw_name": "sweating"
+    },
+    {
+      "id": "mass_on_eyelid",
+      "display_name": "Mass On Eyelid",
+      "column": "mass_on_eyelid",
+      "raw_name": "mass on eyelid"
+    },
+    {
+      "id": "swollen_eye",
+      "display_name": "Swollen Eye",
+      "column": "swollen_eye",
+      "raw_name": "swollen eye"
+    },
+    {
+      "id": "eyelid_swelling",
+      "display_name": "Eyelid Swelling",
+      "column": "eyelid_swelling",
+      "raw_name": "eyelid swelling"
+    },
+    {
+      "id": "eyelid_lesion_or_rash",
+      "display_name": "Eyelid Lesion Or Rash",
+      "column": "eyelid_lesion_or_rash",
+      "raw_name": "eyelid lesion or rash"
+    },
+    {
+      "id": "unwanted_hair",
+      "display_name": "Unwanted Hair",
+      "column": "unwanted_hair",
+      "raw_name": "unwanted hair"
+    },
+    {
+      "id": "symptoms_of_bladder",
+      "display_name": "Symptoms Of Bladder",
+      "column": "symptoms_of_bladder",
+      "raw_name": "symptoms of bladder"
+    },
+    {
+      "id": "irregular_appearing_nails",
+      "display_name": "Irregular Appearing Nails",
+      "column": "irregular_appearing_nails",
+      "raw_name": "irregular appearing nails"
+    },
+    {
+      "id": "itching_of_skin",
+      "display_name": "Itching Of Skin",
+      "column": "itching_of_skin",
+      "raw_name": "itching of skin"
+    },
+    {
+      "id": "hurts_to_breath",
+      "display_name": "Hurts To Breath",
+      "column": "hurts_to_breath",
+      "raw_name": "hurts to breath"
+    },
+    {
+      "id": "nailbiting",
+      "display_name": "Nailbiting",
+      "column": "nailbiting",
+      "raw_name": "nailbiting"
+    },
+    {
+      "id": "skin_dryness_peeling_scaliness_or_roughness",
+      "display_name": "Skin Dryness, Peeling, Scaliness, Or Roughness",
+      "column": "skin_dryness_peeling_scaliness_or_roughness",
+      "raw_name": "skin dryness, peeling, scaliness, or roughness"
+    },
+    {
+      "id": "skin_on_arm_or_hand_looks_infected",
+      "display_name": "Skin On Arm Or Hand Looks Infected",
+      "column": "skin_on_arm_or_hand_looks_infected",
+      "raw_name": "skin on arm or hand looks infected"
+    },
+    {
+      "id": "skin_irritation",
+      "display_name": "Skin Irritation",
+      "column": "skin_irritation",
+      "raw_name": "skin irritation"
+    },
+    {
+      "id": "itchy_scalp",
+      "display_name": "Itchy Scalp",
+      "column": "itchy_scalp",
+      "raw_name": "itchy scalp"
+    },
+    {
+      "id": "hip_swelling",
+      "display_name": "Hip Swelling",
+      "column": "hip_swelling",
+      "raw_name": "hip swelling"
+    },
+    {
+      "id": "incontinence_of_stool",
+      "display_name": "Incontinence Of Stool",
+      "column": "incontinence_of_stool",
+      "raw_name": "incontinence of stool"
+    },
+    {
+      "id": "foot_or_toe_cramps_or_spasms",
+      "display_name": "Foot Or Toe Cramps Or Spasms",
+      "column": "foot_or_toe_cramps_or_spasms",
+      "raw_name": "foot or toe cramps or spasms"
+    },
+    {
+      "id": "warts",
+      "display_name": "Warts",
+      "column": "warts",
+      "raw_name": "warts"
+    },
+    {
+      "id": "bumps_on_penis",
+      "display_name": "Bumps On Penis",
+      "column": "bumps_on_penis",
+      "raw_name": "bumps on penis"
+    },
+    {
+      "id": "too_little_hair",
+      "display_name": "Too Little Hair",
+      "column": "too_little_hair",
+      "raw_name": "too little hair"
+    },
+    {
+      "id": "foot_or_toe_lump_or_mass",
+      "display_name": "Foot Or Toe Lump Or Mass",
+      "column": "foot_or_toe_lump_or_mass",
+      "raw_name": "foot or toe lump or mass"
+    },
+    {
+      "id": "skin_rash",
+      "display_name": "Skin Rash",
+      "column": "skin_rash",
+      "raw_name": "skin rash"
+    },
+    {
+      "id": "mass_or_swelling_around_the_anus",
+      "display_name": "Mass Or Swelling Around The Anus",
+      "column": "mass_or_swelling_around_the_anus",
+      "raw_name": "mass or swelling around the anus"
+    },
+    {
+      "id": "low_back_swelling",
+      "display_name": "Low Back Swelling",
+      "column": "low_back_swelling",
+      "raw_name": "low back swelling"
+    },
+    {
+      "id": "ankle_swelling",
+      "display_name": "Ankle Swelling",
+      "column": "ankle_swelling",
+      "raw_name": "ankle swelling"
+    },
+    {
+      "id": "hip_lump_or_mass",
+      "display_name": "Hip Lump Or Mass",
+      "column": "hip_lump_or_mass",
+      "raw_name": "hip lump or mass"
+    },
+    {
+      "id": "drainage_in_throat",
+      "display_name": "Drainage In Throat",
+      "column": "drainage_in_throat",
+      "raw_name": "drainage in throat"
+    },
+    {
+      "id": "dry_or_flaky_scalp",
+      "display_name": "Dry Or Flaky Scalp",
+      "column": "dry_or_flaky_scalp",
+      "raw_name": "dry or flaky scalp"
+    },
+    {
+      "id": "premenstrual_tension_or_irritability",
+      "display_name": "Premenstrual Tension Or Irritability",
+      "column": "premenstrual_tension_or_irritability",
+      "raw_name": "premenstrual tension or irritability"
+    },
+    {
+      "id": "feeling_hot",
+      "display_name": "Feeling Hot",
+      "column": "feeling_hot",
+      "raw_name": "feeling hot"
+    },
+    {
+      "id": "feet_turned_in",
+      "display_name": "Feet Turned In",
+      "column": "feet_turned_in",
+      "raw_name": "feet turned in"
+    },
+    {
+      "id": "foot_or_toe_stiffness_or_tightness",
+      "display_name": "Foot Or Toe Stiffness Or Tightness",
+      "column": "foot_or_toe_stiffness_or_tightness",
+      "raw_name": "foot or toe stiffness or tightness"
+    },
+    {
+      "id": "pelvic_pressure",
+      "display_name": "Pelvic Pressure",
+      "column": "pelvic_pressure",
+      "raw_name": "pelvic pressure"
+    },
+    {
+      "id": "elbow_swelling",
+      "display_name": "Elbow Swelling",
+      "column": "elbow_swelling",
+      "raw_name": "elbow swelling"
+    },
+    {
+      "id": "elbow_stiffness_or_tightness",
+      "display_name": "Elbow Stiffness Or Tightness",
+      "column": "elbow_stiffness_or_tightness",
+      "raw_name": "elbow stiffness or tightness"
+    },
+    {
+      "id": "early_or_late_onset_of_menopause",
+      "display_name": "Early Or Late Onset Of Menopause",
+      "column": "early_or_late_onset_of_menopause",
+      "raw_name": "early or late onset of menopause"
+    },
+    {
+      "id": "mass_on_ear",
+      "display_name": "Mass On Ear",
+      "column": "mass_on_ear",
+      "raw_name": "mass on ear"
+    },
+    {
+      "id": "bleeding_from_ear",
+      "display_name": "Bleeding From Ear",
+      "column": "bleeding_from_ear",
+      "raw_name": "bleeding from ear"
+    },
+    {
+      "id": "hand_or_finger_weakness",
+      "display_name": "Hand Or Finger Weakness",
+      "column": "hand_or_finger_weakness",
+      "raw_name": "hand or finger weakness"
+    },
+    {
+      "id": "low_selfesteem",
+      "display_name": "Low Self-esteem",
+      "column": "low_selfesteem",
+      "raw_name": "low self-esteem"
+    },
+    {
+      "id": "throat_irritation",
+      "display_name": "Throat Irritation",
+      "column": "throat_irritation",
+      "raw_name": "throat irritation"
+    },
+    {
+      "id": "itching_of_the_anus",
+      "display_name": "Itching Of The Anus",
+      "column": "itching_of_the_anus",
+      "raw_name": "itching of the anus"
+    },
+    {
+      "id": "swollen_or_red_tonsils",
+      "display_name": "Swollen Or Red Tonsils",
+      "column": "swollen_or_red_tonsils",
+      "raw_name": "swollen or red tonsils"
+    },
+    {
+      "id": "irregular_belly_button",
+      "display_name": "Irregular Belly Button",
+      "column": "irregular_belly_button",
+      "raw_name": "irregular belly button"
+    },
+    {
+      "id": "swollen_tongue",
+      "display_name": "Swollen Tongue",
+      "column": "swollen_tongue",
+      "raw_name": "swollen tongue"
+    },
+    {
+      "id": "lip_sore",
+      "display_name": "Lip Sore",
+      "column": "lip_sore",
+      "raw_name": "lip sore"
+    },
+    {
+      "id": "vulvar_sore",
+      "display_name": "Vulvar Sore",
+      "column": "vulvar_sore",
+      "raw_name": "vulvar sore"
+    },
+    {
+      "id": "hip_stiffness_or_tightness",
+      "display_name": "Hip Stiffness Or Tightness",
+      "column": "hip_stiffness_or_tightness",
+      "raw_name": "hip stiffness or tightness"
+    },
+    {
+      "id": "mouth_pain",
+      "display_name": "Mouth Pain",
+      "column": "mouth_pain",
+      "raw_name": "mouth pain"
+    },
+    {
+      "id": "arm_weakness",
+      "display_name": "Arm Weakness",
+      "column": "arm_weakness",
+      "raw_name": "arm weakness"
+    },
+    {
+      "id": "leg_lump_or_mass",
+      "display_name": "Leg Lump Or Mass",
+      "column": "leg_lump_or_mass",
+      "raw_name": "leg lump or mass"
+    },
+    {
+      "id": "disturbance_of_smell_or_taste",
+      "display_name": "Disturbance Of Smell Or Taste",
+      "column": "disturbance_of_smell_or_taste",
+      "raw_name": "disturbance of smell or taste"
+    },
+    {
+      "id": "discharge_in_stools",
+      "display_name": "Discharge In Stools",
+      "column": "discharge_in_stools",
+      "raw_name": "discharge in stools"
+    },
+    {
+      "id": "penis_pain",
+      "display_name": "Penis Pain",
+      "column": "penis_pain",
+      "raw_name": "penis pain"
+    },
+    {
+      "id": "loss_of_sex_drive",
+      "display_name": "Loss Of Sex Drive",
+      "column": "loss_of_sex_drive",
+      "raw_name": "loss of sex drive"
+    },
+    {
+      "id": "obsessions_and_compulsions",
+      "display_name": "Obsessions And Compulsions",
+      "column": "obsessions_and_compulsions",
+      "raw_name": "obsessions and compulsions"
+    },
+    {
+      "id": "antisocial_behavior",
+      "display_name": "Antisocial Behavior",
+      "column": "antisocial_behavior",
+      "raw_name": "antisocial behavior"
+    },
+    {
+      "id": "neck_cramps_or_spasms",
+      "display_name": "Neck Cramps Or Spasms",
+      "column": "neck_cramps_or_spasms",
+      "raw_name": "neck cramps or spasms"
+    },
+    {
+      "id": "pupils_unequal",
+      "display_name": "Pupils Unequal",
+      "column": "pupils_unequal",
+      "raw_name": "pupils unequal"
+    },
+    {
+      "id": "poor_circulation",
+      "display_name": "Poor Circulation",
+      "column": "poor_circulation",
+      "raw_name": "poor circulation"
+    },
+    {
+      "id": "thirst",
+      "display_name": "Thirst",
+      "column": "thirst",
+      "raw_name": "thirst"
+    },
+    {
+      "id": "sleepwalking",
+      "display_name": "Sleepwalking",
+      "column": "sleepwalking",
+      "raw_name": "sleepwalking"
+    },
+    {
+      "id": "skin_oiliness",
+      "display_name": "Skin Oiliness",
+      "column": "skin_oiliness",
+      "raw_name": "skin oiliness"
+    },
+    {
+      "id": "sneezing",
+      "display_name": "Sneezing",
+      "column": "sneezing",
+      "raw_name": "sneezing"
+    },
+    {
+      "id": "bladder_mass",
+      "display_name": "Bladder Mass",
+      "column": "bladder_mass",
+      "raw_name": "bladder mass"
+    },
+    {
+      "id": "knee_cramps_or_spasms",
+      "display_name": "Knee Cramps Or Spasms",
+      "column": "knee_cramps_or_spasms",
+      "raw_name": "knee cramps or spasms"
+    },
+    {
+      "id": "premature_ejaculation",
+      "display_name": "Premature Ejaculation",
+      "column": "premature_ejaculation",
+      "raw_name": "premature ejaculation"
+    },
+    {
+      "id": "leg_weakness",
+      "display_name": "Leg Weakness",
+      "column": "leg_weakness",
+      "raw_name": "leg weakness"
+    },
+    {
+      "id": "posture_problems",
+      "display_name": "Posture Problems",
+      "column": "posture_problems",
+      "raw_name": "posture problems"
+    },
+    {
+      "id": "bleeding_in_mouth",
+      "display_name": "Bleeding In Mouth",
+      "column": "bleeding_in_mouth",
+      "raw_name": "bleeding in mouth"
+    },
+    {
+      "id": "tongue_bleeding",
+      "display_name": "Tongue Bleeding",
+      "column": "tongue_bleeding",
+      "raw_name": "tongue bleeding"
+    },
+    {
+      "id": "change_in_skin_mole_size_or_color",
+      "display_name": "Change In Skin Mole Size Or Color",
+      "column": "change_in_skin_mole_size_or_color",
+      "raw_name": "change in skin mole size or color"
+    },
+    {
+      "id": "penis_redness",
+      "display_name": "Penis Redness",
+      "column": "penis_redness",
+      "raw_name": "penis redness"
+    },
+    {
+      "id": "penile_discharge",
+      "display_name": "Penile Discharge",
+      "column": "penile_discharge",
+      "raw_name": "penile discharge"
+    },
+    {
+      "id": "shoulder_lump_or_mass",
+      "display_name": "Shoulder Lump Or Mass",
+      "column": "shoulder_lump_or_mass",
+      "raw_name": "shoulder lump or mass"
+    },
+    {
+      "id": "polyuria",
+      "display_name": "Polyuria",
+      "column": "polyuria",
+      "raw_name": "polyuria"
+    },
+    {
+      "id": "cloudy_eye",
+      "display_name": "Cloudy Eye",
+      "column": "cloudy_eye",
+      "raw_name": "cloudy eye"
+    },
+    {
+      "id": "hysterical_behavior",
+      "display_name": "Hysterical Behavior",
+      "column": "hysterical_behavior",
+      "raw_name": "hysterical behavior"
+    },
+    {
+      "id": "arm_lump_or_mass",
+      "display_name": "Arm Lump Or Mass",
+      "column": "arm_lump_or_mass",
+      "raw_name": "arm lump or mass"
+    },
+    {
+      "id": "nightmares",
+      "display_name": "Nightmares",
+      "column": "nightmares",
+      "raw_name": "nightmares"
+    },
+    {
+      "id": "bleeding_gums",
+      "display_name": "Bleeding Gums",
+      "column": "bleeding_gums",
+      "raw_name": "bleeding gums"
+    },
+    {
+      "id": "pain_in_gums",
+      "display_name": "Pain In Gums",
+      "column": "pain_in_gums",
+      "raw_name": "pain in gums"
+    },
+    {
+      "id": "bedwetting",
+      "display_name": "Bedwetting",
+      "column": "bedwetting",
+      "raw_name": "bedwetting"
+    },
+    {
+      "id": "diaper_rash",
+      "display_name": "Diaper Rash",
+      "column": "diaper_rash",
+      "raw_name": "diaper rash"
+    },
+    {
+      "id": "lump_or_mass_of_breast",
+      "display_name": "Lump Or Mass Of Breast",
+      "column": "lump_or_mass_of_breast",
+      "raw_name": "lump or mass of breast"
+    },
+    {
+      "id": "vaginal_bleeding_after_menopause",
+      "display_name": "Vaginal Bleeding After Menopause",
+      "column": "vaginal_bleeding_after_menopause",
+      "raw_name": "vaginal bleeding after menopause"
+    },
+    {
+      "id": "infrequent_menstruation",
+      "display_name": "Infrequent Menstruation",
+      "column": "infrequent_menstruation",
+      "raw_name": "infrequent menstruation"
+    },
+    {
+      "id": "mass_on_vulva",
+      "display_name": "Mass On Vulva",
+      "column": "mass_on_vulva",
+      "raw_name": "mass on vulva"
+    },
+    {
+      "id": "jaw_pain",
+      "display_name": "Jaw Pain",
+      "column": "jaw_pain",
+      "raw_name": "jaw pain"
+    },
+    {
+      "id": "itching_of_scrotum",
+      "display_name": "Itching Of Scrotum",
+      "column": "itching_of_scrotum",
+      "raw_name": "itching of scrotum"
+    },
+    {
+      "id": "postpartum_problems_of_the_breast",
+      "display_name": "Postpartum Problems Of The Breast",
+      "column": "postpartum_problems_of_the_breast",
+      "raw_name": "postpartum problems of the breast"
+    },
+    {
+      "id": "eyelid_retracted",
+      "display_name": "Eyelid Retracted",
+      "column": "eyelid_retracted",
+      "raw_name": "eyelid retracted"
+    },
+    {
+      "id": "hesitancy",
+      "display_name": "Hesitancy",
+      "column": "hesitancy",
+      "raw_name": "hesitancy"
+    },
+    {
+      "id": "elbow_lump_or_mass",
+      "display_name": "Elbow Lump Or Mass",
+      "column": "elbow_lump_or_mass",
+      "raw_name": "elbow lump or mass"
+    },
+    {
+      "id": "muscle_weakness",
+      "display_name": "Muscle Weakness",
+      "column": "muscle_weakness",
+      "raw_name": "muscle weakness"
+    },
+    {
+      "id": "throat_redness",
+      "display_name": "Throat Redness",
+      "column": "throat_redness",
+      "raw_name": "throat redness"
+    },
+    {
+      "id": "joint_swelling",
+      "display_name": "Joint Swelling",
+      "column": "joint_swelling",
+      "raw_name": "joint swelling"
+    },
+    {
+      "id": "tongue_pain",
+      "display_name": "Tongue Pain",
+      "column": "tongue_pain",
+      "raw_name": "tongue pain"
+    },
+    {
+      "id": "redness_in_or_around_nose",
+      "display_name": "Redness In Or Around Nose",
+      "column": "redness_in_or_around_nose",
+      "raw_name": "redness in or around nose"
+    },
+    {
+      "id": "wrinkles_on_skin",
+      "display_name": "Wrinkles On Skin",
+      "column": "wrinkles_on_skin",
+      "raw_name": "wrinkles on skin"
+    },
+    {
+      "id": "foot_or_toe_weakness",
+      "display_name": "Foot Or Toe Weakness",
+      "column": "foot_or_toe_weakness",
+      "raw_name": "foot or toe weakness"
+    },
+    {
+      "id": "hand_or_finger_cramps_or_spasms",
+      "display_name": "Hand Or Finger Cramps Or Spasms",
+      "column": "hand_or_finger_cramps_or_spasms",
+      "raw_name": "hand or finger cramps or spasms"
+    },
+    {
+      "id": "back_stiffness_or_tightness",
+      "display_name": "Back Stiffness Or Tightness",
+      "column": "back_stiffness_or_tightness",
+      "raw_name": "back stiffness or tightness"
+    },
+    {
+      "id": "wrist_lump_or_mass",
+      "display_name": "Wrist Lump Or Mass",
+      "column": "wrist_lump_or_mass",
+      "raw_name": "wrist lump or mass"
+    },
+    {
+      "id": "skin_pain",
+      "display_name": "Skin Pain",
+      "column": "skin_pain",
+      "raw_name": "skin pain"
+    },
+    {
+      "id": "low_back_stiffness_or_tightness",
+      "display_name": "Low Back Stiffness Or Tightness",
+      "column": "low_back_stiffness_or_tightness",
+      "raw_name": "low back stiffness or tightness"
+    },
+    {
+      "id": "low_urine_output",
+      "display_name": "Low Urine Output",
+      "column": "low_urine_output",
+      "raw_name": "low urine output"
+    },
+    {
+      "id": "skin_on_head_or_neck_looks_infected",
+      "display_name": "Skin On Head Or Neck Looks Infected",
+      "column": "skin_on_head_or_neck_looks_infected",
+      "raw_name": "skin on head or neck looks infected"
+    },
+    {
+      "id": "stuttering_or_stammering",
+      "display_name": "Stuttering Or Stammering",
+      "column": "stuttering_or_stammering",
+      "raw_name": "stuttering or stammering"
+    },
+    {
+      "id": "problems_with_orgasm",
+      "display_name": "Problems With Orgasm",
+      "column": "problems_with_orgasm",
+      "raw_name": "problems with orgasm"
+    },
+    {
+      "id": "nose_deformity",
+      "display_name": "Nose Deformity",
+      "column": "nose_deformity",
+      "raw_name": "nose deformity"
+    },
+    {
+      "id": "lump_over_jaw",
+      "display_name": "Lump Over Jaw",
+      "column": "lump_over_jaw",
+      "raw_name": "lump over jaw"
+    },
+    {
+      "id": "sore_in_nose",
+      "display_name": "Sore In Nose",
+      "column": "sore_in_nose",
+      "raw_name": "sore in nose"
+    },
+    {
+      "id": "hip_weakness",
+      "display_name": "Hip Weakness",
+      "column": "hip_weakness",
+      "raw_name": "hip weakness"
+    },
+    {
+      "id": "back_swelling",
+      "display_name": "Back Swelling",
+      "column": "back_swelling",
+      "raw_name": "back swelling"
+    },
+    {
+      "id": "ankle_stiffness_or_tightness",
+      "display_name": "Ankle Stiffness Or Tightness",
+      "column": "ankle_stiffness_or_tightness",
+      "raw_name": "ankle stiffness or tightness"
+    },
+    {
+      "id": "ankle_weakness",
+      "display_name": "Ankle Weakness",
+      "column": "ankle_weakness",
+      "raw_name": "ankle weakness"
+    },
+    {
+      "id": "neck_weakness",
+      "display_name": "Neck Weakness",
+      "column": "neck_weakness",
+      "raw_name": "neck weakness"
     }
   ],
   "diseases": [
-    "(vertigo) Paroymsal  Positional Vertigo",
-    "AIDS",
-    "Acne",
-    "Alcoholic hepatitis",
-    "Allergy",
-    "Arthritis",
-    "Bronchial Asthma",
-    "Cervical spondylosis",
-    "Chicken pox",
-    "Chronic cholestasis",
-    "Common Cold",
-    "Dengue",
-    "Diabetes",
-    "Dimorphic hemmorhoids(piles)",
-    "Drug Reaction",
-    "Fungal infection",
-    "GERD",
-    "Gastroenteritis",
-    "Heart attack",
-    "Hepatitis B",
-    "Hepatitis C",
-    "Hepatitis D",
-    "Hepatitis E",
-    "Hypertension",
-    "Hyperthyroidism",
-    "Hypoglycemia",
-    "Hypothyroidism",
-    "Impetigo",
-    "Jaundice",
-    "Malaria",
-    "Migraine",
-    "Osteoarthristis",
-    "Paralysis (brain hemorrhage)",
-    "Peptic ulcer diseae",
-    "Pneumonia",
-    "Psoriasis",
-    "Tuberculosis",
-    "Typhoid",
-    "Urinary tract infection",
-    "Varicose veins",
-    "hepatitis A"
+    "abdominal aortic aneurysm",
+    "abdominal hernia",
+    "abscess of nose",
+    "abscess of the lung",
+    "abscess of the pharynx",
+    "acanthosis nigricans",
+    "acariasis",
+    "achalasia",
+    "acne",
+    "actinic keratosis",
+    "acute bronchiolitis",
+    "acute bronchitis",
+    "acute bronchospasm",
+    "acute fatty liver of pregnancy (aflp)",
+    "acute glaucoma",
+    "acute kidney injury",
+    "acute otitis media",
+    "acute pancreatitis",
+    "acute respiratory distress syndrome (ards)",
+    "acute sinusitis",
+    "acute stress reaction",
+    "adhesive capsulitis of the shoulder",
+    "adjustment reaction",
+    "adrenal adenoma",
+    "adrenal cancer",
+    "alcohol abuse",
+    "alcohol intoxication",
+    "alcohol withdrawal",
+    "alcoholic liver disease",
+    "allergy",
+    "allergy to animals",
+    "alopecia",
+    "alzheimer disease",
+    "amblyopia",
+    "amyloidosis",
+    "amyotrophic lateral sclerosis (als)",
+    "anal fissure",
+    "anal fistula",
+    "anemia",
+    "anemia due to chronic kidney disease",
+    "anemia due to malignancy",
+    "anemia of chronic disease",
+    "angina",
+    "ankylosing spondylitis",
+    "anxiety",
+    "aortic valve disease",
+    "aphakia",
+    "aphthous ulcer",
+    "aplastic anemia",
+    "appendicitis",
+    "arrhythmia",
+    "arthritis of the hip",
+    "ascending cholangitis",
+    "asperger syndrome",
+    "aspergillosis",
+    "asthma",
+    "astigmatism",
+    "atelectasis",
+    "athlete's foot",
+    "atonic bladder",
+    "atrial fibrillation",
+    "atrial flutter",
+    "atrophic skin condition",
+    "atrophic vaginitis",
+    "atrophy of the corpus cavernosum",
+    "attention deficit hyperactivity disorder (adhd)",
+    "autism",
+    "autonomic nervous system disorder",
+    "avascular necrosis",
+    "balanitis",
+    "bell palsy",
+    "benign kidney cyst",
+    "benign paroxysmal positional vertical (bppv)",
+    "benign prostatic hyperplasia (bph)",
+    "benign vaginal discharge (leukorrhea)",
+    "bipolar disorder",
+    "birth trauma",
+    "bladder cancer",
+    "bladder disorder",
+    "bladder obstruction",
+    "blepharitis",
+    "blepharospasm",
+    "bone cancer",
+    "bone disorder",
+    "bone spur of the calcaneous",
+    "brachial neuritis",
+    "brain cancer",
+    "breast cancer",
+    "breast cyst",
+    "breast infection (mastitis)",
+    "broken tooth",
+    "bunion",
+    "burn",
+    "bursitis",
+    "callus",
+    "carbon monoxide poisoning",
+    "carcinoid syndrome",
+    "cardiac arrest",
+    "cardiomyopathy",
+    "carpal tunnel syndrome",
+    "cat scratch disease",
+    "cataract",
+    "celiac disease",
+    "cellulitis or abscess of mouth",
+    "central atherosclerosis",
+    "central retinal artery or vein occlusion",
+    "cerebral edema",
+    "cerebral palsy",
+    "cervical cancer",
+    "cervical disorder",
+    "cervicitis",
+    "chalazion",
+    "chickenpox",
+    "chlamydia",
+    "cholecystitis",
+    "choledocholithiasis",
+    "cholesteatoma",
+    "chondromalacia of the patella",
+    "chorioretinitis",
+    "chronic back pain",
+    "chronic constipation",
+    "chronic glaucoma",
+    "chronic inflammatory demyelinating polyneuropathy (cidp)",
+    "chronic kidney disease",
+    "chronic knee pain",
+    "chronic obstructive pulmonary disease (copd)",
+    "chronic otitis media",
+    "chronic pain disorder",
+    "chronic pancreatitis",
+    "chronic rheumatic fever",
+    "chronic sinusitis",
+    "chronic ulcer",
+    "cirrhosis",
+    "coagulation (bleeding) disorder",
+    "cold sore",
+    "colonic polyp",
+    "colorectal cancer",
+    "common cold",
+    "complex regional pain syndrome",
+    "concussion",
+    "conduct disorder",
+    "conductive hearing loss",
+    "congenital heart defect",
+    "congenital malformation syndrome",
+    "conjunctivitis",
+    "conjunctivitis due to allergy",
+    "conjunctivitis due to bacteria",
+    "conjunctivitis due to virus",
+    "connective tissue disorder",
+    "contact dermatitis",
+    "conversion disorder",
+    "cornea infection",
+    "corneal abrasion",
+    "corneal disorder",
+    "coronary atherosclerosis",
+    "cranial nerve palsy",
+    "crohn disease",
+    "croup",
+    "crushing injury",
+    "cryptococcosis",
+    "cryptorchidism",
+    "cushing syndrome",
+    "cyst of the eyelid",
+    "cystic fibrosis",
+    "cysticercosis",
+    "cystitis",
+    "de quervain disease",
+    "decubitus ulcer",
+    "deep vein thrombosis (dvt)",
+    "degenerative disc disease",
+    "delirium",
+    "dementia",
+    "dengue fever",
+    "dental caries",
+    "depression",
+    "dermatitis due to sun exposure",
+    "developmental disability",
+    "deviated nasal septum",
+    "diabetes",
+    "diabetes insipidus",
+    "diabetic ketoacidosis",
+    "diabetic kidney disease",
+    "diabetic peripheral neuropathy",
+    "diabetic retinopathy",
+    "diaper rash",
+    "dislocation of the ankle",
+    "dislocation of the elbow",
+    "dislocation of the finger",
+    "dislocation of the foot",
+    "dislocation of the hip",
+    "dislocation of the knee",
+    "dislocation of the patella",
+    "dislocation of the shoulder",
+    "dislocation of the vertebra",
+    "dislocation of the wrist",
+    "dissociative disorder",
+    "diverticulitis",
+    "diverticulosis",
+    "down syndrome",
+    "drug abuse",
+    "drug abuse (barbiturates)",
+    "drug abuse (cocaine)",
+    "drug abuse (methamphetamine)",
+    "drug abuse (opioids)",
+    "drug poisoning due to medication",
+    "drug reaction",
+    "drug withdrawal",
+    "dry eye of unknown cause",
+    "dumping syndrome",
+    "dyshidrosis",
+    "dysthymic disorder",
+    "ear drum damage",
+    "ear wax impaction",
+    "eating disorder",
+    "ectopic pregnancy",
+    "ectropion",
+    "eczema",
+    "edward syndrome",
+    "emphysema",
+    "empyema",
+    "encephalitis",
+    "endocarditis",
+    "endometrial cancer",
+    "endometrial hyperplasia",
+    "endometriosis",
+    "endophthalmitis",
+    "envenomation from spider or animal bite",
+    "ependymoma",
+    "epididymitis",
+    "epidural hemorrhage",
+    "epilepsy",
+    "erectile dysfunction",
+    "erythema multiforme",
+    "esophageal cancer",
+    "esophageal varices",
+    "esophagitis",
+    "essential tremor",
+    "eustachian tube dysfunction (ear disorder)",
+    "extrapyramidal effect of drugs",
+    "eye alignment disorder",
+    "factitious disorder",
+    "female genitalia infection",
+    "female infertility of unknown cause",
+    "fetal alcohol syndrome",
+    "fibroadenoma",
+    "fibrocystic breast disease",
+    "fibromyalgia",
+    "flat feet",
+    "floaters",
+    "flu",
+    "fluid overload",
+    "folate deficiency",
+    "food allergy",
+    "foreign body in the ear",
+    "foreign body in the eye",
+    "foreign body in the gastrointestinal tract",
+    "foreign body in the nose",
+    "foreign body in the throat",
+    "foreign body in the vagina",
+    "fracture of the ankle",
+    "fracture of the arm",
+    "fracture of the facial bones",
+    "fracture of the finger",
+    "fracture of the foot",
+    "fracture of the hand",
+    "fracture of the jaw",
+    "fracture of the leg",
+    "fracture of the neck",
+    "fracture of the patella",
+    "fracture of the pelvis",
+    "fracture of the rib",
+    "fracture of the shoulder",
+    "fracture of the skull",
+    "fracture of the vertebra",
+    "friedrich ataxia",
+    "frostbite",
+    "fungal infection of the hair",
+    "fungal infection of the skin",
+    "g6pd enzyme deficiency",
+    "galactorrhea of unknown cause",
+    "gallstone",
+    "ganglion cyst",
+    "gas gangrene",
+    "gastritis",
+    "gastroduodenal ulcer",
+    "gastroesophageal reflux disease (gerd)",
+    "gastrointestinal hemorrhage",
+    "gastroparesis",
+    "genital herpes",
+    "gestational diabetes",
+    "glaucoma",
+    "glucocorticoid deficiency",
+    "goiter",
+    "gonorrhea",
+    "gout",
+    "granuloma inguinale",
+    "graves disease",
+    "guillain barre syndrome",
+    "gum disease",
+    "gynecomastia",
+    "hammer toe",
+    "hashimoto thyroiditis",
+    "head and neck cancer",
+    "head injury",
+    "headache after lumbar puncture",
+    "heart attack",
+    "heart block",
+    "heart contusion",
+    "heart failure",
+    "heat exhaustion",
+    "heat stroke",
+    "hemangioma",
+    "hemarthrosis",
+    "hematoma",
+    "hemiplegia",
+    "hemochromatosis",
+    "hemolytic anemia",
+    "hemophilia",
+    "hemorrhoids",
+    "hepatic encephalopathy",
+    "hepatitis due to a toxin",
+    "herniated disk",
+    "herpangina",
+    "hiatal hernia",
+    "hidradenitis suppurativa",
+    "high blood pressure",
+    "hirschsprung disease",
+    "hirsutism",
+    "histoplasmosis",
+    "hormone disorder",
+    "hpv",
+    "human immunodeficiency virus infection (hiv)",
+    "huntington disease",
+    "hydatidiform mole",
+    "hydrocele of the testicle",
+    "hydrocephalus",
+    "hydronephrosis",
+    "hypercalcemia",
+    "hypercholesterolemia",
+    "hyperemesis gravidarum",
+    "hypergammaglobulinemia",
+    "hyperhidrosis",
+    "hyperkalemia",
+    "hyperlipidemia",
+    "hypernatremia",
+    "hyperopia",
+    "hyperosmotic hyperketotic state",
+    "hypertension of pregnancy",
+    "hypertensive heart disease",
+    "hypertrophic obstructive cardiomyopathy (hocm)",
+    "hypocalcemia",
+    "hypoglycemia",
+    "hypokalemia",
+    "hyponatremia",
+    "hypothermia",
+    "hypothyroidism",
+    "hypovolemia",
+    "idiopathic absence of menstruation",
+    "idiopathic excessive menstruation",
+    "idiopathic infrequent menstruation",
+    "idiopathic irregular menstrual cycle",
+    "idiopathic nonmenstrual bleeding",
+    "idiopathic painful menstruation",
+    "ileus",
+    "impetigo",
+    "impulse control disorder",
+    "indigestion",
+    "induced abortion",
+    "infection of open wound",
+    "infectious gastroenteritis",
+    "ingrown toe nail",
+    "inguinal hernia",
+    "injury of the ankle",
+    "injury to internal organ",
+    "injury to the abdomen",
+    "injury to the arm",
+    "injury to the face",
+    "injury to the finger",
+    "injury to the hand",
+    "injury to the hip",
+    "injury to the knee",
+    "injury to the leg",
+    "injury to the shoulder",
+    "injury to the spinal cord",
+    "injury to the trunk",
+    "insect bite",
+    "insulin overdose",
+    "interstitial lung disease",
+    "intertrigo (skin condition)",
+    "intestinal cancer",
+    "intestinal disease",
+    "intestinal malabsorption",
+    "intestinal obstruction",
+    "intracerebral hemorrhage",
+    "intracranial abscess",
+    "intracranial hemorrhage",
+    "intussusception",
+    "iridocyclitis",
+    "iron deficiency anemia",
+    "irritable bowel syndrome",
+    "ischemia of the bowel",
+    "ischemic heart disease",
+    "itching of unknown cause",
+    "jaw disorder",
+    "joint effusion",
+    "juvenile rheumatoid arthritis",
+    "kaposi sarcoma",
+    "kidney cancer",
+    "kidney disease due to longstanding hypertension",
+    "kidney failure",
+    "kidney stone",
+    "knee ligament or meniscus tear",
+    "labyrinthitis",
+    "lactose intolerance",
+    "laryngitis",
+    "lateral epicondylitis (tennis elbow)",
+    "leukemia",
+    "lewy body dementia",
+    "lice",
+    "lichen planus",
+    "lichen simplex",
+    "lipoma",
+    "liver cancer",
+    "liver disease",
+    "lumbago",
+    "lung cancer",
+    "lung contusion",
+    "lyme disease",
+    "lymphadenitis",
+    "lymphangitis",
+    "lymphedema",
+    "lymphogranuloma venereum",
+    "lymphoma",
+    "macular degeneration",
+    "magnesium deficiency",
+    "malaria",
+    "male genitalia infection",
+    "malignant hypertension",
+    "marijuana abuse",
+    "mastectomy",
+    "mastoiditis",
+    "meckel diverticulum",
+    "melanoma",
+    "meniere disease",
+    "meningioma",
+    "meningitis",
+    "menopause",
+    "metabolic disorder",
+    "metastatic cancer",
+    "migraine",
+    "missed abortion",
+    "mitral valve disease",
+    "mittelschmerz",
+    "molluscum contagiosum",
+    "mononeuritis",
+    "mononucleosis",
+    "moyamoya disease",
+    "mucositis",
+    "multiple myeloma",
+    "multiple sclerosis",
+    "mumps",
+    "muscle spasm",
+    "muscular dystrophy",
+    "myasthenia gravis",
+    "myelodysplastic syndrome",
+    "myocarditis",
+    "myoclonus",
+    "myopia",
+    "myositis",
+    "narcolepsy",
+    "nasal polyp",
+    "necrotizing fasciitis",
+    "neonatal jaundice",
+    "nerve impingement near the shoulder",
+    "neuralgia",
+    "neurofibromatosis",
+    "neuropathy due to drugs",
+    "neurosis",
+    "nonalcoholic liver disease (nash)",
+    "noninfectious gastroenteritis",
+    "normal pressure hydrocephalus",
+    "nose disorder",
+    "obesity",
+    "obsessive compulsive disorder (ocd)",
+    "obstructive sleep apnea (osa)",
+    "omphalitis",
+    "onychomycosis",
+    "open wound due to trauma",
+    "open wound from surgical incision",
+    "open wound of the abdomen",
+    "open wound of the arm",
+    "open wound of the back",
+    "open wound of the cheek",
+    "open wound of the chest",
+    "open wound of the ear",
+    "open wound of the eye",
+    "open wound of the face",
+    "open wound of the finger",
+    "open wound of the foot",
+    "open wound of the hand",
+    "open wound of the head",
+    "open wound of the jaw",
+    "open wound of the knee",
+    "open wound of the lip",
+    "open wound of the mouth",
+    "open wound of the neck",
+    "open wound of the nose",
+    "open wound of the shoulder",
+    "oppositional disorder",
+    "optic neuritis",
+    "oral leukoplakia",
+    "oral mucosal lesion",
+    "oral thrush (yeast infection)",
+    "orbital cellulitis",
+    "orthostatic hypotension",
+    "osteoarthritis",
+    "osteochondroma",
+    "osteochondrosis",
+    "osteomyelitis",
+    "osteoporosis",
+    "otitis externa (swimmer's ear)",
+    "otitis media",
+    "otosclerosis",
+    "ovarian cancer",
+    "ovarian cyst",
+    "ovarian torsion",
+    "overflow incontinence",
+    "pain after an operation",
+    "pain disorder affecting the neck",
+    "pancreatic cancer",
+    "panic attack",
+    "panic disorder",
+    "parasitic disease",
+    "parathyroid adenoma",
+    "parkinson disease",
+    "paronychia",
+    "paroxysmal supraventricular tachycardia",
+    "paroxysmal ventricular tachycardia",
+    "pelvic fistula",
+    "pelvic inflammatory disease",
+    "pelvic organ prolapse",
+    "pemphigus",
+    "pericarditis",
+    "peripheral arterial disease",
+    "peripheral arterial embolism",
+    "peripheral nerve disorder",
+    "perirectal infection",
+    "peritonitis",
+    "peritonsillar abscess",
+    "persistent vomiting of unknown cause",
+    "personality disorder",
+    "peyronie disease",
+    "pharyngitis",
+    "phimosis",
+    "pilonidal cyst",
+    "pinguecula",
+    "pinworm infection",
+    "pituitary adenoma",
+    "pituitary disorder",
+    "pityriasis rosea",
+    "placenta previa",
+    "placental abruption",
+    "plantar fasciitis",
+    "pleural effusion",
+    "pneumoconiosis",
+    "pneumonia",
+    "pneumothorax",
+    "poisoning due to analgesics",
+    "poisoning due to anticonvulsants",
+    "poisoning due to antidepressants",
+    "poisoning due to antihypertensives",
+    "poisoning due to antimicrobial drugs",
+    "poisoning due to antipsychotics",
+    "poisoning due to ethylene glycol",
+    "poisoning due to gas",
+    "poisoning due to opioids",
+    "poisoning due to sedatives",
+    "polycystic kidney disease",
+    "polycystic ovarian syndrome (pcos)",
+    "polycythemia vera",
+    "polymyalgia rheumatica",
+    "post-traumatic stress disorder (ptsd)",
+    "postoperative infection",
+    "postpartum depression",
+    "preeclampsia",
+    "pregnancy",
+    "premature atrial contractions (pacs)",
+    "premature ovarian failure",
+    "premature rupture of amniotic membrane",
+    "premature ventricular contractions (pvcs)",
+    "premenstrual tension syndrome",
+    "presbyacusis",
+    "presbyopia",
+    "priapism",
+    "primary immunodeficiency",
+    "primary insomnia",
+    "primary kidney disease",
+    "primary thrombocythemia",
+    "problem during pregnancy",
+    "prostate cancer",
+    "prostatitis",
+    "protein deficiency",
+    "pseudohypoparathyroidism",
+    "pseudotumor cerebri",
+    "psoriasis",
+    "psychosexual disorder",
+    "psychotic disorder",
+    "pterygium",
+    "pulmonary congestion",
+    "pulmonary embolism",
+    "pulmonary eosinophilia",
+    "pulmonary fibrosis",
+    "pulmonary hypertension",
+    "pulmonic valve disease",
+    "pyelonephritis",
+    "pyloric stenosis",
+    "pyogenic skin infection",
+    "raynaud disease",
+    "reactive arthritis",
+    "rectal disorder",
+    "restless leg syndrome",
+    "retinal detachment",
+    "retinopathy due to high blood pressure",
+    "rhabdomyolysis",
+    "rheumatic fever",
+    "rheumatoid arthritis",
+    "rocky mountain spotted fever",
+    "rosacea",
+    "rotator cuff injury",
+    "salivary gland disorder",
+    "sarcoidosis",
+    "scabies",
+    "scar",
+    "scarlet fever",
+    "schizophrenia",
+    "sciatica",
+    "scleritis",
+    "scleroderma",
+    "scoliosis",
+    "scurvy",
+    "seasonal allergies (hay fever)",
+    "sebaceous cyst",
+    "seborrheic dermatitis",
+    "seborrheic keratosis",
+    "sensorineural hearing loss",
+    "sepsis",
+    "septic arthritis",
+    "shingles (herpes zoster)",
+    "sialoadenitis",
+    "sick sinus syndrome",
+    "sickle cell anemia",
+    "sickle cell crisis",
+    "sinus bradycardia",
+    "sjogren syndrome",
+    "skin cancer",
+    "skin disorder",
+    "skin pigmentation disorder",
+    "skin polyp",
+    "smoking or tobacco addiction",
+    "social phobia",
+    "soft tissue sarcoma",
+    "somatization disorder",
+    "spermatocele",
+    "spherocytosis",
+    "spina bifida",
+    "spinal stenosis",
+    "spinocerebellar ataxia",
+    "spondylitis",
+    "spondylolisthesis",
+    "spondylosis",
+    "spontaneous abortion",
+    "sporotrichosis",
+    "sprain or strain",
+    "stenosis of the tear duct",
+    "stomach cancer",
+    "strep throat",
+    "stress incontinence",
+    "stricture of the esophagus",
+    "stroke",
+    "stye",
+    "subacute thyroiditis",
+    "subarachnoid hemorrhage",
+    "subconjunctival hemorrhage",
+    "subdural hemorrhage",
+    "substance-related mental disorder",
+    "syndrome of inappropriate secretion of adh (siadh)",
+    "syphilis",
+    "syringomyelia",
+    "systemic lupus erythematosis (sle)",
+    "teething syndrome",
+    "temporary or benign blood in urine",
+    "temporomandibular joint disorder",
+    "tendinitis",
+    "tension headache",
+    "testicular cancer",
+    "testicular disorder",
+    "testicular torsion",
+    "thalassemia",
+    "thoracic aortic aneurysm",
+    "thoracic outlet syndrome",
+    "threatened pregnancy",
+    "thrombocytopenia",
+    "thrombophlebitis",
+    "thyroid cancer",
+    "thyroid disease",
+    "thyroid nodule",
+    "tic (movement) disorder",
+    "tietze syndrome",
+    "tinnitus of unknown cause",
+    "tonsillar hypertrophy",
+    "tonsillitis",
+    "tooth abscess",
+    "tooth disorder",
+    "torticollis",
+    "tourette syndrome",
+    "toxic multinodular goiter",
+    "toxoplasmosis",
+    "tracheitis",
+    "transient ischemic attack",
+    "trichiasis",
+    "trichinosis",
+    "trichomonas infection",
+    "tricuspid valve disease",
+    "trigeminal neuralgia",
+    "trigger finger (finger disorder)",
+    "tuberculosis",
+    "tuberous sclerosis",
+    "turner syndrome",
+    "typhoid fever",
+    "ulcerative colitis",
+    "urethral disorder",
+    "urethral stricture",
+    "urethral valves",
+    "urethritis",
+    "urge incontinence",
+    "urinary tract infection",
+    "urinary tract obstruction",
+    "uterine atony",
+    "uterine cancer",
+    "uterine fibroids",
+    "uveitis",
+    "vacterl syndrome",
+    "vaginal cyst",
+    "vaginal yeast infection",
+    "vaginismus",
+    "vaginitis",
+    "valley fever",
+    "varicocele of the testicles",
+    "varicose veins",
+    "vasculitis",
+    "venous insufficiency",
+    "vertebrobasilar insufficiency",
+    "vesicoureteral reflux",
+    "viral exanthem",
+    "viral hepatitis",
+    "viral warts",
+    "vitamin a deficiency",
+    "vitamin b12 deficiency",
+    "vitamin d deficiency",
+    "vitreous degeneration",
+    "vitreous hemorrhage",
+    "vocal cord polyp",
+    "volvulus",
+    "von willebrand disease",
+    "vulvar cancer",
+    "vulvar disorder",
+    "vulvodynia",
+    "wernicke korsakoff syndrome",
+    "white blood cell disease",
+    "whooping cough",
+    "wilson disease",
+    "yeast infection",
+    "zenker diverticulum"
   ]
 }

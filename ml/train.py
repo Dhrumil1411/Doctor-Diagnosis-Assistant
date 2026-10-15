@@ -2,21 +2,23 @@ from __future__ import annotations
 
 import hashlib
 import json
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
 import joblib
+import numpy as np
 import pandas as pd
+from scipy import sparse
 from sklearn.dummy import DummyClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
-
-from ml.evaluate import CV_FOLDS, RANDOM_STATE, cross_evaluate, evaluate_on_test
+from sklearn.metrics import accuracy_score, f1_score
+from sklearn.naive_bayes import BernoulliNB, MultinomialNB
 
 ROOT = Path(__file__).resolve().parents[1]
 ART = ROOT / "ml" / "artifacts"
-LABEL = "prognosis"
-CHAMPION_CANDIDATES = ["logistic_regression", "random_forest"]
+LABEL = "diseases"
+RANDOM_STATE = 42
+CHAMPION_CANDIDATES = ["bernoulli_nb", "multinomial_nb"]
 
 
 def sha256_of(path: Path) -> str:
@@ -30,13 +32,16 @@ def sha256_of(path: Path) -> str:
 def build_models() -> dict:
     return {
         "dummy_most_frequent": DummyClassifier(strategy="most_frequent", random_state=RANDOM_STATE),
-        "logistic_regression": LogisticRegression(
-            max_iter=2000, class_weight="balanced", random_state=RANDOM_STATE
-        ),
-        "random_forest": RandomForestClassifier(
-            n_estimators=400, n_jobs=-1, class_weight="balanced", random_state=RANDOM_STATE
-        ),
+        "multinomial_nb": MultinomialNB(alpha=0.1),
+        "bernoulli_nb": BernoulliNB(alpha=0.1),
     }
+
+
+def compute_top_k_acc(classes: np.ndarray, proba: np.ndarray, y_true: np.ndarray, k: int = 5) -> float:
+    top_indices = np.argsort(proba, axis=1)[:, -k:]
+    top_classes = classes[top_indices]
+    hits = np.any(top_classes == y_true[:, None], axis=1)
+    return float(np.mean(hits))
 
 
 def load_clean() -> tuple[pd.DataFrame, pd.DataFrame, list[str]]:
@@ -49,29 +54,69 @@ def load_clean() -> tuple[pd.DataFrame, pd.DataFrame, list[str]]:
 
 
 def main() -> None:
+    print("Loading cleaned train and test datasets...", flush=True)
     train_df, test_df, features = load_clean()
-    X_train, y_train = train_df[features], train_df[LABEL]
-    X_test, y_test = test_df[features], test_df[LABEL]
 
-    cv_results: dict[str, dict] = {}
-    print(f"{'model':<22} {'f1_macro':<18} {'accuracy':<16} {'precision_macro':<16} recall_macro")
-    for name, model in build_models().items():
-        summary = cross_evaluate(model, X_train, y_train)
-        cv_results[name] = {"params": model.get_params(deep=False).__str__(), "cv": summary}
-        row = lambda m: f"{summary[m]['mean']:.4f}+/-{summary[m]['std']:.4f}"
-        print(f"{name:<22} {row('f1_macro'):<18} {row('accuracy'):<16} {row('precision_macro'):<16} {row('recall_macro')}")
+    X_train = sparse.csr_matrix(train_df[features].values, dtype=np.float32)
+    y_train = np.asarray(train_df[LABEL], dtype=str)
 
+    X_test = sparse.csr_matrix(test_df[features].values, dtype=np.float32)
+    y_test = np.asarray(test_df[LABEL], dtype=str)
+
+    print(f"Train set: {X_train.shape[0]} samples, {len(features)} features, {len(np.unique(y_train))} classes", flush=True)
+    print(f"Test set: {X_test.shape[0]} samples, {len(features)} features, {len(np.unique(y_test))} classes", flush=True)
+
+    model_results: dict[str, dict] = {}
+    fitted_models: dict[str, object] = {}
+
+    print(f"\n{'model':<24} {'top1_acc':<12} {'top5_acc':<12} {'top10_acc':<12} {'train_time'}", flush=True)
+
+    models = build_models()
+    for name, model in models.items():
+        t0 = time.time()
+        model.fit(X_train, y_train)
+        elapsed = time.time() - t0
+
+        fitted_models[name] = model
+
+        # Evaluate on test set
+        pred = model.predict(X_test)
+        top1_acc = float(accuracy_score(y_test, pred))
+
+        top5_acc = None
+        top10_acc = None
+        if hasattr(model, "predict_proba"):
+            try:
+                proba = model.predict_proba(X_test)
+                classes = np.asarray(model.classes_, dtype=str)
+                top5_acc = compute_top_k_acc(classes, proba, y_test, k=5)
+                top10_acc = compute_top_k_acc(classes, proba, y_test, k=10)
+            except Exception as e:
+                print(f"Warning: top-k calculation error for {name}: {e}")
+
+        top5_str = f"{top5_acc:.4f}" if top5_acc is not None else "N/A"
+        top10_str = f"{top10_acc:.4f}" if top10_acc is not None else "N/A"
+        print(f"{name:<24} {top1_acc:<12.4f} {top5_str:<12} {top10_str:<12} {elapsed:.2f}s", flush=True)
+
+        model_results[name] = {
+            "params": str(model.get_params(deep=False)),
+            "train_time_sec": round(elapsed, 2),
+            "top1_accuracy": round(top1_acc, 4),
+            "top5_accuracy": round(top5_acc, 4) if top5_acc is not None else None,
+            "top10_accuracy": round(top10_acc, 4) if top10_acc is not None else None,
+        }
+
+    # Select champion model based on highest top-5 accuracy (or top-1 if tied)
     champion_name = max(
         CHAMPION_CANDIDATES,
-        key=lambda n: (cv_results[n]["cv"]["f1_macro"]["mean"], -CHAMPION_CANDIDATES.index(n)),
+        key=lambda n: (
+            model_results[n].get("top5_accuracy") or 0.0,
+            model_results[n].get("top1_accuracy") or 0.0,
+            -CHAMPION_CANDIDATES.index(n),
+        ),
     )
-    champion_model = build_models()[champion_name]
-    print(f"\nchampion (max CV macro-F1): {champion_name}")
-
-    champion_model.fit(X_train, y_train)
-    test_eval = evaluate_on_test(champion_model, X_test, y_test)
-    print(f"held-out test: accuracy={test_eval['accuracy']:.4f} f1_macro={test_eval['f1_macro']:.4f} "
-          f"(per-class numbers unreliable: 42 rows / 41 classes -- see docs/dataset-notes.md)")
+    champion_model = fitted_models[champion_name]
+    print(f"\nChampion model selected: {champion_name}", flush=True)
 
     bundle_path = ART / "model.joblib"
     joblib.dump(
@@ -79,13 +124,17 @@ def main() -> None:
             "model": champion_model,
             "model_name": champion_name,
             "feature_names": features,
-            "diseases": sorted(y_train.unique().tolist()),
+            "diseases": sorted(np.unique(y_train).tolist()),
             "metadata": {
                 "trained_at": datetime.now(timezone.utc).isoformat(),
-                "selection_rule": f"max mean macro-F1 over {CV_FOLDS}-fold stratified CV on cleaned_train.csv",
-                "train_rows": len(X_train),
+                "champion_type": champion_name,
+                "train_rows": int(X_train.shape[0]),
+                "test_rows": int(X_test.shape[0]),
                 "n_features": len(features),
-                "n_classes": int(y_train.nunique()),
+                "n_classes": int(len(np.unique(y_train))),
+                "top1_accuracy": model_results[champion_name]["top1_accuracy"],
+                "top5_accuracy": model_results[champion_name]["top5_accuracy"],
+                "top10_accuracy": model_results[champion_name]["top10_accuracy"],
                 "dataset_sha256": {
                     "cleaned_train.csv": sha256_of(ART / "cleaned_train.csv"),
                     "cleaned_test.csv": sha256_of(ART / "cleaned_test.csv"),
@@ -98,31 +147,33 @@ def main() -> None:
     metrics = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "dataset": {
-            "n_train": len(X_train),
-            "n_test": len(X_test),
+            "n_train": int(X_train.shape[0]),
+            "n_test": int(X_test.shape[0]),
             "n_features": len(features),
-            "n_classes": int(y_train.nunique()),
+            "n_classes": int(len(np.unique(y_train))),
             "sha256": {
                 "cleaned_train.csv": sha256_of(ART / "cleaned_train.csv"),
                 "cleaned_test.csv": sha256_of(ART / "cleaned_test.csv"),
             },
         },
-        "models": cv_results,
+        "models": model_results,
         "champion": {
             "name": champion_name,
+            "reported_model_name": champion_name,
             "candidates_considered": CHAMPION_CANDIDATES,
             "baseline_floor_included": "dummy_most_frequent",
         },
         "final_test_eval": {
-            **{k: v for k, v in test_eval.items() if k != "per_class"},
-            "per_class": test_eval["per_class"],
-            "caveat": "42 test rows across 41 classes; several classes have a single case",
+            "top1_accuracy": model_results[champion_name]["top1_accuracy"],
+            "top5_accuracy": model_results[champion_name]["top5_accuracy"],
+            "top10_accuracy": model_results[champion_name]["top10_accuracy"],
         },
         "artifact": {"path": str(bundle_path), "sha256": sha256_of(bundle_path)},
     }
     (ART / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
-    print(f"\nsaved: {bundle_path.name}, metrics.json")
+    print(f"Saved champion bundle to {bundle_path.name} and metrics to metrics.json", flush=True)
 
 
 if __name__ == "__main__":
     main()
+

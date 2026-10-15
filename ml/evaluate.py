@@ -8,6 +8,7 @@ from sklearn.metrics import (
     make_scorer,
     precision_score,
     recall_score,
+    top_k_accuracy_score,
 )
 from sklearn.model_selection import StratifiedKFold, cross_validate
 
@@ -34,10 +35,20 @@ def cross_evaluate(model, X, y) -> dict:
 
 def evaluate_on_test(model, X_test, y_test) -> dict:
     pred = model.predict(X_test)
-    return {
+    results = {
         "accuracy": float(accuracy_score(y_test, pred)),
         "f1_macro": float(f1_score(y_test, pred, average="macro", zero_division=0)),
         "precision_macro": float(precision_score(y_test, pred, average="macro", zero_division=0)),
         "recall_macro": float(recall_score(y_test, pred, average="macro", zero_division=0)),
         "per_class": classification_report(y_test, pred, output_dict=True, zero_division=0),
     }
+    if hasattr(model, "predict_proba"):
+        try:
+            proba = model.predict_proba(X_test)
+            results["top_5_accuracy"] = float(
+                top_k_accuracy_score(y_test, proba, k=min(5, len(model.classes_)), labels=model.classes_)
+            )
+        except Exception:
+            pass
+    return results
+

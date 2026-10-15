@@ -24,6 +24,8 @@ Data/
 # --- ML artifacts (regenerable via ml/ scripts) ---
 ml/artifacts/*.joblib
 ml/artifacts/*.pkl
+ml/artifacts/*.csv
+ml/artifacts/*.jsonl
 
 # --- Uploaded files / local object storage ---
 uploads/
@@ -40,4 +42,3 @@ Thumbs.db
 .idea/
 .vscode/
 *.log
-
