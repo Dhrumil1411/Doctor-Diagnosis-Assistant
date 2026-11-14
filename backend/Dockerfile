@@ -22,4 +22,4 @@ WORKDIR /app/backend
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips \"${FORWARDED_ALLOW_IPS:-*}\""]
+CMD ["sh", "-c", "alembic upgrade head && ( [ \"$SEED_DEMO\" = \"true\" ] && python scripts/seed_demo.py || true ) && uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips \"${FORWARDED_ALLOW_IPS:-*}\""]

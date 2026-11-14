@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+import logging
 import os
 from pathlib import Path
 from fastapi import FastAPI
@@ -23,8 +25,23 @@ from app.api.routes.vocabulary import router as vocabulary_router
 from app.core.limiter import limiter
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    if os.getenv("SEED_DEMO", "").strip().lower() in ("true", "1", "yes"):
+        try:
+            from scripts.seed_demo import seed_demo
+            seed_demo()
+        except Exception as exc:
+            logging.getLogger("uvicorn.error").warning("Demo seed failed on startup: %s", exc)
+    yield
+
+
 def create_app() -> FastAPI:
-    app = FastAPI(title="Doctor Diagnosis Assistant API", version="0.1.0")
+    app = FastAPI(
+        title="Doctor Diagnosis Assistant API",
+        version="0.1.0",
+        lifespan=lifespan,
+    )
 
     settings = get_settings()
     origins = settings.cors_origins_list
