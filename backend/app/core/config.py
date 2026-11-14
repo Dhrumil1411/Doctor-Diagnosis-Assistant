@@ -1,7 +1,8 @@
+import os
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import field_validator
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -12,6 +13,7 @@ class Settings(BaseSettings):
 
     app_env: str = "development"
     secret_key: str = "dev-only-secret-change-me-0123456789abcdef0123456789abcdef"
+    jwt_secret: str | None = None
     access_token_expire_minutes: int = 480
     database_url: str = "postgresql+psycopg://dda:dda@localhost:5432/dda"
     model_artifacts_dir: Path = REPO_ROOT / "ml" / "artifacts"
@@ -53,6 +55,37 @@ class Settings(BaseSettings):
                 if fallback_db.exists():
                     return f"sqlite:///{fallback_db.as_posix()}"
         return v
+
+    @model_validator(mode="after")
+    def validate_production_secrets(self) -> "Settings":
+        # Allow JWT_SECRET to configure secret_key
+        raw_jwt_secret = self.jwt_secret or os.getenv("JWT_SECRET")
+        if raw_jwt_secret:
+            self.secret_key = raw_jwt_secret
+
+        placeholder_secrets = {
+            "",
+            "dev-only-secret-change-me-0123456789abcdef0123456789abcdef",
+            "change-me-to-a-long-random-string",
+            "change-this-in-production-please-use-a-strong-secret",
+            "secret",
+            "dev-secret",
+            "changeme",
+        }
+
+        if self.app_env.lower() == "production":
+            sec = (self.secret_key or "").strip()
+            if (
+                not sec
+                or sec in placeholder_secrets
+                or "change-me" in sec.lower()
+                or "dev-only" in sec.lower()
+            ):
+                raise ValueError(
+                    "Production configuration error: JWT_SECRET (or SECRET_KEY) is missing or set to an insecure default placeholder. "
+                    "Set a secure, random secret (at least 32 characters) for production."
+                )
+        return self
 
 
 @lru_cache

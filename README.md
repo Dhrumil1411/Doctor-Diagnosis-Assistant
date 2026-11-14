@@ -252,6 +252,37 @@ The backend provides 40 endpoints across 28 distinct routes:
 
 ---
 
+## Deployment
+
+For public or production deployment (Render, Railway, Fly.io, AWS, GCP, or a VPS with Docker):
+
+### Required Environment Variables
+
+When `APP_ENV=production`, strict startup validation prevents execution if secrets are missing or retain development defaults:
+
+| Variable | Required in Production | Description |
+|---|:---:|---|
+| `APP_ENV` | Yes | Set to `production`. Activates strict secret validation and disables debug behavior. |
+| `JWT_SECRET` | Yes | High-entropy random secret (minimum 32 characters) used to sign and verify JWT authentication tokens. **FastAPI fails startup immediately** if this is missing or set to a placeholder (`dev-only-...`, `change-me-...`). |
+| `DATABASE_URL` | Yes | PostgreSQL connection string (e.g., `postgresql+psycopg://user:password@host:5432/dbname?sslmode=require`). Alembic migrations execute automatically on container startup. |
+
+### Optional / Integration Environment Variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `CORS_ORIGINS` | `http://localhost:5173,...` | Comma-separated list of allowed web origins (e.g., `https://dda.example.com,https://dda-frontend.onrender.com`). |
+| `FORWARDED_ALLOW_IPS` | `*` | IP addresses trusted by Uvicorn proxy headers for resolving `X-Forwarded-For`. |
+| `SEED_DEMO` | `false` | When set to `true`, executes idempotent demo seeding on container launch (creates demo staff accounts and synthetic patient cases). |
+| `DEMO_DOCTOR_PASSWORD` | *(local default only)* | Custom password for `demo.doctor@example.com` when `SEED_DEMO=true`. |
+| `DEMO_READONLY_PASSWORD` | *(local default only)* | Custom password for `demo.nurse@example.com` when `SEED_DEMO=true`. |
+| `DEMO_ADMIN_PASSWORD` | *(local default only)* | Custom password for `demo.admin@example.com` when `SEED_DEMO=true`. |
+| `GROQ_API_KEY` | *(empty)* | Optional API key for Groq inference provider (`openai/gpt-oss-120b`). |
+| `OPENROUTER_API_KEY` | *(empty)* | Optional API key for OpenRouter inference provider (`nvidia/nemotron-3.5-lightning:free`). |
+| `VITE_API_URL` | *(empty = same-origin `/api`)* | Base API URL for frontend build (set if frontend and backend are hosted on distinct domains). |
+| `VITE_DEMO_MODE` | `false` | When set to `true`, displays persistent demo disclaimers in the navbar and login card. |
+
+---
+
 ## Running Test Suites
 
 ### Backend Tests (pytest)
