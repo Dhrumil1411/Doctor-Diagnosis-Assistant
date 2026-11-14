@@ -27,7 +27,6 @@ jobs:
 
       - name: Run backend tests
         env:
-          DATABASE_URL: "sqlite:///backend/dda.db"
           APP_ENV: "testing"
           PYTHONPATH: "backend"
         run: |

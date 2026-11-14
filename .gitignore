@@ -23,6 +23,7 @@ Data/
 
 # --- ML artifacts (regenerable via ml/ scripts) ---
 ml/artifacts/*.joblib
+!ml/artifacts/model.joblib
 ml/artifacts/*.pkl
 ml/artifacts/*.csv
 ml/artifacts/*.jsonl
