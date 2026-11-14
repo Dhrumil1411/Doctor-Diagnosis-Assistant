@@ -104,3 +104,48 @@ def test_reason_rate_limit_429(client: TestClient, doctor_headers, monkeypatch):
     # Request 2: 429 Too Many Requests
     res2 = client.post("/api/reason", json={"visit_id": visit_id}, headers=doctor_headers)
     assert res2.status_code == 429
+
+
+def test_get_real_client_ip_unit():
+    from starlette.datastructures import Headers
+    from app.core.limiter import get_real_client_ip
+
+    class DummyRequest:
+        def __init__(self, headers: dict, client_host: str = "127.0.0.1"):
+            self.headers = Headers(headers)
+            self.client = type("Client", (), {"host": client_host})()
+
+    # When X-Forwarded-For is present with multiple IPs
+    req1 = DummyRequest({"x-forwarded-for": "203.0.113.195, 70.41.3.18, 150.172.238.178"})
+    assert get_real_client_ip(req1) == "203.0.113.195"
+
+    # When X-Forwarded-For is present with single IP
+    req2 = DummyRequest({"x-forwarded-for": "198.51.100.42"})
+    assert get_real_client_ip(req2) == "198.51.100.42"
+
+    # When X-Forwarded-For is absent, falls back to remote address
+    req3 = DummyRequest({}, client_host="10.0.0.5")
+    assert get_real_client_ip(req3) == "10.0.0.5"
+
+
+def test_rate_limit_uses_x_forwarded_for(client: TestClient, doctor_headers, monkeypatch):
+    monkeypatch.setattr(get_settings(), "rate_limit_predict", "1/minute")
+    limiter.reset()
+
+    payload = {"symptoms": ["headache"], "top_k": 2}
+
+    headers_ip1 = {**doctor_headers, "X-Forwarded-For": "198.51.100.10, 10.0.0.1"}
+    headers_ip2 = {**doctor_headers, "X-Forwarded-For": "198.51.100.20, 10.0.0.1"}
+
+    # IP1 Request 1: OK
+    res1 = client.post("/api/predict", json=payload, headers=headers_ip1)
+    assert res1.status_code == 200
+
+    # IP1 Request 2: Rate limited (429)
+    res2 = client.post("/api/predict", json=payload, headers=headers_ip1)
+    assert res2.status_code == 429
+
+    # IP2 Request 1: OK (different client IP is not rate limited)
+    res3 = client.post("/api/predict", json=payload, headers=headers_ip2)
+    assert res3.status_code == 200
+
