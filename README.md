@@ -1,204 +1,287 @@
-# Doctor Diagnosis Assistant
+# Doctor Diagnosis Assistant (DDA)
 
-An intelligent clinical decision support platform designed to assist medical practitioners with structured patient intake, machine learning disease predictions, standardized Human Phenotype Ontology (HPO) mapping, and AI-powered differential diagnoses.
+An intelligent clinical decision support workstation designed for general practice clinicians. DDA streamlines clinical intake, structures doctor-patient dialogues into standardized EHR schemas with Human Phenotype Ontology (HPO) codes, generates machine-learning disease probabilities across 773 conditions, and synthesizes multi-modal differential diagnoses via LLM clinical reasoning.
 
-> **Status: Phase 1 & Architecture Scale-up Complete** — 773 Diseases / 377 Symptoms, HPO Standardized Phenotypes, DDXPlus Clinical Evidence Framework. **70 automated tests passing (100% green)**.
-> 
-> 🩺 **Doctor Colleague Overview**: See [CLINICAL_OVERVIEW.md](CLINICAL_OVERVIEW.md) for a clinical-friendly summary of the system and future medical roadmap.
-
----
-
-## Features
-
-| Feature | Details |
-|---|---|
-| **Patient Intake Form** | Demographics, vitals (auto-BMI), OPQRST HPI, searchable HPO symptom checklist with severity/duration, allergies, medications, social history, working notes |
-| **ML Disease Classifier** | BernoulliNB (377 symptoms → 773 diseases, 87.0% Top-1, 97.8% Top-5, 99.4% Top-10); top-ranked differential predictions with confidence probabilities |
-| **HPO Phenotype Layer** | Standardized Human Phenotype Ontology (`HP:XXXXXXX`) mappings, colloquial synonym normalization, and domain-based category filtering |
-| **LLM Reasoning Layer** | DDXPlus Clinical Evidence Framework (Antecedents vs Active Evidences vs Pertinent Negatives); Groq → OpenRouter provider chain with auto-fallback |
-| **Lab & Imaging Upload** | File attachment (PDF, PNG, JPG, DICOM, TXT, DOC, up to 10 MB); lab findings injected into LLM reasoning; per-visit lab management with delete |
-| **Doctor Feedback Workflow** | Accept, edit, or reject algorithmic diagnoses with notes; accepted/edited decision stored with final disease label |
-| **Role-Based Access Control** | Doctor / Admin / Nurse / Read-Only roles; JWT authentication; admin-only user management |
-| **Audit Log Viewer** | Admin-only paginated audit log UI; filterable by action type, entity type, and actor; expandable JSON detail inspector |
-| **End-to-End Test Suite** | Synthea synthetic data loader + curated multi-domain clinical benchmark cases; 70 automated integration tests |
-
----
-
-## Tech Stack
-
-| Layer | Technologies |
-|---|---|
-| **Backend** | Python 3.13, FastAPI, Uvicorn, SQLAlchemy 2.0, Alembic, Pydantic v2, PyJWT, Bcrypt, HTTPX, Pytest |
-| **Database** | PostgreSQL 17 (via Docker Compose) |
-| **Frontend** | JavaScript (ES6+), React 19, React Router DOM v7, Vite 6, Oxlint |
-| **ML / AI** | Scikit-learn (Logistic Regression), Joblib, Groq API, OpenRouter API |
+> [!WARNING]
+> **Medical & Educational Disclaimer:**
+> This project is a research prototype and technical demonstration developed using public and synthetic data (Kaggle disease-symptom datasets and Synthea patient simulations). It is **not** medical software, not certified by any health regulatory agency (such as the FDA or CE mark), and **does not provide medical advice, clinical diagnoses, or treatment plans**. Attending medical practitioners retain sole clinical judgment and responsibility for all patient evaluations.
 
 ---
 
 ## Architecture Overview
 
-```
-┌─────────────────────────────────────────────────────┐
-│                  React SPA (Vite)                   │
-│  Login → Intake Form → Results → Audit Logs         │
-└──────────────────┬──────────────────────────────────┘
-                   │ HTTP (Vite dev proxy / nginx)
-┌──────────────────▼──────────────────────────────────┐
-│              FastAPI Backend (:8000)                 │
-│  /api/auth  /api/patients  /api/visits               │
-│  /api/predict  /api/reason  /api/audit-logs          │
-└────────┬────────────┬──────────────┬────────────────┘
-         │            │              │
-    ┌────▼────┐  ┌────▼────┐  ┌─────▼──────┐
-    │PostgreSQL│  │ joblib  │  │ Groq /     │
-    │   DB     │  │ model   │  │ OpenRouter  │
-    └──────────┘  └─────────┘  └────────────┘
+```mermaid
+flowchart TD
+    subgraph Client ["Client Layer"]
+        UI["React 19 SPA (Vite)"]
+        Forms["Intake Form & Note Extractor"]
+        Decision["Attending Physician Sign-Off"]
+    end
+
+    subgraph Gateway ["Reverse Proxy & Rate Limiting"]
+        NGINX["Nginx Container (:80)"]
+        SlowAPI["SlowAPI Limiter (IP-keyed)"]
+    end
+
+    subgraph Backend ["FastAPI Core Services (:8000)"]
+        Auth["JWT & RBAC Service (HS256 + Bcrypt)"]
+        NLP["Clinical Note NLP & Heuristic Extractor"]
+        Router["REST API Router (40 Endpoints)"]
+        Audit["Database Audit Logger"]
+        ReasonEngine["Differential Reasoning Engine"]
+    end
+
+    subgraph ML ["Diagnostic & Intelligence Layer"]
+        Classifier["BernoulliNB Classifier (377 Features → 773 Classes)"]
+        HPO["HPO Phenotype Normalizer & Synonym Registry"]
+        LLMChain["LLM Fallback Chain (Groq ➔ OpenRouter)"]
+        Cache["SHA-256 Payload LRU Cache (500 Entries)"]
+    end
+
+    subgraph Storage ["Persistence Layer"]
+        Postgres[("PostgreSQL 17 / SQLite 3")]
+        Uploads[("Diagnostic Lab Attachments")]
+    end
+
+    UI -->|HTTP / REST| NGINX
+    NGINX -->|Proxy /api/| SlowAPI
+    SlowAPI --> Router
+    Router --> Auth
+    Router --> NLP
+    Router --> ReasonEngine
+    Router --> Audit
+
+    NLP --> HPO
+    NLP --> LLMChain
+    ReasonEngine --> Classifier
+    ReasonEngine --> Cache
+    ReasonEngine --> LLMChain
+
+    Auth --> Postgres
+    Router --> Postgres
+    Audit --> Postgres
+    Router --> Uploads
 ```
 
 ---
 
-## API Endpoints Summary
+## Features
 
-| Method | Path | Role | Description |
-|---|---|---|---|
-| POST | `/api/auth/login` | Public | JWT login |
-| GET | `/api/auth/me` | Any | Current user info |
-| GET/POST/PATCH | `/api/users` | Admin | User management |
-| GET/POST | `/api/patients` | Any/Writer | Patient list & create |
-| GET/PATCH | `/api/patients/{id}` | Any/Writer | Patient detail & update |
-| GET/POST | `/api/visits` | Any/Writer | Visit list & create |
-| GET | `/api/visits/{id}` | Any | Visit detail (aggregated) |
-| POST | `/api/predict` | Writer | ML classifier inference |
-| POST | `/api/reason` | Writer | LLM differential reasoning |
-| POST/GET | `/api/visits/{id}/diagnosis` | Writer/Any | Doctor feedback |
-| POST/GET | `/api/visits/{id}/labs` | Writer/Any | Lab upload & list |
-| DELETE | `/api/labs/{id}` | Writer | Delete lab attachment |
-| GET | `/api/audit-logs` | Admin | Paginated audit log |
-| GET | `/api/symptom-vocabulary` | Any | Symptom list for intake form |
+* **AI Clinical Note & Dialogue Extractor**: Paste raw doctor narratives, SOAP notes, or consultation transcripts to auto-populate patient demographics, vitals, OPQRST pain characteristics, and symptoms via an LLM extraction pipeline with deterministic regex fallback.
+* **Standardized HPO Symptom Checklist**: Search and select from 377 clinical symptoms categorized by organ system and normalized to Human Phenotype Ontology (`HP:XXXXXXX`) concept IDs and colloquial synonyms.
+* **773-Disease ML Classifier**: Fast statistical inference using a Bernoulli Naive Bayes model trained on 246,945 patient presentations, delivering Top-1, Top-5, and Top-10 disease likelihoods.
+* **DDXPlus Clinical Evidence Reasoning**: Generates structured differentials ranking high/moderate/low likelihoods by evaluating antecedents (age, comorbidities, medications, social history) against active evidences, pertinent negatives, and emergency red flags.
+* **Multi-Provider LLM Fallback & Caching**: Multi-provider resilience automatically cascading from Groq to OpenRouter with an in-memory SHA-256 canonical payload cache (500 entries) preventing redundant inference.
+* **Diagnostic Lab & Imaging Reports**: Upload and attach multi-format clinical files (PDF, PNG, JPG, DICOM, TXT, DOCX) to patient visits with metadata aggregation.
+* **Doctor Final Sign-off & Decision Tracking**: Dedicated review screen enabling attending physicians to accept, modify, or reject AI diagnostic recommendations with clinical rationales stored in the permanent medical record.
+* **Enterprise Role-Based Access Control (RBAC)**: Enforces role permissions across `doctor`, `admin`, `nurse`, and `read_only` accounts using signed JWT bearer tokens and salted bcrypt password hashing.
+* **Immutable Audit Trail**: Tracks user authentication, clinical record creation, differential generation, and patient updates with client IP addresses and serialized state diffs.
+* **Automated Rate Limiting**: SlowAPI token bucket limiting protects high-compute endpoints (`/api/predict`, `/api/reason`, `/api/clinical-notes/extract`) against abuse.
+
+---
+
+## Tech Stack
+
+| Layer | Technology | Purpose |
+|---|---|---|
+| **Frontend** | React 19, React Router DOM 7, Vite 8 | Single-page clinical workstation interface |
+| **Testing (UI)** | Vitest 5, React Testing Library, JSDOM | Frontend unit and user-flow integration testing |
+| **Backend** | Python 3.13, FastAPI 0.115, Uvicorn 0.30 | High-performance asynchronous REST API |
+| **ORM & Migrations** | SQLAlchemy 2.0, Alembic 1.13 | Declarative database modeling and schema revisions |
+| **Databases** | PostgreSQL 17 (Production/Docker), SQLite 3 (Dev/Test) | Relational persistence with 13 foreign-key constrained tables |
+| **Security & Auth** | PyJWT (HS256), Bcrypt, SlowAPI | Token-based auth, password hashing, and rate limiting |
+| **Machine Learning** | scikit-learn 1.5, pandas 2.0, NumPy, SciPy, Joblib | Binary classification, top-k evaluation, and artifact serialization |
+| **LLM Inference** | Groq API, OpenRouter API, HTTPX | Structured JSON extraction and clinical reasoning |
+| **Containerization** | Docker, Docker Compose, Nginx | Multi-container deployment (database, backend, frontend) |
+| **CI / CD** | GitHub Actions | Automated Python test suites and frontend lint/test/build |
+
+---
+
+## Machine Learning & Evaluation
+
+The diagnostic classifier models disease probabilities from high-dimensional binary symptom indicators across 773 acute and chronic clinical conditions.
+
+### Dataset
+* **Source:** Kaggle `diseases-symptoms-773` (`diseases-symptoms-773.csv`)
+* **Raw Presentation Records:** 246,945 clinical records
+* **Cleaned Training Set:** 197,559 records (80%)
+* **Cleaned Test Set:** 49,386 records (20%)
+* **Feature Dimensions:** 377 standardized symptom features
+* **Class Space:** 773 disease categories
+
+### Model Architecture & Benchmark
+Multiple candidate classifiers were evaluated against a baseline floor:
+
+| Model | Top-1 Accuracy | Top-5 Accuracy | Top-10 Accuracy | Precision (Macro) | Recall (Macro) | Macro-F1 | Training Time |
+|---|---|---|---|---|---|---|---|
+| **Dummy (Most Frequent)** | 0.49% | 1.28% | 1.85% | 0.00% | 0.14% | 0.00% | 0.32s |
+| **Multinomial Naive Bayes** | 86.02% | 97.73% | 99.21% | 84.83% | 77.86% | 80.04% | 4.34s |
+| **Bernoulli Naive Bayes (Champion)** | **87.00%** | **98.21%** | **99.37%** | **82.13%** | **80.49%** | **80.41%** | **3.53s** |
+
+*(Verified from `ml/artifacts/metrics.json` generated on test set of 49,386 samples)*
+
+---
+
+## Environment Variables
+
+Copy `.env.example` to `.env` in the repository root:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Default Value | Description |
+|---|---|---|
+| `APP_ENV` | `development` | Application runtime environment (`development`, `testing`, `production`) |
+| `SECRET_KEY` | `dev-only-secret-...` | Cryptographic secret for signing JWT access tokens |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | `480` | Lifetime of issued JWT authentication tokens (8 hours) |
+| `DATABASE_URL` | `sqlite:///backend/dda.db` | SQLAlchemy connection string (supports SQLite and PostgreSQL) |
+| `LLM_PROVIDER_CHAIN` | `groq,openrouter` | Comma-separated order of LLM providers for reasoning |
+| `GROQ_API_KEY` | *(optional)* | API key for Groq Cloud completions |
+| `GROQ_MODEL` | `openai/gpt-oss-120b` | Model name for Groq inference |
+| `OPENROUTER_API_KEY` | *(optional)* | API key for OpenRouter completions |
+| `OPENROUTER_MODEL` | `nvidia/nemotron-3-super-120b-a12b:free` | Model name for OpenRouter inference |
+| `RATE_LIMIT_PREDICT` | `60/minute` | Rate limit for `/api/predict` |
+| `RATE_LIMIT_REASON` | `30/minute` | Rate limit for `/api/reason` |
+| `RATE_LIMIT_NOTE_EXTRACT` | `30/minute` | Rate limit for `/api/clinical-notes/extract` |
 
 ---
 
 ## Quick Start
 
-### Prerequisites
-- Python 3.11+ (tested on 3.13)
-- Node.js 20+ and npm
-- Docker Desktop with WSL2 (for PostgreSQL)
-- Free API keys: [Groq](https://console.groq.com) and [OpenRouter](https://openrouter.ai)
+### Option A: Docker Compose (Recommended)
 
-### 1. Clone & configure
+Run PostgreSQL, FastAPI backend, and Nginx/React frontend in isolated containers:
 
 ```bash
-git clone <repo-url>
+# 1. Clone the repository
+git clone https://github.com/Dhrumil1411/Doctor-Diagnosis-Assistant.git
 cd Doctor-Diagnosis-Assistant
 
-# Copy env template and fill in values
+# 2. Configure environment
 cp .env.example .env
-# Edit .env: set DATABASE_URL, JWT_SECRET_KEY, GROQ_API_KEY, OPENROUTER_API_KEY
+
+# 3. Launch the container stack
+docker compose up --build
 ```
 
-### 2. Backend setup
+* **Frontend UI:** `http://localhost:3000`
+* **API Documentation (Swagger):** `http://localhost:8000/docs`
+* **Health Check:** `http://localhost:8000/health`
 
+---
+
+### Option B: Manual Local Setup
+
+#### 1. Backend Setup
 ```bash
-# Create and activate virtual environment
+# Set up Python virtual environment
 python -m venv .venv
-.venv\Scripts\activate        # Windows
-# source .venv/bin/activate   # Linux/Mac
+# Windows:
+.\.venv\Scripts\activate
+# Linux / macOS:
+source .venv/bin/activate
 
-pip install -r backend/requirements.txt
+# Install dependencies
+pip install -r backend/requirements.txt -r ml/requirements.txt
 
-# Start PostgreSQL
-docker compose up -d
-
-# Apply migrations
+# Run migrations (creates SQLite dda.db or initializes PostgreSQL)
 cd backend
 alembic upgrade head
+cd ..
 
-# Seed admin user
-python scripts/create_admin.py
+# Optional: Seed an administrative user
+python backend/scripts/create_admin.py
 
-# Start backend server
-uvicorn app.main:app --reload --port 8000
+# Launch backend server
+uvicorn app.main:app --app-dir backend --reload --port 8000
 ```
 
-### 3. Frontend setup
-
+#### 2. Frontend Setup
 ```bash
-# In a new terminal
+# In a separate terminal
 cd frontend
 npm install
 npm run dev
 ```
 
-Access the app at `http://localhost:5173`.
+Visit `http://localhost:5173` to access the Vite development workstation.
 
 ---
 
-## Running Tests
+## API Endpoints
 
+The backend provides 40 endpoints across 28 distinct routes:
+
+| HTTP Method | Route Path | Access / Role | Description |
+|---|---|---|---|
+| `GET` | `/health` | Public | System status and database connectivity check |
+| `POST` | `/api/auth/login` | Public | OAuth2 password login, returns JWT token |
+| `GET` | `/api/auth/me` | Authenticated | Inspect current authenticated user and permissions |
+| `GET` | `/api/users` | Admin | List all registered hospital users |
+| `POST` | `/api/users` | Admin | Register new doctor, nurse, or staff account |
+| `PATCH` | `/api/users/{user_id}` | Admin | Activate, deactivate, or modify staff roles |
+| `GET` | `/api/patients` | All Roles | Search and list patient medical records |
+| `POST` | `/api/patients` | Doctor, Nurse, Admin | Register new patient with MRN and consent |
+| `GET` | `/api/patients/{id}` | All Roles | Retrieve comprehensive patient record and history |
+| `PATCH` | `/api/patients/{id}` | Doctor, Nurse, Admin | Update patient demographics and contact details |
+| `GET` | `/api/patients/{id}/visits` | All Roles | List all clinical encounter visits for patient |
+| `GET` | `/api/patients/{id}/allergies` | All Roles | List documented drug and environmental allergies |
+| `POST` | `/api/patients/{id}/allergies` | Doctor, Nurse, Admin | Record new patient allergy entry |
+| `GET` | `/api/patients/{id}/history` | All Roles | Retrieve chronic medical and surgical history |
+| `POST` | `/api/patients/{id}/history` | Doctor, Nurse, Admin | Append medical history record |
+| `GET` | `/api/patients/{id}/medications` | All Roles | List active outpatient medication regimens |
+| `POST` | `/api/patients/{id}/medications` | Doctor, Nurse, Admin | Prescribe or document patient medication |
+| `POST` | `/api/visits` | Doctor, Nurse, Admin | Initiate new clinical consultation encounter |
+| `GET` | `/api/visits/{id}` | All Roles | Fetch aggregated visit record (vitals, symptoms, notes) |
+| `PATCH` | `/api/visits/{id}` | Doctor, Nurse, Admin | Update encounter notes and complaint details |
+| `PUT` | `/api/visits/{id}/symptoms` | Doctor, Nurse, Admin | Replace active symptom list for visit |
+| `PUT` | `/api/visits/{id}/vitals` | Doctor, Nurse, Admin | Upsert vital signs (BP, HR, temp, SpO2, pain) |
+| `PUT` | `/api/visits/{id}/social-history` | Doctor, Nurse, Admin | Document personal habits, smoking, sleep, addictions |
+| `PUT` | `/api/visits/{id}/general-exam` | Doctor, Nurse, Admin | Upsert physical examination findings (pallor, edema, etc.) |
+| `GET` | `/api/visits/{id}/labs` | All Roles | List diagnostic lab tests and attached files |
+| `POST` | `/api/visits/{id}/labs` | Doctor, Nurse, Admin | Upload diagnostic lab reports or imaging studies |
+| `DELETE` | `/api/labs/{id}` | Doctor, Nurse, Admin | Delete uploaded lab report attachment |
+| `GET` | `/api/symptom-vocabulary` | Public / All | Retrieve 377 symptom vocabulary with HPO metadata |
+| `POST` | `/api/clinical-notes/extract` | Doctor, Nurse, Admin | NLP entity extraction from raw doctor notes *(Rate-limited)* |
+| `POST` | `/api/predict` | Doctor, Nurse, Admin | 773-class Bayesian classifier prediction *(Rate-limited)* |
+| `POST` | `/api/reason` | Doctor, Nurse, Admin | LLM differential diagnosis reasoning engine *(Rate-limited)* |
+| `GET` | `/api/visits/{id}/diagnosis` | All Roles | Fetch signed clinical decision record |
+| `POST` | `/api/visits/{id}/diagnosis` | Doctor, Nurse, Admin | Record attending physician diagnosis and sign-off |
+| `GET` | `/api/audit-logs` | Admin | Searchable audit log of data mutations and logins |
+
+---
+
+## Running Test Suites
+
+### Backend Tests (pytest)
 ```bash
-cd backend
+# Run all 77 automated backend tests
+pytest backend/tests -v
 
-# Run full test suite (63 tests)
-..\.venv\Scripts\python.exe -m pytest
+# Run rate limiting tests
+pytest backend/tests/test_rate_limit.py -v
 
-# Run with verbose output
-..\.venv\Scripts\python.exe -m pytest -v
+# Run end-to-end clinical workflow scenarios
+pytest backend/tests/test_e2e_scenarios.py -v
+```
 
-# Run a specific test file
-..\.venv\Scripts\python.exe -m pytest tests/test_audit.py -v
+### Frontend Tests (Vitest & React Testing Library)
+```bash
+cd frontend
 
-# Run end-to-end scenarios only
-..\.venv\Scripts\python.exe -m pytest tests/test_e2e_scenarios.py -v
+# Run all 10 unit and integration tests
+npm test
+
+# Run linter
+npm run lint
+
+# Validate production build bundle
+npm run build
 ```
 
 ---
 
-## Project Structure
+## License
 
-```
-Doctor-Diagnosis-Assistant/
-├── backend/
-│   ├── app/
-│   │   ├── api/routes/        # FastAPI route handlers
-│   │   ├── models/            # SQLAlchemy ORM models
-│   │   ├── schemas/           # Pydantic request/response schemas
-│   │   ├── services/          # Business logic (classifier, audit, LLM)
-│   │   └── e2e/               # E2E test data loaders (Synthea + curated)
-│   ├── migrations/            # Alembic migration scripts
-│   ├── scripts/               # Utility scripts (create_admin, run_e2e_suite)
-│   └── tests/                 # Pytest test suite (63 tests)
-├── frontend/
-│   └── src/
-│       ├── pages/             # React page components
-│       ├── components/        # Reusable UI components
-│       └── api/               # Fetch-based API client
-├── ml/
-│   ├── artifacts/             # Trained model + vocabulary (committed)
-│   └── data_prep.py           # Data cleaning + model training pipeline
-├── docs/                      # Dataset notes, data sources, compliance
-├── uploads/                   # Lab file storage (gitignored)
-└── docker-compose.yml
-```
-
----
-
-## Development Steps Completed
-
-| Step | What |
-|---|---|
-| 0 | Repo scaffold, tooling baseline |
-| 1 | Data audit + prep (42-disease Kaggle set) |
-| 2 | Baseline classifier (Logistic Regression, CV + test macro-F1 = 1.00) |
-| 3 | API skeleton + full DB schema + Alembic migrations |
-| 4 | Auth + RBAC (Doctor/Admin/Nurse/Read-Only) + JWT |
-| 5 | Patients/visits CRUD (full intake form persistence) |
-| 6 | Classifier inference service (`POST /api/predict`) |
-| 7 | LLM reasoning layer with Groq/OpenRouter fallback chain + cache |
-| 8 | Frontend skeleton (Vite + React), login wired |
-| 9 | Intake form UI (all 10 spec sections) |
-| 10 | Results screen + accept/edit/reject feedback loop |
-| 11 | Labs/imaging upload + LLM integration |
-| 12 | End-to-end testing (Synthea loader + curated clinical benchmark) |
-| 13 | Hardening: admin audit log viewer, DPDP compliance notes, docs finalized |
-
+Distributed under the Apache 2.0 License. See `LICENSE` for details.
