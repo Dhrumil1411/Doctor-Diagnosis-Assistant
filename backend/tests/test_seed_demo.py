@@ -1,13 +1,12 @@
 from sqlalchemy import select
 
-from app.models.patients import Patient
-from app.models.users import User, UserRole
-from app.models.visits import Visit
-from scripts.seed_demo import seed_demo
-
 
 def test_seed_demo_idempotent():
     from app.db.base import SessionLocal
+    from app.models.patients import Patient
+    from app.models.users import User, UserRole
+    from app.models.visits import Visit
+    from scripts.seed_demo import seed_demo
 
     # 1. Run initial seed
     stats1 = seed_demo()

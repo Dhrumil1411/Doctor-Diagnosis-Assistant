@@ -21,7 +21,6 @@ from sqlalchemy import select
 
 from app.core.security import hash_password
 import app.models  # noqa: F401
-from app.db.base import Base, SessionLocal, engine
 from app.models.diagnoses import ConfidenceBand, Diagnosis, DiagnosisSource, DoctorDecision
 from app.models.patients import Patient, Sex
 from app.models.symptoms import Symptom, SymptomStatus
@@ -239,12 +238,14 @@ def seed_demo() -> dict[str, int]:
 
     Returns a summary dict with counts of created/updated entities.
     """
+    import app.db.base
+
     # Ensure tables exist (e.g. for standalone execution or testing)
-    Base.metadata.create_all(bind=engine)
+    app.db.base.Base.metadata.create_all(bind=app.db.base.engine)
 
     stats = {"users_seeded": 0, "patients_seeded": 0, "visits_seeded": 0}
 
-    with SessionLocal() as db:
+    with app.db.base.SessionLocal() as db:
         user_map: dict[str, User] = {}
 
         # 1. Seed or update demo accounts
