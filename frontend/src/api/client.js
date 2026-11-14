@@ -1,4 +1,11 @@
-const BASE = "/api";
+const rawApiUrl = (typeof import.meta !== "undefined" && import.meta.env) ? import.meta.env.VITE_API_URL : "";
+const envUrl = rawApiUrl ? String(rawApiUrl).trim().replace(/\/+$/, "") : "";
+
+// If VITE_API_URL is provided, normalize to ensure it points to the API root.
+// If empty, defaults to same-origin "/api" (standard reverse proxy setup).
+export const BASE = envUrl ? (envUrl.endsWith("/api") ? envUrl : `${envUrl}/api`) : "/api";
+export const API_ORIGIN = envUrl ? envUrl.replace(/\/api$/, "") : "";
+
 const TOKEN_KEY = "dda_token";
 
 export function getToken() {
@@ -48,18 +55,32 @@ export class ApiError extends Error {
   }
 }
 
-async function request(method, path, { body, isForm } = {}) {
+async function request(method, path, { body, isForm, isMultipart } = {}) {
   const headers = {};
   const token = getToken();
   if (token) headers["Authorization"] = `Bearer ${token}`;
-  if (body && !isForm) headers["Content-Type"] = "application/json";
+  if (body && !isForm && !isMultipart) headers["Content-Type"] = "application/json";
 
-  const resp = await fetch(BASE + path, {
+  let requestBody = undefined;
+  if (body) {
+    if (isMultipart) {
+      requestBody = body; // Native FormData
+    } else if (isForm) {
+      requestBody = new URLSearchParams(body);
+    } else {
+      requestBody = JSON.stringify(body);
+    }
+  }
+
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const url = path.startsWith("http://") || path.startsWith("https://")
+    ? path
+    : `${BASE}${normalizedPath}`;
+
+  const resp = await fetch(url, {
     method,
     headers,
-    ...(body
-      ? { body: isForm ? new URLSearchParams(body) : JSON.stringify(body) }
-      : {}),
+    ...(requestBody ? { body: requestBody } : {}),
   });
 
   if (resp.status === 401 && path !== "/auth/login") setToken(null);
@@ -81,6 +102,8 @@ export const api = {
   get: (path) => request("GET", path),
   post: (path, body) => request("POST", path, { body }),
   postForm: (path, form) => request("POST", path, { body: form, isForm: true }),
+  postMultipart: (path, formData) => request("POST", path, { body: formData, isMultipart: true }),
   patch: (path, body) => request("PATCH", path, { body }),
   put: (path, body) => request("PUT", path, { body }),
+  delete: (path) => request("DELETE", path),
 };

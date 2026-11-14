@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "../api/client.js";
+import { api, API_ORIGIN } from "../api/client.js";
 
 export default function LabResultsSection({ visitId, onLabUpdated }) {
   const [labs, setLabs] = useState([]);
@@ -51,18 +51,8 @@ export default function LabResultsSection({ visitId, onLabUpdated }) {
       if (performedAt) formData.append("performed_at", performedAt);
       if (selectedFile) formData.append("file", selectedFile);
 
-      // Perform multipart upload via fetch client
-      const token = localStorage.getItem("dda_token");
-      const resp = await fetch(`/api/visits/${visitId}/labs`, {
-        method: "POST",
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-        body: formData,
-      });
-
-      if (!resp.ok) {
-        const errJson = await resp.json().catch(() => ({ detail: resp.statusText }));
-        throw new Error(errJson.detail || "Upload failed");
-      }
+      // Perform multipart upload via centralized api client
+      await api.postMultipart(`/visits/${visitId}/labs`, formData);
 
       setSuccess("Lab result uploaded successfully!");
       setTestName("");
@@ -177,7 +167,7 @@ export default function LabResultsSection({ visitId, onLabUpdated }) {
               {lab.file_url && (
                 <div style={{ marginTop: "0.5rem" }}>
                   <a
-                    href={lab.file_url}
+                    href={lab.file_url.startsWith("http") ? lab.file_url : `${API_ORIGIN}${lab.file_url}`}
                     target="_blank"
                     rel="noreferrer"
                     style={{
