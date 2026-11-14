@@ -3,18 +3,47 @@ services:
     image: postgres:17-alpine
     container_name: dda-postgres
     environment:
-      POSTGRES_USER: dda
-      POSTGRES_PASSWORD: dda
-      POSTGRES_DB: dda
+      POSTGRES_USER: ${POSTGRES_USER:-dda}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dda}
+      POSTGRES_DB: ${POSTGRES_DB:-dda}
     ports:
       - "5432:5432"
     volumes:
       - dda_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U dda -d dda"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dda} -d ${POSTGRES_DB:-dda}"]
       interval: 5s
       timeout: 3s
       retries: 20
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: dda-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql+psycopg://${POSTGRES_USER:-dda}:${POSTGRES_PASSWORD:-dda}@db:5432/${POSTGRES_DB:-dda}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/backend/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: dda-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
 
 volumes:
   dda_pgdata:
