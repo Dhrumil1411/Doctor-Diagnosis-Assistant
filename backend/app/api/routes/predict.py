@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.api.deps import require_writer
+from app.core.config import get_settings
+from app.core.limiter import limiter
 from app.db.base import get_db
 from app.models.symptoms import Symptom, SymptomStatus
 from app.models.visits import Visit
@@ -28,7 +30,9 @@ def _symptoms_for_visit(db: Session, visit_id) -> tuple[Visit, list[str]]:
 
 
 @router.post("/api/predict", response_model=PredictResponse)
+@limiter.limit(lambda: get_settings().rate_limit_predict)
 def predict(
+    request: Request,
     payload: PredictRequest,
     db: Session = Depends(get_db),
     user=Depends(require_writer),

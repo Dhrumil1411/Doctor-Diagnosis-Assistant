@@ -1,9 +1,10 @@
 import logging
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import require_writer
 from app.core.config import Settings, get_settings
+from app.core.limiter import limiter
 from app.db.base import get_db
 from app.schemas.note_extractor import ExtractNoteRequest, ExtractedClinicalCase
 from app.services.audit import record_audit
@@ -14,7 +15,9 @@ logger = logging.getLogger("uvicorn.error")
 
 
 @router.post("/api/clinical-notes/extract", response_model=ExtractedClinicalCase)
+@limiter.limit(lambda: get_settings().rate_limit_note_extract)
 def extract_note(
+    request: Request,
     payload: ExtractNoteRequest,
     db: Session = Depends(get_db),
     user=Depends(require_writer),

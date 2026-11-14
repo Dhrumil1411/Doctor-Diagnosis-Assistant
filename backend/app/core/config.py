@@ -25,6 +25,11 @@ class Settings(BaseSettings):
     llm_max_tokens: int = 1500
     reason_cache_size: int = 500
 
+    # Rate Limiting (SlowAPI)
+    rate_limit_predict: str = "60/minute"
+    rate_limit_reason: str = "30/minute"
+    rate_limit_note_extract: str = "30/minute"
+
     @field_validator("database_url", mode="before")
     @classmethod
     def normalize_database_url(cls, v: str) -> str:

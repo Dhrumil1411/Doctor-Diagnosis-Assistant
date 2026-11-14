@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 from app.api.routes.audit import router as audit_router
 from app.api.routes.auth import router as auth_router
@@ -15,10 +17,14 @@ from app.api.routes.reason import router as reason_router
 from app.api.routes.users import router as users_router
 from app.api.routes.visits import router as visits_router
 from app.api.routes.vocabulary import router as vocabulary_router
+from app.core.limiter import limiter
 
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Doctor Diagnosis Assistant API", version="0.1.0")
+
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
     # Ensure uploads directory exists and mount static files
     uploads_dir = Path("uploads")
