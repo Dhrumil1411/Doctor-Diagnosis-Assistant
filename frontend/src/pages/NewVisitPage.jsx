@@ -397,7 +397,7 @@ export default function NewVisitPage() {
             ]} />
           <TextInput id="refdoc" label="Referring doctor (if any)" value={visitInfo.referring_doctor_name} onChange={setV("referring_doctor_name")} />
         </div>
-        <p className="muted">Attending doctor: you ({user.email})</p>
+        <p className="muted">Attending doctor: you ({user?.email || "doctor"})</p>
       </FormSection>
 
       <FormSection title="2.3 Chief complaint">
