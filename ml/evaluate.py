@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 import numpy as np
 from sklearn.metrics import (
     accuracy_score,
@@ -37,9 +39,9 @@ def evaluate_on_test(model, X_test, y_test) -> dict:
     pred = model.predict(X_test)
     results = {
         "accuracy": float(accuracy_score(y_test, pred)),
-        "f1_macro": float(f1_score(y_test, pred, average="macro", zero_division=0)),
         "precision_macro": float(precision_score(y_test, pred, average="macro", zero_division=0)),
         "recall_macro": float(recall_score(y_test, pred, average="macro", zero_division=0)),
+        "f1_macro": float(f1_score(y_test, pred, average="macro", zero_division=0)),
         "per_class": classification_report(y_test, pred, output_dict=True, zero_division=0),
     }
     if hasattr(model, "predict_proba"):
@@ -48,7 +50,30 @@ def evaluate_on_test(model, X_test, y_test) -> dict:
             results["top_5_accuracy"] = float(
                 top_k_accuracy_score(y_test, proba, k=min(5, len(model.classes_)), labels=model.classes_)
             )
+            results["top_10_accuracy"] = float(
+                top_k_accuracy_score(y_test, proba, k=min(10, len(model.classes_)), labels=model.classes_)
+            )
         except Exception:
             pass
     return results
 
+
+def update_metrics_file(eval_results: dict, metrics_path: Path | str) -> dict:
+    """Update an existing metrics.json file with precision, recall, and macro F1 scores."""
+    p = Path(metrics_path)
+    if not p.exists():
+        raise FileNotFoundError(f"Metrics file not found: {p}")
+    data = json.loads(p.read_text(encoding="utf-8"))
+    final_eval = data.setdefault("final_test_eval", {})
+    final_eval["precision_macro"] = round(eval_results.get("precision_macro", 0.0), 4)
+    final_eval["recall_macro"] = round(eval_results.get("recall_macro", 0.0), 4)
+    final_eval["f1_macro"] = round(eval_results.get("f1_macro", 0.0), 4)
+
+    champion_name = data.get("champion", {}).get("name")
+    if champion_name and champion_name in data.get("models", {}):
+        data["models"][champion_name]["precision_macro"] = round(eval_results.get("precision_macro", 0.0), 4)
+        data["models"][champion_name]["recall_macro"] = round(eval_results.get("recall_macro", 0.0), 4)
+        data["models"][champion_name]["f1_macro"] = round(eval_results.get("f1_macro", 0.0), 4)
+
+    p.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    return data

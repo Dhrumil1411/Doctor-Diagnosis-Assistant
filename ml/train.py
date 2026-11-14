@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from scipy import sparse
 from sklearn.dummy import DummyClassifier
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from sklearn.naive_bayes import BernoulliNB, MultinomialNB
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -82,6 +82,9 @@ def main() -> None:
         # Evaluate on test set
         pred = model.predict(X_test)
         top1_acc = float(accuracy_score(y_test, pred))
+        prec_macro = float(precision_score(y_test, pred, average="macro", zero_division=0))
+        rec_macro = float(recall_score(y_test, pred, average="macro", zero_division=0))
+        f1_macro_val = float(f1_score(y_test, pred, average="macro", zero_division=0))
 
         top5_acc = None
         top10_acc = None
@@ -104,6 +107,9 @@ def main() -> None:
             "top1_accuracy": round(top1_acc, 4),
             "top5_accuracy": round(top5_acc, 4) if top5_acc is not None else None,
             "top10_accuracy": round(top10_acc, 4) if top10_acc is not None else None,
+            "precision_macro": round(prec_macro, 4),
+            "recall_macro": round(rec_macro, 4),
+            "f1_macro": round(f1_macro_val, 4),
         }
 
     # Select champion model based on highest top-5 accuracy (or top-1 if tied)
@@ -135,6 +141,9 @@ def main() -> None:
                 "top1_accuracy": model_results[champion_name]["top1_accuracy"],
                 "top5_accuracy": model_results[champion_name]["top5_accuracy"],
                 "top10_accuracy": model_results[champion_name]["top10_accuracy"],
+                "precision_macro": model_results[champion_name]["precision_macro"],
+                "recall_macro": model_results[champion_name]["recall_macro"],
+                "f1_macro": model_results[champion_name]["f1_macro"],
                 "dataset_sha256": {
                     "cleaned_train.csv": sha256_of(ART / "cleaned_train.csv"),
                     "cleaned_test.csv": sha256_of(ART / "cleaned_test.csv"),
@@ -167,6 +176,9 @@ def main() -> None:
             "top1_accuracy": model_results[champion_name]["top1_accuracy"],
             "top5_accuracy": model_results[champion_name]["top5_accuracy"],
             "top10_accuracy": model_results[champion_name]["top10_accuracy"],
+            "precision_macro": model_results[champion_name]["precision_macro"],
+            "recall_macro": model_results[champion_name]["recall_macro"],
+            "f1_macro": model_results[champion_name]["f1_macro"],
         },
         "artifact": {"path": str(bundle_path), "sha256": sha256_of(bundle_path)},
     }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T06:59:28.154034+00:00",
+  "generated_at": "2026-11-14T04:43:04.717173+00:00",
   "dataset": {
     "n_train": 197559,
     "n_test": 49386,
@@ -13,24 +13,33 @@
   "models": {
     "dummy_most_frequent": {
       "params": "{'constant': None, 'random_state': 42, 'strategy': 'most_frequent'}",
-      "train_time_sec": 0.17,
+      "train_time_sec": 0.32,
       "top1_accuracy": 0.0049,
       "top5_accuracy": 0.0128,
-      "top10_accuracy": 0.0185
+      "top10_accuracy": 0.0185,
+      "precision_macro": 0.0,
+      "recall_macro": 0.0014,
+      "f1_macro": 0.0
     },
     "multinomial_nb": {
       "params": "{'alpha': 0.1, 'class_prior': None, 'fit_prior': True, 'force_alpha': True}",
-      "train_time_sec": 2.15,
+      "train_time_sec": 4.34,
       "top1_accuracy": 0.8602,
       "top5_accuracy": 0.9773,
-      "top10_accuracy": 0.9921
+      "top10_accuracy": 0.9921,
+      "precision_macro": 0.8483,
+      "recall_macro": 0.7786,
+      "f1_macro": 0.8004
     },
     "bernoulli_nb": {
       "params": "{'alpha': 0.1, 'binarize': 0.0, 'class_prior': None, 'fit_prior': True, 'force_alpha': True}",
-      "train_time_sec": 2.21,
+      "train_time_sec": 3.53,
       "top1_accuracy": 0.87,
       "top5_accuracy": 0.9821,
-      "top10_accuracy": 0.9937
+      "top10_accuracy": 0.9937,
+      "precision_macro": 0.8213,
+      "recall_macro": 0.8049,
+      "f1_macro": 0.8041
     }
   },
   "champion": {
@@ -45,10 +54,13 @@
   "final_test_eval": {
     "top1_accuracy": 0.87,
     "top5_accuracy": 0.9821,
-    "top10_accuracy": 0.9937
+    "top10_accuracy": 0.9937,
+    "precision_macro": 0.8213,
+    "recall_macro": 0.8049,
+    "f1_macro": 0.8041
   },
   "artifact": {
-    "path": "D:\\Project\\Doctor-Diagnosis-Assistant\\ml\\artifacts\\model.joblib",
-    "sha256": "ded39f6a12f62fb86fd1119a4054edc29687b7ff29e1a03bf609dcddb9688384"
+    "path": "D:\\Projects\\Doctor-Diagnosis-Assistant\\ml\\artifacts\\model.joblib",
+    "sha256": "fd3b74ad0b2d91e78af961b6e6fef0c6fba155481aa06d92e1bee71214eefd05"
   }
 }
