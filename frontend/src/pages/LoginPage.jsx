@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import DemoBanner from "../components/DemoBanner.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function LoginPage() {
@@ -33,6 +34,7 @@ export default function LoginPage() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}>
       <div className="card" style={{ maxWidth: "440px", width: "100%", padding: "2rem", boxShadow: "var(--shadow-lg)" }}>
+        <DemoBanner inline />
         <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
           <div
             style={{

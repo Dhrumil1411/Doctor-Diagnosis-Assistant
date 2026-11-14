@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import DemoBanner from "./DemoBanner.jsx";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -12,6 +13,7 @@ export default function Navbar() {
 
   return (
     <header className="app-navbar">
+      <DemoBanner />
       <div className="navbar-inner">
         <Link to="/" className="nav-brand">
           <div className="nav-logo-badge">⚕️</div>
